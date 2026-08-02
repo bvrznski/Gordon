@@ -31,6 +31,18 @@ modules = [
     "engine",
     "executor",
     "manager",
+    # Phase 3.5 - Observability, Integrity, Health, Recovery
+    "lifecycle",
+    "registry",
+    "state",
+    "execution",
+    "scheduling",
+    "observability",
+    "integrity",
+    "health",
+    "failures",
+    "recovery",
+    "diagnostics",
 ]
 
 canonical_name = "gordon.system.src.agent.components.core"
@@ -38,7 +50,13 @@ layer = 2
 semantic_owner = "Components Team"
 parent_package = "gordon.system.src.agent.components"
 
-children_modules = ["engine", "executor", "manager"]
+children_modules = [
+    "engine", "executor", "manager",
+    "lifecycle", "registry", "state",
+    "execution", "scheduling",
+    "observability", "integrity",
+    "health", "failures", "recovery", "diagnostics",
+]
 allowed_dependencies = ["g Gordon.system.src.agent.architecture.*", "g Gordon.system.src.agent.systems.*"]
 forbidden_dependencies = ["g Gordon.system.src.agent.capabilities.*"]
 

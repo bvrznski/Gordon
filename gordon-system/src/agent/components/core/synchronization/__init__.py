@@ -1,10 +1,20 @@
 # Core Synchronization Primitives
 # ================================
+#
+# NOTE: Cancellation types are provided by the execution module.
+# This module provides concurrency primitives only.
 
 """
-Core runtime synchronization primitives.
+Core runtime synchronization and concurrency primitives.
 
-Provides narrow concurrency primitives required by Core.
+Provides:
+- Async-compatible locks and semaphores
+- One-time execution guards
+- Bounded resource access
+- Guarded concurrent resource access
+
+Cancellation tokens and sources are in the `execution` module to provide
+single-authority semantics for cancellation.
 """
 
 import asyncio
@@ -17,38 +27,6 @@ T = TypeVar("T")
 
 
 @dataclass(frozen=True)
-class CancellationToken:
-    """
-    Token for tracking cancellation status.
-    
-    Usage:
-        token = CancellationToken()
-        
-        # Check if cancelled
-        if token.is_cancelled:
-            return
-        
-        # Cancel the token
-        token.cancel()
-    """
-    
-    _cancelled: bool = False
-    
-    @property
-    def is_cancelled(self) -> bool:
-        """Check if cancellation has been requested."""
-        with self._lock():
-            return self._cancelled
-    
-    def cancel(self) -> None:
-        """Mark the token as cancelled."""
-        import threading
-        lock = threading.Lock()
-        with lock:
-            self._cancelled = True
-
-
-@dataclass(frozen=True)
 class ShutdownSignal:
     """
     Signal for graceful shutdown coordination.
@@ -56,8 +34,9 @@ class ShutdownSignal:
     Usage:
         signal = ShutdownSignal()
         
-        # Wait for shutdown
-        await signal.wait_for_shutdown()
+        # Check if shutdown requested
+        if signal.is_shutdown_requested:
+            await self.stop_gracefully()
         
         # Request shutdown
         signal.request_shutdown()
@@ -277,8 +256,9 @@ class GuardedResource(Generic[T]):
 
 
 __all__ = [
-    "CancellationToken",
+    # Shutdown signal (not duplicated - unique to this module)
     "ShutdownSignal",
+    # Concurrency primitives
     "AsyncLock",
     "OnceGuard",
     "BoundedSemaphore",

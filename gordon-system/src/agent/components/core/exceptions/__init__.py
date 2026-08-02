@@ -196,6 +196,66 @@ class ShutdownError(CoreError):
         self.timeout = timeout
 
 
+class TaskError(CoreError):
+    """Base exception for task-related errors."""
+    
+    def __init__(
+        self,
+        message: str,
+        *args: object,
+        task_id: Optional[str] = None,
+        cause: Optional[Exception] = None
+    ) -> None:
+        super().__init__(message, *args, cause=cause)
+        self.task_id = task_id
+
+
+class TaskCancelledError(TaskError):
+    """Raised when a task is cancelled."""
+    
+    def __init__(
+        self,
+        message: str,
+        *args: object,
+        task_id: Optional[str] = None,
+        source: Optional[Any] = None,
+        cause: Optional[Exception] = None
+    ) -> None:
+        super().__init__(message, *args, cause=cause)
+        self.task_id = task_id
+        self.source = source
+
+
+class TaskTimeoutError(TaskError):
+    """Raised when a task exceeds its execution timeout."""
+    
+    def __init__(
+        self,
+        message: str,
+        *args: object,
+        task_id: Optional[str] = None,
+        timeout_seconds: Optional[float] = None,
+        cause: Optional[Exception] = None
+    ) -> None:
+        super().__init__(message, *args, cause=cause)
+        self.task_id = task_id
+        self.timeout_seconds = timeout_seconds
+
+
+class SchedulerError(CoreError):
+    """Raised when scheduler operations fail."""
+    
+    def __init__(
+        self,
+        message: str,
+        *args: object,
+        task_id: Optional[str] = None,
+        cause: Optional[Exception] = None
+    ) -> None:
+        super().__init__(message, *args, cause=cause)
+        self.task_id = task_id
+
+
 __all__ = [
     "CoreError",
     "ConfigurationError",
@@ -209,4 +269,8 @@ __all__ = [
     "IntegrityError",
     "StartupError",
     "ShutdownError",
+    "TaskError",
+    "TaskCancelledError",
+    "TaskTimeoutError",
+    "SchedulerError",
 ]
