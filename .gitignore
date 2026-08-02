@@ -1,0 +1,53 @@
+# OS temporary files
+.DS_Store
+Thumbs.db
+
+# Editor swap files
+*~
+*.swp
+*.swo
+.SW*
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Test and type-checker caches
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pytype/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+*.egg-info/
+
+# Legacy system artifacts
+*.bin
+*.exe
+*.dll
+*.so
+*.o
+*.a
+*.lib
+
+# Backup files
+*~
+*.bak
+.bak*
