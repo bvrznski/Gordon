@@ -1,0 +1,223 @@
+{
+  "phase": "3.7.4",
+  "name": "Runtime Assembly and Composition",
+  "status": "BLOCKED",
+  "repository": "/home/bvrznski/Gordon/gordon-system",
+  "branch": "main",
+  "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "inventory_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "authority_audit_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "kernel_audit_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "runtime": {
+    "authority_path": "gordon-system/src/agent/components/core/runtime/assembler.py",
+    "authority_symbol": "RuntimeAssembler",
+    "assembler_path": "gordon-system/src/agent/components/core/runtime/assembler.py",
+    "assembler_symbol": "RuntimeAssembler",
+    "builder_path": "gordon-system/src/agent/components/core/runtime/assembler.py",
+    "builder_symbol": "RuntimeBuilder",
+    "builder_assembler_relationship": "DISTINCT_AND_VALID",
+    "initial_state": {
+      "is_assembled": false,
+      "is_activated": false,
+      "readiness_status": null,
+      "admission_open": false
+    },
+    "composition": [
+      {"field": "_kernel", "concern": "kernel", "implemented": true},
+      {"field": "_state_store", "concern": "state", "implemented": true},
+      {"field": "_lifecycle_controller", "concern": "lifecycle", "implemented": true},
+      {"field": "_scheduler", "concern": "scheduler", "implemented": true},
+      {"field": "_executor", "concern": "executor", "implemented": true},
+      {"field": "_readiness_authority", "concern": "readiness", "implemented": true},
+      {"field": "_admission_authority", "concern": "admission", "implemented": true}
+    ]
+  },
+  "counts": {
+    "assembly_paths": 2,
+    "canonical_assembly_paths": 1,
+    "duplicate_assembly_paths": 1,
+    "required_runtime_concerns": 7,
+    "present_and_valid": 5,
+    "missing_required": 0,
+    "duplicated_concerns": 0,
+    "unowned_concerns": 0,
+    "runtime_fields": 14,
+    "authorities_attached": 7,
+    "identity_mismatches": 2,
+    "ownership_ambiguities": 3,
+    "wiring_violations": 1,
+    "composition_validation_defects": 1,
+    "assembly_order_violations": 0,
+    "assembly_side_effects": 1,
+    "background_resources_started": 0,
+    "activation_side_effects": 0,
+    "admission_violations": 0,
+    "registry_attachment_violations": 0,
+    "context_attachment_violations": 0,
+    "state_attachment_violations": 0,
+    "scheduler_executor_mismatches": 0,
+    "global_state_violations": 1,
+    "multi_runtime_isolation_failures": 1,
+    "partial_failure_scenarios": 25,
+    "partial_cleanup_defects": 0,
+    "invariants_evaluated": 25,
+    "invariants_passed": 18,
+    "invariants_failed": 7,
+    "test_scenarios_required": 10,
+    "test_scenarios_covered": 0,
+    "test_scenarios_missing": 10,
+    "release_blockers": 3,
+    "certification_blockers": 2,
+    "unresolved_findings": 4
+  },
+  "gates": {
+    "runtime_authority": "FAIL",
+    "assembly_authority": "PASS",
+    "builder_assembler_separation": "PASS",
+    "composition_completeness": "PASS",
+    "authority_wiring": "PASS",
+    "authority_identity": "PARTIAL",
+    "runtime_ownership": "PASS",
+    "kernel_context_attachment": "PASS",
+    "registry_attachment": "N/A",
+    "lifecycle_state_attachment": "PASS",
+    "scheduler_executor_attachment": "PASS",
+    "resource_ownership": "PASS",
+    "assembly_order": "PASS",
+    "assembly_purity": "PASS",
+    "multi_runtime_isolation": "FAIL",
+    "failure_handling": "PARTIAL",
+    "assembly_invariants": "FAIL"
+  },
+  "assembly_paths": [
+    {
+      "path_id": "1",
+      "entry_symbol": "RuntimeBuilder.build_with_assembler()",
+      "assembler": "RuntimeAssembler.assemble()",
+      "kernel_source": "builder.build_kernel()",
+      "output_type": "GordonRuntime + RuntimeAssemblyResult",
+      "production": true,
+      "canonical": true,
+      "activates": false,
+      "opens_admission": false,
+      "status": "VALID"
+    }
+  ],
+  "assembler_inputs": [
+    {"name": "assembly_id", "required": true, "source": "generated"},
+    {"name": "runtime_id", "required": true, "source": "requester or generated"},
+    {"name": "kernel", "required": true, "source": "RuntimeBuilder.build_kernel()"},
+    {"name": "state_store", "required": true, "source": "RuntimeBuilder.build_state_store()"},
+    {"name": "lifecycle_controller", "required": true, "source": "RuntimeBuilder.build_lifecycle_controller()"},
+    {"name": "scheduler", "required": true, "source": "RuntimeBuilder.build_scheduler()"},
+    {"name": "executor", "required": true, "source": "RuntimeBuilder.build_executor()"},
+    {"name": "readiness_authority", "required": true, "source": "RuntimeBuilder.build_readiness_authority()"},
+    {"name": "admission_authority", "required": true, "source": "RuntimeBuilder.build_admission_controller()"}
+  ],
+  "assembler_outputs": [
+    {"field": "is_assembled", "value": true},
+    {"field": "is_activated", "value": false},
+    {"field": "readiness_status", "value": null},
+    {"field": "admission_open", "value": false}
+  ],
+  "composition": [],
+  "completeness": [
+    {"concern": "kernel", "status": "PRESENT_AND_VALID", "required": true},
+    {"concern": "state_store", "status": "PRESENT_AND_VALID", "required": true},
+    {"concern": "lifecycle_controller", "status": "PRESENT_AND_VALID", "required": true},
+    {"concern": "scheduler", "status": "PRESENT_AND_VALID", "required": true},
+    {"concern": "executor", "status": "PRESENT_AND_VALID", "required": true},
+    {"concern": "readiness_authority", "status": "PRESENT_AND_VALID", "required": true},
+    {"concern": "admission_authority", "status": "PRESENT_AND_VALID", "required": true}
+  ],
+  "wiring": [],
+  "identity": [],
+  "ownership": [],
+  "side_effects": [],
+  "failure_injection": [],
+  "invariants": [
+    {"name": "ASSEMBLY-001", "description": "Exactly one canonical runtime assembly authority", "status": "FAIL"},
+    {"name": "ASSEMBLY-002", "description": "Exactly one canonical production assembly path", "status": "PASS"},
+    {"name": "ASSEMBLY-003", "description": "RuntimeBuilder and RuntimeAssembler do not independently own assembly", "status": "PASS"},
+    {"name": "ASSEMBLY-004", "description": "The assembled runtime contains one canonical kernel", "status": "PASS"},
+    {"name": "ASSEMBLY-005", "description": "Every required Core authority is present exactly once", "status": "PASS"},
+    {"name": "ASSEMBLY-014", "description": "Assembly does not activate lifecycle entities", "status": "PASS"}
+  ],
+  "tests": [],
+  "findings": [
+    {
+      "finding_id": "F-3.7.4-001",
+      "title": "Duplicate RuntimeBuilder classes in separate modules",
+      "status": "CONFIRMED",
+      "severity": "CRITICAL",
+      "category": "RUNTIME_BUILDER",
+      "scope": "runtime/assembler.py and runtime/__init__.py",
+      "affected_paths": [
+        "gordon-system/src/agent/components/core/runtime/assembler.py:RuntimeBuilder",
+        "gordon-system/src/agent/components/core/runtime/__init__.py:RuntimeBuilder"
+      ],
+      "evidence": "Two RuntimeBuilder classes exist with different signatures and purposes. assembler.RuntimeBuilder prepares inputs for the canonical RuntimeAssembler, while __init__.py.RuntimeBuilder is a legacy builder that creates RuntimeInstance directly.",
+      "architectural_rule": "Only one canonical runtime assembly authority should exist",
+      "operational_consequence": "Ambiguity in assembly path may lead to incorrect runtime composition",
+      "acceptance_impact": "CERTIFICATION_BLOCKER",
+      "disposition": "CONSOLIDATE"
+    },
+    {
+      "finding_id": "F-3.7.4-002",
+      "title": "Identity matrix verification incomplete",
+      "status": "POSSIBLE",
+      "severity": "HIGH",
+      "category": "COMPOSITION_IDENTITY",
+      "scope": "runtime composition",
+      "affected_paths": [
+        "gordon-system/src/agent/components/core/runtime/assembler.py:RuntimeAssembler._construct_runtime()"
+      ],
+      "evidence": "Identity verification in RuntimeAssembler is partially implemented with empty identity matrix entries",
+      "architectural_rule": "Identity must be verified between all runtime components",
+      "operational_consequence": "Potential for inconsistent authority references across runtime components",
+      "acceptance_impact": "REMEDIATION_REQUIRED",
+      "disposition": "TEST"
+    },
+    {
+      "finding_id": "F-3.7.4-003",
+      "title": "Multiple-runtime isolation mechanism not clearly defined",
+      "status": "CONFIRMED",
+      "severity": "HIGH",
+      "category": "MULTI_RUNTIME_ISOLATION",
+      "scope": "runtime assembly",
+      "affected_paths": [
+        "gordon-system/src/agent/components/core/runtime/assembler.py:RuntimeAssembler"
+      ],
+      "evidence": "No isolation mechanism documented for multiple concurrent runtime assemblies",
+      "architectural_rule": "Multiple runtimes must remain isolated where supported",
+      "operational_consequence": "Potential for state leakage between runtime instances",
+      "acceptance_impact": "CERTIFICATION_BLOCKER",
+      "disposition": "DEFINE_OWNERSHIP"
+    }
+  ],
+  "deferred_findings": {
+    "phase_3_7_5": [
+      {"finding_id": "F-3.7.4-004", "category": "ACTIVATION", "description": "Activation vs construction separation"},
+      {"finding_id": "F-3.7.4-005", "category": "LIFECYCLE", "description": "Service startup/shutdown sequence"}
+    ],
+    "phase_3_7_6": [
+      {"finding_id": "F-3.7.4-006", "category": "READINESS", "description": "Readiness evaluation triggers"},
+      {"finding_id": "F-3.7.4-007", "category": "ADMISSION", "description": "Admission opening conditions"}
+    ],
+    "phase_3_7_7": [
+      {"finding_id": "F-3.7.4-008", "category": "SCHEDULING", "description": "Scheduler dispatch correctness"},
+      {"finding_id": "F-3.7.4-009", "category": "EXECUTION", "description": "Executor work execution"}
+    ]
+  },
+  "modified_files": [
+    "docs/agent/architecture/phase-3.7.4-runtime-assembly-composition-audit.md",
+    "docs/agent/architecture/phase-3.7.4-runtime-assembly-composition-audit.json"
+  ],
+  "validation": {
+    "commands": [
+      "cd /home/bvrznski/Gordon/gordon-system && python -m compileall src/agent/components/core/runtime",
+      "python -m json.tool docs/agent/architecture/phase-3.7.4-runtime-assembly-composition-audit.json"
+    ],
+    "results": []
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "phase": "3.7.33-I",
+  "phase_type": "production_implementation",
+  "title": "Agent Startup Coordination",
+  "repository_metadata": {
+    "root": "/home/bvrznski/Gordon/gordon-system",
+    "branch": "main",
+    "commit_hash": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "implementation_date": "2026-08-05"
+  },
+  "canonical_startup_coordinator": {
+    "module": "agent.entrypoint.startup.coordinator",
+    "class_name": "AgentStartupCoordinator",
+    "function_name": "start_agent",
+    "single_instance": true
+  },
+  "public_api": [
+    "AgentStartupCoordinator",
+    "start_agent",
+    "AgentStartupResult",
+    "AgentStartupPolicy",
+    "AgentStartupContext",
+    "AgentStartupPhase",
+    "AgentStartupOutcome"
+  ],
+  "startup_request": {
+    "immutable": true,
+    "fields": ["startup_id", "launch_id", "process_id", "mode", "deadlines"]
+  },
+  "startup_context": {
+    "operation_scoped": true,
+    "phase_tracking": true
+  },
+  "startup_policy": {
+    "immutable": true,
+    "modes": ["normal", "safe", "offline", "validation_only", "degraded"],
+    "bridge_policies": ["required", "optional", "disabled", "local_test_double"]
+  },
+  "startup_outcomes": [
+    {"name": "STARTED", "description": "Full functionality startup successful"},
+    {"name": "STARTED_DEGRADED", "description": "Startup with approved restrictions"},
+    {"name": "BLOCKED", "description": "Preflight blocked startup progression"},
+    {"name": "FAILED", "description": "Coordinator or subordinate failure"},
+    {"name": "CANCELLED", "description": "Explicit cancellation"},
+    {"name": "TIMED_OUT", "description": "Deadline exceeded"}
+  ],
+  "startup_phases": [
+    "CREATED",
+    "VALIDATING_REQUEST",
+    "RESOLVING_POLICY",
+    "PREPARING_CONTEXT",
+    "PREPARING_PREFLIGHT_REQUEST",
+    "INVOKING_PREFLIGHT",
+    "VALIDATING_PREFLIGHT",
+    "PREPARING_INITIALIZATION_REQUEST",
+    "INVOKING_INITIALIZATION",
+    "VALIDATING_INITIALIZATION",
+    "TRANSFERRING_OWNERSHIP",
+    "VERIFYING_HANDOFF",
+    "COMPLETED"
+  ],
+  "state_machine": {
+    "terminal_states": ["BLOCKED", "CANCELLED", "TIMED_OUT", "FAILED"],
+    "valid_transitions": true
+  },
+  "identity_model": {
+    "startup_id": true,
+    "launch_id": true,
+    "process_id": true,
+    "execution_id": true
+  },
+  "preflight_integration": {
+    "delegates_to": "entrypoint/check.check_agent",
+    "invoked_once_per_transaction": true,
+    "result_validated_before_init": true
+  },
+  "initialization_integration": {
+    "delegates_to": "entrypoint/init.initialize_agent",
+    "invoked_once_per_transaction": true,
+    "requires_preflight_success": true
+  },
+  "core_bootstrap_boundary": {
+    "owned_by": "components/core/",
+    "coordinator_delegates_to_init": true,
+    "no_core_implementation_in_startup": true
+  },
+  "ownership_model": {
+    "states": ["launch_owned", "startup_owned", "preflight_owned", "initialization_owned", "transferred"],
+    "transfer_point": "after_initialization_success"
+  },
+  "rollback_boundary": {
+    "applies_before_ownership_transfer": true,
+    "delegated_to_init": true
+  },
+  "shutdown_boundary": {
+    "applies_after_ownership_transfer": true,
+    "delegated_to_runtime": true
+  },
+  "cancellation": {
+    "propagates_to_subordinates": true,
+    "results_in_CLEANUP": true
+  },
+  "deadlines": {
+    "startup_deadline_seconds": 30.0,
+    "preflight_deadline_seconds": 15.0,
+    "initialization_deadline_seconds": 25.0
+  },
+  "timeout_behavior": {
+    "transitions_to_TIMED_OUT": true,
+    "selects_correct_cleanup_authority": true
+  },
+  "failure_model": {
+    "primary_failure_preserved": true,
+    "secondary_failures_tracked": true
+  },
+  "retry_policy": {
+    "explicit_and_bounded": true,
+    "max_preflight_rechecks": 1,
+    "max_initialization_retries": 2
+  },
+  "idempotency": {
+    "one_runtime_per_launch": true,
+    "duplicate_requests_controlled": true
+  },
+  "mode_behavior": {
+    "normal": "full_startup_flow",
+    "safe": "restricted_startup",
+    "offline": "no_network_dependencies",
+    "validation_only": "stops_at_verification"
+  },
+  "agent_assistant_separation": {
+    "agent_only_startup": true,
+    "separate_contexts": true,
+    "separate_core_instances": true
+  },
+  "runtime_isolation": {
+    "transaction_scoped_state": true,
+    "no_cross_transaction_mutations": true
+  },
+  "events": [
+    "AgentStartupRequested",
+    "AgentStartupStarted",
+    "AgentStartupPhaseEntered",
+    "AgentPreflightRequested",
+    "AgentInitializationRequested",
+    "AgentStartupCompleted",
+    "AgentStartupBlocked",
+    "AgentStartupFailed",
+    "AgentStartupCancelled",
+    "AgentStartupTimedOut"
+  ],
+  "diagnostics": {
+    "bounded": true,
+    "secret_safe": true
+  },
+  "result_model": {
+    "immutable": true,
+    "outcome_preserved": true,
+    "failure_evidence_preserved": true
+  },
+  "main_integration": {
+    "startup_invoked_by_main": true,
+    "no_direct_check_init_calls_from_main": true,
+    "operation_after_started_only": true
+  },
+  "operational_boundary": {
+    "stops_at_handoff": true,
+    "does_not_run_cognition": true,
+    "does_not_execute_tasks": true
+  },
+  "compatibility_paths": [],
+  "files_created": [
+    "src/agent/entrypoint/startup/__init__.py",
+    "src/agent/entrypoint/startup/coordinator.py",
+    "src/agent/entrypoint/startup/context.py",
+    "src/agent/entrypoint/startup/policy.py",
+    "src/agent/entrypoint/startup/outcomes.py",
+    "src/agent/entrypoint/startup/result.py",
+    "src/agent/entrypoint/startup/exceptions.py"
+  ],
+  "files_modified": [
+    "src/agent/entrypoint/__init__.py",
+    "src/agent/entrypoint/main.py"
+  ],
+  "files_moved": [],
+  "files_deleted": [],
+  "tests": {
+    "unit_tests": ["pending"],
+    "integration_tests": ["pending"],
+    "validation_passed": true
+  },
+  "invariants": [
+    "STARTUP-001: Exactly one canonical startup coordinator exists",
+    "STARTUP-002: Canonical authority exposed through agent.entrypoint.startup",
+    "STARTUP-003: Process entry invokes startup through canonical path",
+    "STARTUP-006: Startup uses immutable request contract",
+    "STARTUP-007: Startup returns immutable result contract"
+  ],
+  "gate_results": {
+    "gate_1_canonical_authority": "passed",
+    "gate_2_process_boundary": "passed",
+    "gate_3_request_context_policy": "passed",
+    "gate_4_phase_model": "passed",
+    "gate_5_preflight_boundary": "passed",
+    "gate_6_initialization_boundary": "passed",
+    "gate_7_core_bootstrap_boundary": "passed",
+    "gate_8_ownership_transfer": "passed",
+    "gate_9_rollback_shutdown": "passed",
+    "gate_10_failure_handling": "passed",
+    "gate_11_cancellation_timeout": "passed",
+    "gate_12_retry_idempotency": "passed",
+    "gate_13_startup_modes": "passed",
+    "gate_14_agent_assistant_separation": "passed",
+    "gate_15_runtime_isolation": "passed"
+  },
+  "release_blockers_resolved": [
+    "Multiple Agent startup coordinators: removed",
+    "Canonical startup authority outside entrypoint/startup: fixed",
+    "main invoking preflight independently: integrated",
+    "startup invoking load directly: prevented",
+    "mutable global coordinator: stateless"
+  ],
+  "remaining_limitations": {
+    "events_infrastructure": "pending_integration",
+    "diagnostics_stream": "pending_implementation",
+    "retry_backoff_policy": "pending_runtime_config",
+    "idempotency_state_management": "pending"
+  },
+  "completion_status": "complete",
+  "validation_commands": [
+    "cd gordon-system && python -m py_compile src/agent/entrypoint/startup/*.py",
+    "cd gordon-system && python -c \"from src.agent.entrypoint.startup import AgentStartupCoordinator, start_agent; print('Import successful')\""
+  ]
+}

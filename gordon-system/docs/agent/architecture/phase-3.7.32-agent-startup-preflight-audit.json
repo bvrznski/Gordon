@@ -1,0 +1,453 @@
+{
+  "phase": "3.7.32-A",
+  "name": "Agent Startup Preflight and Compilation Checks",
+  "audit_type": "architecture_acceptance",
+  "target": "/src/agent/entrypoint/check.py",
+  "status": "REMEDIATION_REQUIRED",
+  "certification": "REMEDIATION_REQUIRED",
+  "confidence": "medium-high",
+  "repository": {
+    "root": "/home/bvrznski/Gordon/gordon-system",
+    "branch": "main",
+    "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "working_tree": "modified",
+    "python_version": "3.10.12",
+    "deployment_mode": "standalone_source"
+  },
+  "canonical_authorities": {
+    "checker": {
+      "path": "src/agent/entrypoint/check/checker.py",
+      "class": "AgentPreflightChecker",
+      "function": "check_agent(request)",
+      "status": "active",
+      "issues": []
+    },
+    "policy": {
+      "path": "src/agent/entrypoint/check/policy.py",
+      "class": "AgentPreflightPolicy",
+      "status": "active",
+      "issues": []
+    },
+    "compilation_policy": {
+      "path": "src/agent/entrypoint/check/policy.py",
+      "class": "AgentCompilationPolicy",
+      "status": "active",
+      "modes": ["NONE", "TARGETED", "CHANGED", "COMPONENT_DESCRIPTORS", "FULL_AGENT", "FULL_GORDON", "PACKAGED_ARTIFACT"],
+      "issues": []
+    },
+    "compiler": {
+      "path": "src/agent/entrypoint/check/checker.py:_execute_compilation",
+      "status": "active",
+      "execution_policy": "syntax_only",
+      "issues": ["no_manifest_based_selection"]
+    },
+    "manifest": {
+      "status": "placeholder_implementation",
+      "issues": ["no_real_manifest_format", "no_cryptographic_validation"]
+    },
+    "fingerprint": {
+      "path": "src/agent/entrypoint/check/checker.py:_fingerprint_source",
+      "method": "hash-based_deterministic",
+      "status": "active",
+      "issues": []
+    },
+    "package_layout": {
+      "status": "implemented",
+      "issues": []
+    },
+    "metadata": {
+      "status": "implemented",
+      "issues": []
+    },
+    "startup_symbols": {
+      "status": "partial",
+      "issues": ["static_inspection_only"]
+    },
+    "descriptor_static": {
+      "status": "not_implemented",
+      "issues": ["no_full_descriptor_syntax_validation"]
+    },
+    "configuration": {
+      "status": "implemented",
+      "issues": []
+    },
+    "environment": {
+      "status": "implemented",
+      "issues": []
+    },
+    "filesystem": {
+      "status": "implemented",
+      "issues": []
+    },
+    "executables": {
+      "status": "placeholder",
+      "issues": ["no_real_executable_probing"]
+    },
+    "native_libraries": {
+      "status": "not_implemented",
+      "issues": []
+    },
+    "compute": {
+      "status": "coarse_only",
+      "issues": ["no_allocation", "no_reservation"]
+    },
+    "resources": {
+      "status": "predictive_only",
+      "issues": ["no_reservation_guarantee"]
+    },
+    "endpoints": {
+      "status": "not_implemented",
+      "issues": []
+    },
+    "locks": {
+      "status": "not_implemented",
+      "issues": []
+    },
+    "shutdown_evidence": {
+      "status": "not_implemented",
+      "issues": []
+    },
+    "migration": {
+      "status": "not_implemented",
+      "issues": []
+    },
+    "schema": {
+      "status": "not_implemented",
+      "issues": []
+    },
+    "architecture_boundary": {
+      "status": "not_implemented",
+      "issues": ["no_explicit_boundary_checks"]
+    },
+    "staleness": {
+      "path": "src/agent/entrypoint/check/result.py:is_valid_for_launch",
+      "method": "duration_based_only",
+      "issues": ["missing_evidence_binding_to_launch_id", "no_configuration_generation_check"]
+    }
+  },
+  "preflight_request": {
+    "class": "AgentPreflightRequest",
+    "immutable": true,
+    "fields": [
+      "request_id",
+      "launch_identity",
+      "process_identity",
+      "approved_source_roots",
+      "compilation_policy",
+      "startup_deadline_seconds"
+    ],
+    "issues": []
+  },
+  "preflight_context": {
+    "class": "AgentPreflightContext",
+    "operation_scoped": true,
+    "used_in_execution": false,
+    "issues": ["not_used_in_current_execution_path"]
+  },
+  "phase_model": {
+    "phases": [
+      "CREATED", "VALIDATING_REQUEST", "RESOLVING_POLICY", "RESOLVING_ROOTS",
+      "FINGERPRINTING_SOURCE", "COMPILING", "AGGREGATING_RESULTS",
+      "COMPLETED", "BLOCKED", "FAILED", "CANCELLED", "TIMED_OUT"
+    ],
+    "terminal_states": ["BLOCKED", "FAILED", "CANCELLED", "TIMED_OUT"],
+    "issues": []
+  },
+  "check_model": {
+    "categories": [
+      "SOURCE", "ARTIFACT", "SYNTAX", "COMPILATION", "PACKAGE_LAYOUT",
+      "METADATA", "ENTRYPOINT_CONTRACT", "CONFIGURATION_ACCESS",
+      "ENVIRONMENT", "FILESYSTEM"
+    ],
+    "severities": ["BLOCKER", "ERROR", "WARNING", "OBSERVATION", "INFORMATIONAL"],
+    "registry": {
+      "class": "PreflightCheckRegistry",
+      "immutable": false,
+      "issues": ["module_level_mutable_state"]
+    }
+  },
+  "check_result_model": {
+    "class": "AgentPreflightResult",
+    "immutable": true,
+    "fields": [
+      "outcome", "execution_id", "start_time_ns", "end_time_ns",
+      "source_fingerprint", "artifact_fingerprint", "check_results",
+      "blockers", "warnings", "errors"
+    ],
+    "issues": []
+  },
+  "outcome_model": {
+    "outcomes": [
+      {"value": "PASS", "proceeds_to_init": true},
+      {"value": "PASS_WITH_WARNINGS", "proceeds_to_init": true},
+      {"value": "BLOCKED", "proceeds_to_init": false},
+      {"value": "FAILED", "proceeds_to_init": false},
+      {"value": "CANCELLED", "proceeds_to_init": false},
+      {"value": "TIMED_OUT", "proceeds_to_init": false}
+    ],
+    "issues": []
+  },
+  "compilation_model": {
+    "targets_bound": true,
+    "execute_modules": false,
+    "bytecode_output": "system_pycache",
+    "issues": ["no_cleanup_policy"]
+  },
+  "bytecode_output_policy": {
+    "default": "system_pycache",
+    "bounded": true,
+    "cleanup": "not_explicit",
+    "issues": []
+  },
+  "source_manifest": {
+    "status": "not_implemented",
+    "issues": ["placeholder_implementation"]
+  },
+  "artifact_manifest": {
+    "status": "not_implemented",
+    "issues": ["no_artifact_validation_path"]
+  },
+  "source_fingerprint": {
+    "method": "hash_based_deterministic",
+    "inputs": ["approved_source_roots", "configuration_generation"],
+    "issues": []
+  },
+  "artifact_fingerprint": {
+    "status": "not_implemented",
+    "issues": ["placeholder_value"]
+  },
+  "result_model": {
+    "class": "AgentPreflightResult",
+    "frozen": true,
+    "staleness_validation": "duration_only_60s",
+    "evidence_binding": "missing_launch_id_check",
+    "issues": []
+  },
+  "result_fingerprint": {
+    "status": "not_implemented",
+    "issues": ["no_result_hashing"]
+  },
+  "staleness_model": {
+    "validation_method": "duration_based_60s",
+    "evidence_binding": "missing",
+    "issues": ["no_configuration_generation_check", "no_source_fingerprint_change_detection"]
+  },
+  "startup_integration": {
+    "main_py": {
+      "path": "src/agent/entrypoint/main.py:_invoke_preflight",
+      "integration_point": "preflight_before_init",
+      "result_handling": "exit_on_failure",
+      "issues": []
+    },
+    "init_py": {
+      "path": "src/agent/entrypoint/init/__init__.py",
+      "validation": "none",
+      "issues": ["no_stale_result_validation", "no_identity_binding_check"]
+    }
+  },
+  "initialization_integration": {
+    "preflight_validation": false,
+    "evidence_consumption": false,
+    "issues": ["init_does_not_validate_preflight_result"]
+  },
+  "loading_integration": {
+    "status": "pending",
+    "issues": []
+  },
+  "cleanup_model": {
+    "temporary_files": "no_cleanup_policy",
+    "probes_released": "not_specified",
+    "subprocesses_terminated": "not_specified",
+    "issues": ["no_explicit_cleanup"]
+  },
+  "failure_model": {
+    "categories": [
+      "AgentPreflightError", "PreflightRequestError", "PreflightPolicyError",
+      "PreflightCompilationError", "PreflightTimeoutError", "PreflightCancellationError",
+      "PreflightInternalError"
+    ],
+    "typed_failures": true,
+    "issues": []
+  },
+  "agent_assistant_separation": {
+    "agent_only_mode": "policy_defined_not_enforced",
+    "full_gordon_policy": "requires_explicit_selection",
+    "assistant_root_exclusion": false,
+    "issues": ["not_enforced_at_runtime"]
+  },
+  "import_purity": {
+    "check_module": "no_active_checks",
+    "types_module": "definitions_only",
+    "request_module": "definitions_only",
+    "result_module": "definitions_only",
+    "issues": []
+  },
+  "global_state": {
+    "mutable_default_check_registry": true,
+    "mutable_checker_instances": false,
+    "operation_scoped_contexts": true,
+    "issues": ["DEFAULT_CHECK_REGISTRY_is_mutable"]
+  },
+  "legacy_paths": [
+    {
+      "path": "src/agent/components/core/bootstrap/__init__.py",
+      "status": "duplicate_preflight_system",
+      "delegates_to_canonical": false,
+      "issues": ["may_allow_bypass_of_canonical_preflight"]
+    }
+  ],
+  "tests": {
+    "executed": [],
+    "passed": [],
+    "failed": [],
+    "missing": [
+      "preflight_integration_tests",
+      "staleness_validation_tests",
+      "import_purity_tests"
+    ],
+    "blocked": [],
+    "insufficient": ["coverage_of_edge_cases"]
+  },
+  "invariants": [
+    {"id": "CHECK-001", "status": "FAIL", "evidence": "Duplicate bootstrap preflight exists"},
+    {"id": "CHECK-002", "status": "PASS", "evidence": "Primary path at agent.entrypoint.check"},
+    {"id": "CHECK-003", "status": "PASS", "evidence": "main.py enforces order"},
+    {"id": "CHECK-004", "status": "PASS", "evidence": "Per-request instantiation"},
+    {"id": "CHECK-005", "status": "PASS", "evidence": "Frozen dataclass"},
+    {"id": "CHECK-006", "status": "PARTIAL", "evidence": "Frozen but weak staleness"},
+    {"id": "CHECK-049", "status": "FAIL", "evidence": "DEFAULT_CHECK_REGISTRY is mutable"},
+    {"id": "CHECK-052", "status": "PASS", "evidence": "No active checks at import"}
+  ],
+  "gates": [
+    {"gate": 1, "status": "FAIL", "blockers": ["duplicate_preflight_authority"]},
+    {"gate": 2, "status": "PASS", "blockers": []},
+    {"gate": 3, "status": "PASS", "blockers": []},
+    {"gate": 4, "status": "PARTIAL", "blockers": ["no_manifest_based_selection"]},
+    {"gate": 5, "status": "PARTIAL", "blockers": ["placeholder_manifests"]},
+    {"gate": 6, "status": "PASS", "blockers": []},
+    {"gate": 7, "status": "NOT_APPLICABLE", "blockers": []},
+    {"gate": 8, "status": "PASS", "blockers": []},
+    {"gate": 9, "status": "PARTIAL", "blockers": ["no_real_executable_probing"]},
+    {"gate": 10, "status": "PASS", "blockers": []},
+    {"gate": 11, "status": "NOT_APPLICABLE", "blockers": []},
+    {"gate": 12, "status": "FAIL", "blockers": ["init_no_validation"]},
+    {"gate": 13, "status": "FAIL", "blockers": ["no_assistant_enforcement"]},
+    {"gate": 14, "status": "PASS", "blockers": []},
+    {"gate": 15, "status": "PARTIAL", "blockers": ["no_cleanup_policy"]},
+    {"gate": 16, "status": "PASS", "blockers": []},
+    {"gate": 17, "status": "NOT_APPLICABLE", "blockers": []},
+    {"gate": 18, "status": "PASS", "blockers": []},
+    {"gate": 19, "status": "FAIL", "blockers": ["mutable_default_check_registry"]},
+    {"gate": 20, "status": "PARTIAL", "blockers": ["incomplete_coverage"]}
+  ],
+  "findings": [
+    {
+      "id": "FINDING-C001",
+      "severity": "CRITICAL",
+      "category": "duplicate_authority",
+      "path": "src/agent/components/core/bootstrap/__init__.py",
+      "symbol": "BootstrapRequest",
+      "evidence": "Bootstrap module has its own preflight system that may bypass canonical authority",
+      "root_cause": "Dual preflight systems with no delegation",
+      "invariant": "CHECK-001",
+      "gate": 1,
+      "release_impact": "pre_flight_may_be_bypassed",
+      "recommendation": "Remove bootstrap preflight or delegate to entrypoint/check"
+    },
+    {
+      "id": "FINDING-C002",
+      "severity": "CRITICAL",
+      "category": "integration_gap",
+      "path": "src/agent/entrypoint/init/__init__.py",
+      "symbol": "initialize_agent",
+      "evidence": "No stale result validation or identity binding check in init",
+      "root_cause": "init.py does not validate preflight results",
+      "invariant": "CHECK-038",
+      "gate": 12,
+      "release_impact": "stale_results_may_authorize_init",
+      "recommendation": "Add result staleness validation to init"
+    },
+    {
+      "id": "FINDING-C003",
+      "severity": "CRITICAL",
+      "category": "global_state_violation",
+      "path": "src/agent/entrypoint/check.py",
+      "symbol": "DEFAULT_CHECK_REGISTRY",
+      "evidence": "Module-level mutable registry violates CHECK-049",
+      "root_cause": "Mutable global accumulator in import-time code",
+      "invariant": "CHECK-049",
+      "gate": 19,
+      "release_impact": "potential_side_effects_between_runs",
+      "recommendation": "Make registry immutable or operation-scoped"
+    },
+    {
+      "id": "FINDING-H001",
+      "severity": "HIGH",
+      "category": "staleness_validation",
+      "path": "src/agent/entrypoint/check/result.py",
+      "symbol": "is_valid_for_launch",
+      "evidence": "Only checks duration, not evidence binding",
+      "root_cause": "Missing configuration generation and source fingerprint change detection",
+      "invariant": "CHECK-038",
+      "gate": 2,
+      "release_impact": "results_may_be_accepted_after_config_changes",
+      "recommendation": "Add evidence binding to staleness check"
+    },
+    {
+      "id": "FINDING-H002",
+      "severity": "HIGH",
+      "category": "separation_enforcement",
+      "path": "src/agent/entrypoint/check/",
+      "symbol": "AgentPreflightChecker",
+      "evidence": "Agent-Assistant separation not enforced at runtime",
+      "root_cause": "FULL_GORDON may execute without explicit policy",
+      "invariant": "CHECK-047",
+      "gate": 13,
+      "release_impact": "assistant_may_start_without_explicit_policy",
+      "recommendation": "Enforce agent-only mode in default configuration"
+    }
+  ],
+  "release_blockers": [
+    "duplicate_preflight_authority_in_bootstrap_module",
+    "init_does_not_validate_stale_results",
+    "mutable_global_check_registry"
+  ],
+  "certification_blockers": [
+    "no_formal_assistant_separation_enforcement",
+    "import_time_behavior_not_fully_verified"
+  ],
+  "recommendations": {
+    "mandatory": [
+      "Remove or integrate duplicate bootstrap preflight system",
+      "Add result staleness validation to init.py with evidence binding",
+      "Replace mutable DEFAULT_CHECK_REGISTRY with immutable alternative"
+    ],
+    "optional": [
+      "Implement full manifest-based compilation target selection",
+      "Add explicit architecture boundary checks",
+      "Enhance Agent-Assistant separation enforcement"
+    ],
+    "tests": [
+      "Add preflight-integration tests",
+      "Add staleness validation tests",
+      "Add import-purity tests for all modules"
+    ]
+  },
+  "validation": {
+    "python_compileall_passed": true,
+    "commands_executed": [
+      "git rev-parse --show-toplevel",
+      "git branch --show-current",
+      "git rev-parse HEAD",
+      "python -m compileall src/agent/entrypoint"
+    ],
+    "exit_codes": [0, 0, 0, 0],
+    "issues_found": []
+  },
+  "limitations": [
+    "Static side-effect analysis is heuristic only",
+    "No cryptographic artifact signing validation",
+    "GPU validation coarse without heavy runtime initialization",
+    "Platform-specific checks not yet implemented"
+  ]
+}

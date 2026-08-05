@@ -1,186 +1,199 @@
-# Core Testing Utilities
-# ======================
+# Gordon Testing Infrastructure
+# =============================
+#
+# Production-grade testing, validation, verification & quality assurance architecture.
 
 """
-Core runtime test utilities.
+Gordon Testing Infrastructure
 
-Provides fake implementations for testing purposes. These are NOT part of
-production code and should not be imported by production modules.
+This package provides production-grade testing infrastructure for the Gordon
+autonomous cognitive agent. It implements a comprehensive quality architecture
+with:
+
+- Canonical test coordinator for orchestration
+- Validation managers per domain (source, config, schema, etc.)
+- Verification managers for contracts, invariants, requirements
+- Quality assurance with governance policies and gates
+- Evidence management with traceability
+- Scoped certification decisions
+
+The testing architecture follows these principles:
+
+1. Testing is evidence production, not just test execution
+2. Validation ≠ Verification (different purposes)
+3. Verification ≠ Certification (evidence vs decision)
+4. Coverage ≠ Correctness (necessary but insufficient)
+5. Passing tests ≠ Complete assurance
+6. Determinism ≠ Sufficient coverage
+
+All tests must be:
+- Isolated (no shared mutable state)
+- Reproducible (same inputs → same outputs)
+- Deterministic (when environment is controlled)
+- Owned (clear ownership for maintenance and triage)
+- Evidence-backed (produce verifiable artifacts)
+
+Test Taxonomy
+-------------
+Tests are classified by scope, purpose, and evidence type:
+
+UNIT              - Test individual units in isolation
+COMPONENT         - Test complete component interfaces  
+CONTRACT          - Verify implementations satisfy protocols
+INTEGRATION       - Test component boundaries and interactions
+SYSTEM            - Test complete runtime behavior
+END_TO_END        - Test user- or operator-visible workflows
+ACCEPTANCE        - Verify against acceptance criteria
+REGRESSION        - Prevent known defects from recurring
+PROPERTY          - Verify properties across inputs (property-based)
+METAMORPHIC       - Verify metamorphic relations between outputs
+FUZZ              - Explore input space for boundary violations
+MUTATION          - Test fault detection capability
+PERFORMANCE       - Verify performance characteristics
+LOAD              - Verify behavior under load
+STRESS            # Test limits and failure modes
+SOAK              # Test long-running stability
+SECURITY          # Verify security boundaries
+FAILURE           # Test failure handling and recovery
+RECOVERY          # Test recovery from failures
+CONCURRENCY       # Test concurrent execution correctness
+DISTRIBUTED       # Test distributed behavior
+COMPATIBILITY     # Test across versions/platforms
+MIGRATION         # Test migration paths
+INSTALLATION      # Test installation workflows
+RELEASE           # Test release-candidate readiness
+CERTIFICATION     # Verify certification requirements
+
+Test Markers
+------------
+Markers categorize tests and enable selection/filtering:
+
+unit, component, contract, integration, system, e2e,
+acceptance, slow, gpu, network, distributed, fuzz,
+mutation, performance, security, recovery, concurrency,
+release, certification
+
+Architecture Modules
+--------------------
+coordinators/     # Test orchestration (TestCoordinator)
+validation/       # Validation authorities per domain
+verification/     # Verification authorities
+quality/          # Quality governance and policy
+evidence/         # Evidence management and traceability
+certification/    # Certification decisions and reports
+suites/           # Test suite definitions
+environments/     # Test environment specifications
+fixtures/         # Fixture architecture and lifecycle
+data/             # Test data generation and management
+doubles/          # Mocks, fakes, stubs, simulators, emulators
+fault_injection/  # Failure injection testing
+reports/          # Reports and documentation
+
+Usage Example
+-------------
+```python
+from gordon_system.src.agent.components.core.testing import (
+    TestCoordinator,
+)
+
+# Create test coordinator with environment config
+coordinator = TestCoordinator(
+    runtime_id="test_runtime_123",
+    environment="LOCAL"
+)
+
+# Validate source code
+validation_result = coordinator.run_validation()
+
+# Run tests
+results = coordinator.run_tests(
+    selection={"include_markers": ["unit", "contract"]}
+)
+
+# Evaluate quality gates
+gates = coordinator.evaluate_quality_gates()
+```
 """
 
-from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from .coordinators import TestCoordinator
 
+# Authorities - Validation managers (placeholders for future implementation)
+from .validation import (
+    SourceValidator,
+    ConfigValidator,
+    ImportValidator,
+    PackageValidator,
+    APIDocValidator,
+    DocumentationValidator,
+    ArtifactValidator,
+    ReleaseValidator,
+)
 
-@dataclass
-class FakeLifecycleEntity:
-    """
-    Fake lifecycle entity for testing.
-    
-    Tracks state transitions and provides deterministic behavior.
-    """
-    
-    name: str = "fake_entity"
-    initial_state: str = "created"
-    _state: str = field(default="created")
-    transitions: List[Dict[str, Any]] = field(default_factory=list)
-    
-    @property
-    def state(self) -> str:
-        return self._state
-    
-    async def initialize(self) -> None:
-        old = self._state
-        self._state = "initializing"
-        self.transitions.append({
-            "from": old,
-            "to": self._state,
-            "event": "initialize"
-        })
-    
-    async def start(self) -> None:
-        old = self._state
-        if old == "ready":
-            self._state = "running"
-        elif old == "initializing":
-            self._state = "ready"
-            self.transitions.append({
-                "from": old,
-                "to": self._state,
-                "event": "ready"
-            })
-        
-        self.transitions.append({
-            "from": old,
-            "to": self._state,
-            "event": "start"
-        })
-    
-    async def stop(self) -> None:
-        old = self._state
-        if old == "running":
-            self._state = "stopped"
-        self.transitions.append({
-            "from": old,
-            "to": self._state,
-            "event": "stop"
-        })
-    
-    async def shutdown(self) -> None:
-        old = self._state
-        self._state = "stopped"
-        self.transitions.append({
-            "from": old,
-            "to": self._state,
-            "event": "shutdown"
-        })
+# Verification authorities
+from .verification import (
+    VerificationManager,
+    ContractVerifier,
+    InvariantVerifier,
+)
 
+# Quality governance and policy
+from .quality import (
+    QualityAssuranceManager,
+    QualityPolicy,
+    QualityGate,
+    QualityGateStatus,
+)
 
-@dataclass
-class FakeService:
-    """
-    Fake service for testing.
-    
-    Tracks startup/shutdown calls.
-    """
-    
-    service_id: str
-    name: str = "fake_service"
-    started: bool = False
-    stopped: bool = False
-    
-    async def start(self) -> None:
-        self.started = True
-    
-    async def stop(self) -> None:
-        self.stopped = True
+# Evidence management
+from .evidence import (
+    EvidenceManager,
+    EvidenceArtifact,
+    EvidenceBundle,
+)
 
+# Certification decisions and reports
+from .certification import (
+    CertificationManager,
+    CertificationRequest,
+    CertificationDecision,
+    CertificationReport,
+)
 
-@dataclass
-class FakeRegistry:
-    """
-    Fake registry for testing.
-    
-    Tracks registrations and lookups.
-    """
-    
-    entries: Dict[str, Any] = field(default_factory=dict)
-    register_calls: int = 0
-    get_calls: int = 0
-    
-    def register(self, key: str, value: Any) -> bool:
-        self.register_calls += 1
-        self.entries[key] = value
-        return True
-    
-    def get(self, key: str) -> Optional[Any]:
-        self.get_calls += 1
-        return self.entries.get(key)
-    
-    def contains(self, key: str) -> bool:
-        return key in self.entries
-
-
-@dataclass
-class FakeObservabilitySink:
-    """
-    Fake observability sink for testing.
-    
-    Records all events without outputting them.
-    """
-    
-    events: List[Dict[str, Any]] = field(default_factory=list)
-    log_count: int = 0
-    
-    async def record_event(
-        self,
-        category: str,
-        message: str,
-        severity: str = "info",
-        **attributes
-    ) -> None:
-        import time
-        self.events.append({
-            "timestamp": time.monotonic(),
-            "category": category,
-            "message": message,
-            "severity": severity,
-            **attributes
-        })
-        self.log_count += 1
-
-
-@dataclass
-class FakeScheduler:
-    """
-    Fake scheduler for testing.
-    
-    Tracks scheduled tasks without executing them.
-    """
-    
-    scheduled_tasks: List[Dict[str, Any]] = field(default_factory=list)
-    run_order: List[str] = field(default_factory=list)
-    
-    async def schedule(self, task_name: str, priority: int = 0) -> None:
-        self.scheduled_tasks.append({
-            "name": task_name,
-            "priority": priority
-        })
-    
-    async def execute_next(self) -> Optional[str]:
-        """Execute next task in order and return its name."""
-        if not self.scheduled_tasks:
-            return None
-        
-        task = self.scheduled_tasks.pop(0)
-        self.run_order.append(task["name"])
-        return task["name"]
-
+# Markers
+from .markers import (
+    MarkerType,
+    get_marker_definition,
+    get_markers_by_category,
+    is_execution_scope_marker,
+    is_special_testing_marker,
+    is_resource_marker,
+)
 
 __all__ = [
-    "FakeLifecycleEntity",
-    "FakeService",
-    "FakeRegistry",
-    "FakeObservabilitySink",
-    "FakeScheduler",
+    # Main coordinators
+    "TestCoordinator",
+    
+    # Authorities
+    "SourceValidator",
+    "ConfigValidator",
+    "ImportValidator",
+    "PackageValidator",
+    "APIDocValidator",
+    "DocumentationValidator",
+    "ArtifactValidator",
+    "ReleaseValidator",
+    "VerificationManager",
+    "ContractVerifier",
+    "InvariantVerifier",
+    "QualityAssuranceManager",
+    "QualityPolicy",
+    "QualityGate",
+    "QualityGateStatus",
+    "EvidenceManager",
+    "EvidenceArtifact",
+    "EvidenceBundle",
+    "CertificationManager",
+    "CertificationRequest",
+    "CertificationDecision",
+    "CertificationReport",
 ]

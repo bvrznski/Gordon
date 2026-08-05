@@ -550,6 +550,346 @@ class FailureDeduplicator:
         )
 
 
+# =============================================================================
+# Runtime Failure Model (Phase 3.7+)
+# =============================================================================
+
+@dataclass(frozen=True)
+class RuntimeFailure:
+    """
+    A runtime-level failure that affects system operation.
+    
+    Extends FailureRecord with runtime-specific context:
+        - Impact scope (which entities are affected)
+        - Recovery strategy (automated vs manual)
+        - Alerting configuration
+        - Escalation path
+    
+    Usage:
+        failure = RuntimeFailure.from_failure_record(
+            record=my_failure,
+            impact_scope=["service_a", "service_b"],
+            recovery_strategy=RecoveryStrategy.AUTOMATED_RETRY,
+            alert_level=AlertLevel.HIGH
+        )
+        
+        if failure.should_alert:
+            await send_alert(failure)
+    """
+    
+    # Base failure info (from FailureRecord)
+    failure_id: str
+    
+    category: FailureCategory
+    severity: int
+    primary: bool
+    
+    # Runtime-specific context
+    runtime_id: Optional[str] = None
+    source_entity_id: Optional[str] = None
+    task_id: Optional[str] = None
+    
+    lifecycle_state: str = ""
+    execution_state: str = ""
+    
+    primary_exception_type: str = ""
+    primary_exception_message: str = ""
+    primary_exception_traceback: Optional[str] = None
+    
+    # Runtime-specific fields
+    impact_scope: List[str] = field(default_factory=list)  # Affected entities
+    recovery_strategy: "RuntimeRecoveryStrategy" = None  # Default set below
+    alert_level: "AlertLevel" = None  # Default set below
+    
+    # Alerting config
+    should_alert: bool = True
+    alert_channels: List[str] = field(default_factory=list)  # e.g., ["email", "slack"]
+    
+    # Escalation
+    escalation_path: Optional[str] = None  # e.g., "team-oncall"
+    escalate_after_attempts: int = 3
+    
+    # Timing
+    first_occurrence_utc: float = field(default_factory=time.time)
+    latest_occurrence_utc: float = field(default_factory=time.time)
+    occurrence_count: int = 1
+    
+    @property
+    def duration_seconds(self) -> float:
+        """Calculate time since first occurrence."""
+        return time.time() - self.first_occurrence_utc
+    
+    @property
+    def should_escalate(self) -> bool:
+        """Check if failure should be escalated."""
+        return self.occurrence_count >= self.escalate_after_attempts
+    
+    def with_impact_scope(self, scope: List[str]) -> "RuntimeFailure":
+        """Return a copy with updated impact scope."""
+        return RuntimeFailure(
+            failure_id=self.failure_id,
+            category=self.category,
+            severity=self.severity,
+            primary=self.primary,
+            runtime_id=self.runtime_id,
+            source_entity_id=self.source_entity_id,
+            task_id=self.task_id,
+            lifecycle_state=self.lifecycle_state,
+            execution_state=self.execution_state,
+            primary_exception_type=self.primary_exception_type,
+            primary_exception_message=self.primary_exception_message,
+            primary_exception_traceback=self.primary_exception_traceback,
+            impact_scope=scope,
+            recovery_strategy=self.recovery_strategy,
+            alert_level=self.alert_level,
+            should_alert=self.should_alert,
+            alert_channels=list(self.alert_channels),
+            escalation_path=self.escalation_path,
+            escalate_after_attempts=self.escalate_after_attempts,
+            first_occurrence_utc=self.first_occurrence_utc,
+            latest_occurrence_utc=time.time(),
+            occurrence_count=self.occurrence_count + 1
+        )
+    
+    def mark_alerted(self) -> "RuntimeFailure":
+        """Return a copy with alert flag cleared (already sent)."""
+        return RuntimeFailure(
+            failure_id=self.failure_id,
+            category=self.category,
+            severity=self.severity,
+            primary=self.primary,
+            runtime_id=self.runtime_id,
+            source_entity_id=self.source_entity_id,
+            task_id=self.task_id,
+            lifecycle_state=self.lifecycle_state,
+            execution_state=self.execution_state,
+            primary_exception_type=self.primary_exception_type,
+            primary_exception_message=self.primary_exception_message,
+            primary_exception_traceback=self.primary_exception_traceback,
+            impact_scope=list(self.impact_scope),
+            recovery_strategy=self.recovery_strategy,
+            alert_level=self.alert_level,
+            should_alert=False,
+            alert_channels=list(self.alert_channels),
+            escalation_path=self.escalation_path,
+            escalate_after_attempts=self.escalate_after_attempts,
+            first_occurrence_utc=self.first_occurrence_utc,
+            latest_occurrence_utc=time.time(),
+            occurrence_count=self.occurrence_count + 1
+        )
+    
+    def to_serializable(self) -> Dict[str, Any]:
+        """Convert to a JSON-serializable dictionary."""
+        return {
+            "failure_id": self.failure_id,
+            "category": self.category.value if hasattr(self.category, 'value') else str(self.category),
+            "severity": self.severity,
+            "primary": self.primary,
+            "runtime_id": self.runtime_id,
+            "source_entity_id": self.source_entity_id,
+            "task_id": self.task_id,
+            "lifecycle_state": self.lifecycle_state,
+            "execution_state": self.execution_state,
+            "primary_exception_type": self.primary_exception_type,
+            "primary_exception_message": self.primary_exception_message,
+            "impact_scope": self.impact_scope,
+            "recovery_strategy": str(self.recovery_strategy) if hasattr(self.recovery_strategy, 'value') else self.recovery_strategy,
+            "alert_level": str(self.alert_level) if hasattr(self.alert_level, 'value') else self.alert_level,
+            "should_alert": self.should_alert,
+            "alert_channels": self.alert_channels,
+            "escalation_path": self.escalation_path,
+            "occurrence_count": self.occurrence_count,
+            "duration_seconds": self.duration_seconds
+        }
+    
+    @classmethod
+    def from_failure_record(
+        cls,
+        record: FailureRecord,
+        runtime_id: Optional[str] = None,
+        impact_scope: Optional[List[str]] = None,
+        recovery_strategy: "RuntimeRecoveryStrategy" = None,
+        alert_level: "AlertLevel" = None
+    ) -> "RuntimeFailure":
+        """
+        Create a RuntimeFailure from a FailureRecord.
+        
+        Args:
+            record: The base failure record
+            runtime_id: Runtime instance identifier
+            impact_scope: List of affected entity IDs
+            recovery_strategy: How to recover automatically
+            alert_level: Alert priority
+            
+        Returns:
+            A new RuntimeFailure instance
+        """
+        return cls(
+            failure_id=record.failure_id,
+            category=record.category,
+            severity=record.severity,
+            primary=record.primary,
+            runtime_id=runtime_id or record.runtime_id,
+            source_entity_id=record.source_entity_id,
+            task_id=record.task_id,
+            lifecycle_state=record.lifecycle_state,
+            execution_state=record.execution_state,
+            primary_exception_type=record.primary_exception_type,
+            primary_exception_message=record.primary_exception_message,
+            primary_exception_traceback=record.primary_exception_traceback,
+            impact_scope=impact_scope or [],
+            recovery_strategy=recovery_strategy or RuntimeRecoveryStrategy.AUTOMATED_RETRY,
+            alert_level=alert_level or AlertLevel.INFO,
+            should_alert=True,
+            alert_channels=["log"],
+            escalation_path=None,
+            escalate_after_attempts=3,
+            first_occurrence_utc=record.first_occurrence_utc,
+            latest_occurrence_utc=record.latest_occurrence_utc,
+            occurrence_count=record.occurrence_count
+        )
+
+
+class RuntimeRecoveryStrategy(Enum):
+    """
+    Strategies for automatic recovery from runtime failures.
+    
+    - AUTOMATED_RETRY: Retry the operation automatically
+    - RESTART_SERVICE: Restart the affected service
+    - ISOLATE_ENTITY: Isolate from other entities temporarily
+    - ESCALATE_ONLY: Only escalate, no automated action
+    - DISABLE_FEATURE: Temporarily disable affected feature
+    """
+    
+    AUTOMATED_RETRY = "automated_retry"
+    RESTART_SERVICE = "restart_service"
+    ISOLATE_ENTITY = "isolate_entity"
+    ESCALATE_ONLY = "escalate_only"
+    DISABLE_FEATURE = "disable_feature"
+
+
+class AlertLevel(Enum):
+    """
+    Alert priority levels for runtime failures.
+    
+    - INFO: Informational, no immediate action needed
+    - LOW: Notable event, monitor closely
+    - MEDIUM: Requires attention, may need intervention
+    - HIGH: Urgent, requires immediate response
+    - CRITICAL: System impact, immediate escalation required
+    """
+    
+    INFO = "info"
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class RuntimeFailureDeduplicator:
+    """
+    Deduplicate runtime failures for reporting.
+    
+    Groups related failures and tracks:
+        - Total occurrence count
+        - First and latest occurrence times
+        - Impact scope expansion
+    
+    Usage:
+        dedup = RuntimeFailureDeduplicator()
+        
+        failure = RuntimeFailure(...)
+        dedup.add(failure)
+        
+        # Get deduplicated failures
+        reports = dedup.get_all()
+    """
+    
+    def __init__(self) -> None:
+        self._failures: Dict[str, RuntimeFailure] = {}
+        self._lock = __import__("threading").Lock()
+    
+    def add(self, failure: RuntimeFailure) -> None:
+        """Add or update a runtime failure."""
+        key = f"{failure.category.value}|{failure.source_entity_id or ''}"
+        
+        with self._lock:
+            if key in self._failures:
+                existing = self._failures[key]
+                
+                # Update occurrence and expand impact scope
+                new_impact = list(set(existing.impact_scope) | set(failure.impact_scope))
+                
+                self._failures[key] = RuntimeFailure(
+                    failure_id=existing.failure_id,
+                    category=failure.category,
+                    severity=max(existing.severity, failure.severity),
+                    primary=existing.primary,
+                    runtime_id=existing.runtime_id,
+                    source_entity_id=existing.source_entity_id,
+                    task_id=failure.task_id or existing.task_id,
+                    lifecycle_state=failure.lifecycle_state or existing.lifecycle_state,
+                    execution_state=failure.execution_state or existing.execution_state,
+                    primary_exception_type=existing.primary_exception_type,
+                    primary_exception_message=existing.primary_exception_message,
+                    primary_exception_traceback=existing.primary_exception_traceback,
+                    impact_scope=new_impact,
+                    recovery_strategy=failure.recovery_strategy or existing.recovery_strategy,
+                    alert_level=max_alert_level(existing.alert_level, failure.alert_level),
+                    should_alert=True,
+                    alert_channels=list(set(existing.alert_channels) | set(failure.alert_channels)),
+                    escalation_path=existing.escalation_path,
+                    escalate_after_attempts=existing.escalate_after_attempts,
+                    first_occurrence_utc=existing.first_occurrence_utc,
+                    latest_occurrence_utc=time.time(),
+                    occurrence_count=existing.occurrence_count + 1
+                )
+            else:
+                self._failures[key] = failure
+    
+    def get(self, key: str) -> Optional[RuntimeFailure]:
+        """Get a deduplicated failure by key."""
+        return self._failures.get(key)
+    
+    def get_all(self) -> List[RuntimeFailure]:
+        """Get all deduplicated failures."""
+        with self._lock:
+            return list(self._failures.values())
+    
+    def remove(self, key: str) -> None:
+        """Remove a failure from the deduplicator."""
+        with self._lock:
+            if key in self._failures:
+                del self._failures[key]
+    
+    def clear(self) -> None:
+        """Clear all failures."""
+        with self._lock:
+            self._failures.clear()
+
+
+def max_alert_level(a: Optional[AlertLevel], b: Optional[AlertLevel]) -> AlertLevel:
+    """
+    Return the higher alert level between two.
+    
+    Returns CRITICAL > HIGH > MEDIUM > LOW > INFO
+    """
+    if a is None:
+        return b or AlertLevel.INFO
+    if b is None:
+        return a
+    
+    priority = {
+        AlertLevel.CRITICAL: 5,
+        AlertLevel.HIGH: 4,
+        AlertLevel.MEDIUM: 3,
+        AlertLevel.LOW: 2,
+        AlertLevel.INFO: 1
+    }
+    
+    return max(a, b, key=lambda x: priority.get(x, 0))
+
+
 __all__ = [
     # Categories
     "FailureCategory",
@@ -559,7 +899,15 @@ __all__ = [
     
     # Records
     "FailureRecord",
+    "RuntimeFailure",
+    
+    # Recovery strategies
+    "RuntimeRecoveryStrategy",
+    
+    # Alerting
+    "AlertLevel",
     
     # Deduplication
     "FailureDeduplicator",
+    "RuntimeFailureDeduplicator",
 ]

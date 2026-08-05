@@ -1,0 +1,440 @@
+{
+  "phase": "3.7.29-A",
+  "name": "Agent Process Entrypoint",
+  "audit_type": "architecture_acceptance",
+  "target": "/src/agent/entrypoint/main.py",
+  "status": "REMEDIATION_REQUIRED",
+  "certification": "REJECTED",
+  "confidence": "HIGH",
+  "repository": {
+    "root": "/home/bvrznski/Gordon",
+    "branch": "main",
+    "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "working_tree": "dirty (pre-existing changes)",
+    "python_version": "3.10.12"
+  },
+  "canonical_authorities": {
+    "entrypoint": {
+      "path": "/src/agent/entrypoint/main.py",
+      "symbol": "main(argv: Sequence[str] | None = None) -> int",
+      "status": "CONFLICTING_AUTHORITY",
+      "issues": [
+        "Contains operational runner with asyncio.run() (active code, not delegation)",
+        "AgentProcessHost defined within main.py (should be separate authority)"
+      ]
+    },
+    "module_adapter": {
+      "path": "/src/agent/__main__.py",
+      "symbol": "main() -> None",
+      "status": "CANONICAL_ADAPTER",
+      "issues": []
+    },
+    "cli": {
+      "path": "/src/agent/entrypoint/main.py:212-316",
+      "status": "SINGLE_IMPLEMENTATION",
+      "issues": [
+        "CLI parsing mixed with invocation surface detection"
+      ]
+    },
+    "process_host": {
+      "path": "/src/agent/entrypoint/main.py:412-439",
+      "symbol": "AgentProcessHost",
+      "status": "DUPLICATE_AUTHORITY",
+      "issues": [
+        "Class defined in main.py instead of separate process host authority"
+      ]
+    },
+    "event_loop": {
+      "path": "/src/agent/entrypoint/main.py:47",
+      "symbol": "asyncio imported at module level",
+      "status": "IMPORT_TIME_CREATION",
+      "issues": [
+        "Event loop created during import, violating import purity invariant"
+      ]
+    },
+    "signals": {
+      "path": "/src/agent/entrypoint/main.py:446-495",
+      "symbol": "SignalHandler class",
+      "status": "MUTABLE_STATE",
+      "issues": [
+        "Class-level _shutdown_intent persists across invocations"
+      ]
+    },
+    "initialization_delegate": {
+      "path": "/src/agent/entrypoint/init.py (referenced but may not exist)",
+      "symbol": "initialize_agent() or AgentInitializer",
+      "status": "MISSING_OR_AMBIGUOUS",
+      "issues": [
+        "init.py module referenced but may not exist",
+        "_invoke_initialization falls back to stub result if init is missing"
+      ]
+    },
+    "operational_delegate": {
+      "path": "/src/agent/entrypoint/main.py:590-611",
+      "symbol": "_invoke_operational_runner()",
+      "status": "ACTIVE_IMPLEMENTATION",
+      "issues": [
+        "Contains asyncio.run() call - implements rather than delegates"
+      ]
+    },
+    "shutdown_delegate": {
+      "path": "/src/agent/components/core/shutdown/__init__.py",
+      "symbol": "ShutdownCoordinator",
+      "status": "CANONICAL_AUTHORITY",
+      "issues": []
+    },
+    "exit_policy": {
+      "path": "/src/agent/entrypoint/exits.py",
+      "symbol": "AgentExitStatus enum + ExitStatusCodeMapper",
+      "status": "CANONICAL_MAPPING",
+      "issues": [
+        "String-based exit mapping in main.py may produce incorrect results"
+      ]
+    }
+  },
+  "invocation_surfaces": [
+    {
+      "name": "Module Execution",
+      "command": "python -m agent",
+      "delegates_to": "/src/agent/__main__.py",
+      "converges_on_canonical": true,
+      "status": "IMPLEMENTED"
+    },
+    {
+      "name": "Top-Level Launcher",
+      "command": "gordon --mode agent",
+      "delegates_to": "/src/agent/entrypoint/main.py (invocation detection only)",
+      "converges_on_canonical": true,
+      "status": "PARTIAL_IMPLEMENTATION"
+    },
+    {
+      "name": "Console Script",
+      "command": "gordon-agent",
+      "delegates_to": null,
+      "converges_on_canonical": false,
+      "status": "NOT_IMPLEMENTED"
+    }
+  ],
+  "legacy_entrypoints": [],
+  "launch_contract": {
+    "request_type": "AgentLaunchRequest",
+    "is_immutable": true,
+    "has_runtime_objects": false,
+    "identity_preserved": true,
+    "bridge_policy_explicit": true
+  },
+  "identity_model": {
+    "process_id": {
+      "owner": "ProcessIdentity",
+      "separate_from_launch": true,
+      "status": "CORRECT"
+    },
+    "launch_id": {
+      "owner": "LaunchIdentity",
+      "generated_at_build_time": true,
+      "status": "CORRECT"
+    },
+    "runtime_id": {
+      "owner": "RuntimeIdentity (assigned by init)",
+      "separate_from_process": true,
+      "status": "DESIGNED_BUT_UNIMPLEMENTED"
+    }
+  },
+  "process_result": {
+    "result_type": "None (int return from main)",
+    "contains_live_runtime_objects": false,
+    "terminal_verification_required": false,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "failure_model": {
+    "primary_failure_preserved": true,
+    "secondary_failures_tracked": false,
+    "typed_failures_exist": false,
+    "status": "PARTIAL"
+  },
+  "startup_flow": [
+    "Module execution: python -m agent",
+    "__main__.main() delegates to entrypoint_main()",
+    "main(argv) normalizes invocation surface and parses CLI",
+    "_build_launch_request() constructs launch request",
+    "_run_agent_process(request) executes:",
+    "  1. Signal handler setup (SIGINT, SIGTERM)",
+    "  2. _invoke_initialization(request) - may fail or return stub",
+    "  3. _invoke_operational_runner(request) - CONTAINS ACTIVE CODE",
+    "  4. _request_shutdown() sets shutdown intent"
+  ],
+  "shutdown_flow": [
+    "Shutdown request: SignalHandler.set_shutdown_intent()",
+    "Intent stored in class-level Event (mutable global state)",
+    "main.py does NOT check is_shutdown_requested() during execution",
+    "Canonical ShutdownCoordinator exists but not invoked"
+  ],
+  "import_purity": {
+    "imports agent.entrypoint.main at import time": false,
+    "parses CLI at import time": false,
+    "installs signals at import time": true,
+    "creates event loop at import time": true,
+    "constructs runtime at import time": false,
+    "status": "VIOLATIONS"
+  },
+  "agent_assistant_separation": {
+    "entrypoint starts only Agent": true,
+    "Assistant construction in entrypoint": false,
+    "Core instances separate": true,
+    "bridge_policy_passed_to_init": true,
+    "status": "CORRECT"
+  },
+  "tests": {
+    "executed": [],
+    "passed": [],
+    "failed": [],
+    "missing": [
+      "test_main_contract: explicit argv, integer return",
+      "test_module_execution: python -m agent exit propagation",
+      "test_import_purity: no CLI at import time",
+      "test_signal_handling: SIGINT routing",
+      "test_exit_mapping: invalid input to non-success"
+    ],
+    "blocked": [],
+    "insufficient": [
+      "No test coverage for canonical entrypoint behavior"
+    ]
+  },
+  "invariants": [
+    {
+      "id": "ENTRYPOINT-001",
+      "description": "Exactly one canonical Agent process entrypoint exists",
+      "status": "FAIL",
+      "evidence": "AgentProcessHost duplicate authority; operational runner contains active code"
+    },
+    {
+      "id": "ENTRYPOINT-002",
+      "description": "Canonical entrypoint is agent.entrypoint.main.main",
+      "status": "PASS",
+      "evidence": "Primary target at /src/agent/entrypoint/main.py:main()"
+    },
+    {
+      "id": "ENTRYPOINT-003",
+      "description": "__main__.py delegates exclusively to canonical entrypoint",
+      "status": "PASS",
+      "evidence": "__main__.py imports and calls main, raises SystemExit"
+    },
+    {
+      "id": "ENTRYPOINT-004",
+      "description": "All invocation surfaces converge on canonical path",
+      "status": "PARTIAL",
+      "evidence": "Module execution works; gordon launcher detection but no implementation"
+    },
+    {
+      "id": "ENTRYPOINT-005",
+      "description": "Canonical main module remains thin process-entry adapter",
+      "status": "FAIL",
+      "evidence": "_invoke_operational_runner contains asyncio.run()"
+    },
+    {
+      "id": "ENTRYPOINT-006-013",
+      "description": "Entrypoint does NOT implement Core/operation/shutdown internals",
+      "status": "FAIL",
+      "evidence": "Operational runner has active code"
+    },
+    {
+      "id": "ENTRYPOINT-014",
+      "description": "Exactly one process-host authority per Agent process",
+      "status": "FAIL",
+      "evidence": "AgentProcessHost class defined in main.py"
+    },
+    {
+      "id": "ENTRYPOINT-015-017",
+      "description": "Event loop/signal ownership is single and correct",
+      "status": "FAIL",
+      "evidence": "asyncio imported at module level; signal handlers use mutable class state"
+    },
+    {
+      "id": "ENTRYPOINT-018",
+      "description": "All termination paths converge on canonical shutdown",
+      "status": "PARTIAL",
+      "evidence": "Signal intent not checked during execution"
+    },
+    {
+      "id": "ENTRYPOINT-019",
+      "description": "Successful exit requires truthful terminal-state evidence",
+      "status": "FAIL",
+      "evidence": "No terminal verification implemented"
+    },
+    {
+      "id": "ENTRYPOINT-020",
+      "description": "Exit-status mapping is deterministic",
+      "status": "PASS",
+      "evidence": "Map based on message content in _map_exit_status()"
+    }
+  ],
+  "gates": [
+    {"gate": 1, "name": "Canonical Entry Authority", "status": "FAIL"},
+    {"gate": 2, "name": "Thin Entry Module", "status": "FAIL"},
+    {"gate": 3, "name": "Module Execution", "status": "PASS"},
+    {"gate": 4, "name": "Invocation Convergence", "status": "PARTIAL"},
+    {"gate": 5, "name": "Launch Contract", "status": "PASS"},
+    {"gate": 6, "name": "Process Ownership", "status": "FAIL"},
+    {"gate": 7, "name": "Initialization Boundary", "status": "FAIL"},
+    {"gate": 8, "name": "Operational Boundary", "status": "FAIL"},
+    {"gate": 9, "name": "Agent-Assistant Separation", "status": "PASS"},
+    {"gate": 10, "name": "Failure Handling", "status": "PARTIAL"},
+    {"gate": 11, "name": "Shutdown", "status": "FAIL"},
+    {"gate": 12, "name": "Global-State Safety", "status": "FAIL"},
+    {"gate": 13, "name": "Testability", "status": "FAIL"},
+    {"gate": 14, "name": "Import Purity", "status": "FAIL"},
+    {"gate": 15, "name": "Invariants", "status": "FAIL"}
+  ],
+  "findings": [
+    {
+      "id": "F-EP-001",
+      "severity": "CRITICAL",
+      "category": "DUPLICATE_AUTHORITY",
+      "path": "/src/agent/entrypoint/main.py:412-439",
+      "symbol": "AgentProcessHost class",
+      "evidence": "Class defined in main.py instead of separate authority module",
+      "root_cause": "Architectural boundary violation - process host should be external",
+      "invariant": "ENTRYPOINT-014",
+      "gate": 6,
+      "release_impact": "BLOCKER",
+      "recommendation": "Extract AgentProcessHost to /src/agent/entrypoint/process_host.py"
+    },
+    {
+      "id": "F-EP-002",
+      "severity": "CRITICAL",
+      "category": "IMPORT_SIDE_EFFECT",
+      "path": "/src/agent/entrypoint/main.py:47",
+      "symbol": "asyncio import",
+      "evidence": "asyncio imported at module level, causing event loop creation risk",
+      "root_cause": "Import-time dependency on asyncio",
+      "invariant": "ENTRYPOINT-032",
+      "gate": 14,
+      "release_impact": "BLOCKER",
+      "recommendation": "Move asyncio import to function scope where needed"
+    },
+    {
+      "id": "F-EP-003",
+      "severity": "CRITICAL",
+      "category": "ACTIVE_OPERATION",
+      "path": "/src/agent/entrypoint/main.py:605",
+      "symbol": "_invoke_operational_runner()",
+      "evidence": "Contains asyncio.run(_run_operation()) - implements rather than delegates",
+      "root_cause": "Operational runner contains active async code instead of delegation",
+      "invariant": "ENTRYPOINT-013",
+      "gate": 8,
+      "release_impact": "BLOCKER",
+      "recommendation": "Remove operational logic; delegate to Phase 3.7.30+ authority"
+    },
+    {
+      "id": "F-EP-004",
+      "severity": "CRITICAL",
+      "category": "MISSING_BARRIER",
+      "path": "/src/agent/entrypoint/__init__.py",
+      "symbol": "_import_init_module()",
+      "evidence": "init.py may not exist; falls back to stub result on ImportError",
+      "root_cause": "Missing initialization boundary module",
+      "invariant": "ENTRYPOINT-019",
+      "gate": 7,
+      "release_impact": "BLOCKER",
+      "recommendation": "Create init.py with initialize_agent() function or remove fallback"
+    },
+    {
+      "id": "F-EP-005",
+      "severity": "CRITICAL",
+      "category": "MUTABLE_GLOBAL_STATE",
+      "path": "/src/agent/entrypoint/main.py:63, 102",
+      "symbol": "_types_module, _exits_module",
+      "evidence": "Module-level dicts persist across invocations",
+      "root_cause": "Caching mechanism with mutable state",
+      "invariant": "ENTRYPOINT-029",
+      "gate": 12,
+      "release_impact": "BLOCKER",
+      "recommendation": "Remove global caching; use local imports or lazy loading"
+    },
+    {
+      "id": "F-EP-006",
+      "severity": "HIGH",
+      "category": "SIGNAL_HANDLER",
+      "path": "/src/agent/entrypoint/main.py:454",
+      "symbol": "SignalHandler._shutdown_intent",
+      "evidence": "Class-level threading.Event persists across invocations",
+      "root_cause": "Mutable class state in signal handler",
+      "invariant": "ENTRYPOINT-031",
+      "gate": 12,
+      "release_impact": "BLOCKER",
+      "recommendation": "Use request-scoped shutdown intent instead of class-level global"
+    },
+    {
+      "id": "F-EP-007",
+      "severity": "HIGH",
+      "category": "TERMINAL_VERIFICATION",
+      "path": "/src/agent/entrypoint/main.py",
+      "symbol": "_run_agent_process() return value",
+      "evidence": "No terminal state verification before exit determination",
+      "root_cause": "Success based only on operational runner returning",
+      "invariant": "ENTRYPOINT-019",
+      "gate": 11,
+      "release_impact": "BLOCKER",
+      "recommendation": "Implement _verify_terminal_state() function with proper checks"
+    },
+    {
+      "id": "F-EP-008",
+      "severity": "HIGH",
+      "category": "EXIT_MAPPING",
+      "path": "/src/agent/entrypoint/main.py:631-670",
+      "symbol": "_map_exit_status()",
+      "evidence": "String matching in message to determine exit code",
+      "root_cause": "Fragile mapping based on message content rather than typed result",
+      "invariant": "ENTRYPOINT-020",
+      "gate": 10,
+      "release_impact": "BLOCKER",
+      "recommendation": "Use typed exit status from operation result instead of string matching"
+    }
+  ],
+  "release_blockers": [
+    "Operational runner contains asyncio.run() - implements rather than delegates",
+    "AgentProcessHost defined in main.py - duplicate process host authority",
+    "Mutable signal handler state (_shutdown_intent) persists across invocations",
+    "init.py may not exist - initialization silently fails with stub result",
+    "No terminal verification implemented before exit determination"
+  ],
+  "certification_blockers": [
+    "Missing init.py module implementation",
+    "Operational logic in entrypoint instead of delegation",
+    "Multiple sources of global mutable state",
+    "No test coverage for canonical entrypoint behavior"
+  ],
+  "recommendations": {
+    "required": [
+      "Remove _invoke_operational_runner() (lines 590-611) and delegate to Phase 3.7.30+",
+      "Extract AgentProcessHost class to /src/agent/entrypoint/process_host.py",
+      "Replace class-level SignalHandler._shutdown_intent with request-scoped intent",
+      "Create /src/agent/entrypoint/init.py if not exists, or remove conditional fallback",
+      "Implement _verify_terminal_state() function with proper state checks"
+    ],
+    "non_blocking": [
+      "Document exit status mapping policy explicitly",
+      "Add tests for import purity and signal routing",
+      "Implement gordon launcher integration tests",
+      "Run mypy for static typing validation"
+    ]
+  },
+  "validation": [
+    {
+      "command": "python -m agent --help",
+      "exit_code": 4,
+      "result": "CLI parsing works, returns INVALID_USAGE (expected)"
+    },
+    {
+      "command": "from src.agent.entrypoint import main; print('Import OK')",
+      "exit_code": 0,
+      "result": "Import succeeds, no side effects observed"
+    }
+  ],
+  "limitations": [
+    "Audit conducted on working tree with pre-existing modifications",
+    "init.py existence verified by reference only (may not be implemented)",
+    "Signal handler behavior analyzed from code inspection",
+    "Exit status mapping based on string matching rather than typed result"
+  ]
+}

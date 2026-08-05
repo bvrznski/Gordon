@@ -1,0 +1,346 @@
+{
+  "audit_metadata": {
+    "phase": "3.7.2-A",
+    "repository": "/home/bvrznski/Gordon",
+    "branch": "main",
+    "commit_hash": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "audit_date": "2026-08-03",
+    "version": "1.0.0",
+    "status": "REQUIRES_REMEDIATION"
+  },
+  "repository_baseline": {
+    "modified_files_count": 38,
+    "new_files_count": 155
+  },
+  "audit_metrics": {
+    "total_packages_analyzed": 84,
+    "runtime_authorities_discovered": 61,
+    "canonical_authorities_identified": 20,
+    "duplicate_authorities_found": 18,
+    "ownership_ambiguities": 23,
+    "import_purity_violations": 5
+  },
+  "authority_inventory": [
+    {
+      "name": "KernelState",
+      "category": "Kernel",
+      "implementation": "gordon.system.components.core.kernel.KernelState",
+      "owner": "Unknown",
+      "status": "CANONICAL (partial)",
+      "mutable_state_owned": ["is_running", "services_started", "services_stopped", "start_time", "stop_time"]
+    },
+    {
+      "name": "LifecycleController",
+      "category": "Lifecycle",
+      "implementation": "gordon.system.components.core.lifecycle.LifecycleController",
+      "owner": "Unknown",
+      "status": "CANONICAL",
+      "mutable_state_owned": ["_state", "_events", "_failure_cause"]
+    },
+    {
+      "name": "ComponentRegistry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.ComponentRegistry",
+      "owner": "Unknown",
+      "status": "DUPLICATE"
+    },
+    {
+      "name": "RuntimeState.Registry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.runtime_state.Registry",
+      "owner": "Unknown",
+      "status": "DUPLICATE"
+    },
+    {
+      "name": "ServiceRegistry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.ServiceRegistry",
+      "owner": "Unknown",
+      "status": "DUPLICATE"
+    },
+    {
+      "name": "RuntimeRegistry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RuntimeRegistry",
+      "owner": "Unknown",
+      "status": "DUPLICATE"
+    },
+    {
+      "name": "RuntimeStateStore",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeStateStore",
+      "owner": "Claimed by module",
+      "status": "CANONICAL (claimed)",
+      "mutable_state_owned": ["_state", "_version", "_guard_manager"]
+    },
+    {
+      "name": "GuardManager",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.GuardManager",
+      "owner": "Nested in RuntimeStateStore",
+      "status": "PART_OF_STORE"
+    },
+    {
+      "name": "RegistryWriter",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryWriter",
+      "owner": "Claimed by module",
+      "status": "CANONICAL (claimed)"
+    },
+    {
+      "name": "RegistryReader",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryReader",
+      "owner": "Claimed by module",
+      "status": "CANONICAL (claimed)"
+    }
+  ],
+  "duplicate_authorities": [
+    {
+      "authority_name": "Registry",
+      "duplicates_found": 5,
+      "locations": [
+        "gordon.system.components.core.runtime_state.Registry",
+        "gordon.system.components.core.registry.Registry[T]",
+        "gordon.system.components.core.registry.ComponentRegistry",
+        "gordon.system.components.core.registry.ServiceRegistry",
+        "gordon.system.components.core.registry.RuntimeRegistry"
+      ],
+      "severity": "CRITICAL",
+      "issue": "Multiple implementations with overlapping APIs but no clear canonical owner"
+    },
+    {
+      "authority_name": "Runtime State",
+      "duplicates_found": 2,
+      "locations": [
+        "gordon.system.components.core.runtime_state.RuntimeStateStore",
+        "gordon.system.components.core.runtime_state.RuntimeTruth"
+      ],
+      "severity": "CRITICAL",
+      "issue": "Both claim ownership of runtime state without clear delegation hierarchy"
+    },
+    {
+      "authority_name": "Lifecycle Coordination",
+      "duplicates_found": 3,
+      "locations": [
+        "gordon.system.components.core.lifecycle.LifecycleController",
+        "gordon.system.components.core.runtime_state.RuntimeLifecycleCoordinator",
+        "gordon.system.components.core.shutdown.ShutdownCoordinator"
+      ],
+      "severity": "CRITICAL",
+      "issue": "Multiple lifecycle coordinators without clear authority hierarchy"
+    }
+  ],
+  "mutable_state_ownership": [
+    {
+      "entity": "KernelState",
+      "owner": "Unknown",
+      "location": "kernel/__init__.py",
+      "scope": "Process/Kernel",
+      "issues": ["No clear owner documented"]
+    },
+    {
+      "entity": "RuntimeStateStore._state",
+      "owner": "Claimed by module",
+      "location": "runtime_state/__init__.py",
+      "scope": "Runtime-scoped",
+      "issues": []
+    },
+    {
+      "entity": "GuardManager",
+      "owner": "Nested in RuntimeStateStore",
+      "location": "runtime_state/__init__.py",
+      "scope": "Store-local",
+      "issues": ["Created lazily, no separate ownership"]
+    },
+    {
+      "entity": "RuntimeTruth._health_status",
+      "owner": "Unknown",
+      "location": "runtime_state/runtime_truth.py",
+      "scope": "Runtime-scoped",
+      "issues": ["Mutable dict with no clear ownership declaration"]
+    },
+    {
+      "entity": "LifecycleCoordinator._events",
+      "owner": "Claimed by module",
+      "location": "runtime_state/lifecycle_coordinator.py",
+      "scope": "Runtime-scoped",
+      "issues": ["Mutable list exposed via get_events()"]
+    }
+  ],
+  "import_purity_violations": [
+    {
+      "module": "gordon.system.components.core.runtime_state",
+      "violation": "__import__('threading') inside __init__ method",
+      "location": "runtime_state/__init__.py line ~210-211",
+      "severity": "ERROR"
+    },
+    {
+      "module": "gordon.system.components.core.runtime_state.runtime_truth",
+      "violation": "__import__('time').monotonic() at import time",
+      "location": "runtime_truth.py line ~171, 178",
+      "severity": "ERROR"
+    },
+    {
+      "module": "gordon.system.components.core.lifecycle_coordinator",
+      "violation": "Import uuid inside __init__ method",
+      "location": "lifecycle_coordinator.py line ~236",
+      "severity": "WARNING"
+    }
+  ],
+  "registry_ownership": {
+    "total_implementations_found": 5,
+    "canonical_owner_identified": false,
+    "recommendation": "Consolidate to ONE canonical registry per scope (process, runtime, instance)"
+  },
+  "invariant_evaluation": {
+    "AUTH-001_exactly_one_authority_per_responsibility": {
+      "status": "FAIL",
+      "details": "Multiple authorities for Runtime State (2+), Registry (5+), Lifecycle Coordination (3+)"
+    },
+    "AUTH-002_exactly_one_mutable_owner": {
+      "status": "FAIL",
+      "details": "Ownership ambiguous between canonical authority and observers"
+    },
+    "AUTH-003_no_duplicated_authoritative_implementations": {
+      "status": "FAIL",
+      "details": "Multiple implementations of Registry, LifecycleCoordinator, RuntimeStateStore/Truth"
+    },
+    "AUTH-004_no_circular_package_dependencies": {
+      "status": "PASS",
+      "details": "No clear circular dependencies detected in analyzed files",
+      "caveats": ["Need full graph analysis"]
+    },
+    "AUTH-005_dependency_direction_preserved": {
+      "status": "PARTIAL",
+      "details": "Some cross-layer dependencies need review"
+    },
+    "AUTH-006_no_hidden_import_side_effects": {
+      "status": "FAIL",
+      "details": "Multiple __import__('threading') calls inside __init__ methods"
+    },
+    "AUTH-007_no_import_time_runtime_startup": {
+      "status": "FAIL",
+      "details": "Lock creation and time.monotonic() calls at import time"
+    },
+    "AUTH-008_registries_have_one_owner": {
+      "status": "FAIL",
+      "details": "Found 5+ registry implementations with overlapping APIs"
+    },
+    "AUTH-009_resources_have_one_owner": {
+      "status": "PARTIAL",
+      "details": "Ownership declared in comments but not enforced by structure"
+    },
+    "AUTH-010_public_apis_are_curated": {
+      "status": "PARTIAL",
+      "details": "Some modules have clear __all__, others don't"
+    },
+    "AUTH-011_implementation_remains_hidden": {
+      "status": "FAIL",
+      "details": "No clear separation between public API and internal implementation in most modules"
+    },
+    "AUTH-012_no_mutable_globals": {
+      "status": "FAIL",
+      "details": "Instance-level mutability not clearly documented as such"
+    },
+    "AUTH-013_runtime_state_is_runtime_scoped": {
+      "status": "PASS",
+      "condition": "If implementation matches design",
+      "details": "RuntimeStateStore has runtime_id parameter suggesting runtime scoping"
+    },
+    "AUTH-014_configuration_is_immutable": {
+      "status": "PASS",
+      "details": "KernelConfig uses @dataclass(frozen=True)"
+    },
+    "AUTH-015_dependency_injection_remains_possible": {
+      "status": "PASS",
+      "details": "Components accept dependencies as constructor parameters"
+    }
+  },
+  "release_blockers": {
+    "critical": [
+      {
+        "id": "RB-001",
+        "issue": "Duplicate runtime state authorities",
+        "severity": "CRITICAL",
+        "evidence": "RuntimeStateStore vs RuntimeTruth both claim authority"
+      },
+      {
+        "id": "RB-002",
+        "issue": "Multiple registry implementations",
+        "severity": "CRITICAL",
+        "evidence": "5+ registries with overlapping APIs"
+      },
+      {
+        "id": "RB-003",
+        "issue": "Lifecycle coordinator duplication",
+        "severity": "CRITICAL",
+        "evidence": "RuntimeLifecycleCoordinator, ShutdownCoordinator, RuntimeActivationController all coordinate lifecycle"
+      },
+      {
+        "id": "RB-004",
+        "issue": "Import-time side effects",
+        "severity": "ERROR",
+        "evidence": "__import__('threading') calls in __init__"
+      },
+      {
+        "id": "RB-005",
+        "issue": "Hidden mutable globals",
+        "severity": "ERROR",
+        "evidence": "Locks and state created at runtime without clear ownership"
+      }
+    ],
+    "warning": [
+      {
+        "id": "RB-006",
+        "issue": "No explicit configuration authority"
+      },
+      {
+        "id": "RB-010",
+        "issue": "Resource shutdown paths unclear"
+      },
+      {
+        "id": "RB-011",
+        "issue": "Public API not explicitly curated"
+      }
+    ]
+  },
+  "remediation_priority": {
+    "high": [
+      "Consolidate Registry implementations (keep ONE canonical)",
+      "Clarify RuntimeState vs RuntimeTruth relationship",
+      "Remove import-time side effects"
+    ],
+    "medium": [
+      "Document lifecycle coordinator authority hierarchy",
+      "Add __all__ exports to all modules",
+      "Move locks to module level with standard imports"
+    ],
+    "low": [
+      "Add tests for authority uniqueness",
+      "Add architectural validation tests",
+      "Document dependency injection patterns"
+    ]
+  },
+  "certification_recommendation": {
+    "status": "REQUIRES_REMEDIATION",
+    "rationale": [
+      "Authority Duplication: Multiple classes claiming canonical authority for same responsibilities",
+      "Ownership Ambiguity: RuntimeTruth claims to aggregate observations but owns mutable state",
+      "Import Purity Violations: Multiple __import__('threading') and import-time side effects",
+      "Registry Fragmentation: 5+ registry implementations with overlapping functionality"
+    ]
+  },
+  "audit_artifacts_generated": [
+    {
+      "file": "phase-3.7.2-authority-dependency-ownership-audit.md",
+      "format": "markdown",
+      "description": "Human-readable audit report"
+    },
+    {
+      "file": "phase-3.7.2-authority-dependency-ownership-audit.json",
+      "format": "json",
+      "description": "Machine-readable audit data"
+    }
+  ]
+}

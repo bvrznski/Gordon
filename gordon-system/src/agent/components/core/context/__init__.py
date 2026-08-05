@@ -15,6 +15,7 @@ Provides explicit runtime context that can carry controlled references to:
 - shutdown signal
 """
 
+import warnings
 from dataclasses import dataclass, field
 from typing import Dict, Any, Optional, TypeVar, Generic
 
@@ -82,14 +83,53 @@ class RuntimeContext:
         """
         Get a context entry by key.
         
+        .. deprecated::
+           Use `get_typed()` for type-safe access. This method provides arbitrary
+           access without type validation and may be removed in future versions.
+        
         Args:
             key: The entry's registered key
             
         Returns:
             The context value, or None if not found
         """
+        warnings.warn(
+            "Context.get() is deprecated. Use Context.get_typed() for type-safe access.",
+            DeprecationWarning,
+            stacklevel=2
+        )
         with self._lock:
             return self._entries.get(key)
+    
+    def get_typed(self, key: str, expected_type: type[T]) -> T:
+        """
+        Get a context entry by key with type validation.
+        
+        This method provides type-safe retrieval of context entries.
+        Unlike `get()` which returns Optional[Any], this method validates
+        that the stored value is of the expected type.
+        
+        Args:
+            key: The entry's registered key
+            expected_type: The expected type of the value
+            
+        Returns:
+            The context value, validated to be of expected_type
+            
+        Raises:
+            KeyError: If key not found in context
+            TypeError: If value is not of expected_type
+        """
+        with self._lock:
+            if key not in self._entries:
+                raise KeyError(f"Context key '{key}' not found")
+            value = self._entries[key]
+            if not isinstance(value, expected_type):
+                raise TypeError(
+                    f"Context entry '{key}' is {type(value).__name__}, "
+                    f"expected {expected_type.__name__}"
+                )
+            return value
     
     def get_or_raise(self, key: str) -> Any:
         """Get a context entry, raising KeyError if not found."""
@@ -166,6 +206,31 @@ class ContextSnapshot:
     def get(self, key: str) -> Optional[Any]:
         """Get a value from the snapshot."""
         return self.entries.get(key)
+    
+    def get_typed(self, key: str, expected_type: type[T]) -> T:
+        """
+        Get a context entry by key with type validation.
+        
+        Args:
+            key: The entry's registered key
+            expected_type: The expected type of the value
+            
+        Returns:
+            The context value, validated to be of expected_type
+            
+        Raises:
+            KeyError: If key not found in snapshot
+            TypeError: If value is not of expected_type
+        """
+        if key not in self.entries:
+            raise KeyError(f"Context key '{key}' not found in snapshot")
+        value = self.entries[key]
+        if not isinstance(value, expected_type):
+            raise TypeError(
+                f"Context entry '{key}' is {type(value).__name__}, "
+                f"expected {expected_type.__name__}"
+            )
+        return value
     
     def to_dict(self) -> Dict[str, Any]:
         """Return as dictionary (note: owners and timestamps are not included)."""

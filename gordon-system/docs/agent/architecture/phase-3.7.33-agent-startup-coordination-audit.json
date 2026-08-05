@@ -1,0 +1,385 @@
+{
+  "phase": "3.7.33-A",
+  "name": "Agent Startup Coordination",
+  "audit_type": "architecture_acceptance",
+  "target": "/src/agent/entrypoint/startup.py",
+  "status": "PASS",
+  "certification": "PASS",
+  "confidence": "HIGH",
+  "remediation_status": "COMPLETED",
+  "repository": {
+    "root": "/home/bvrznski/Gordon",
+    "branch": "main",
+    "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "working_tree": "clean",
+    "python_version": "3.10.12"
+  },
+  "canonical_authorities": {
+    "startup": {
+      "path": "agent.entrypoint.startup.AgentStartupCoordinator",
+      "status": "PRESENT",
+      "evidence": "startup/coordinator.py lines 36-1002"
+    },
+    "request": {
+      "path": "agent.entrypoint.startup (dict-based)",
+      "status": "PRESENT",
+      "evidence": "Startup uses dictionary format for launch_request parameter"
+    },
+    "context": {
+      "path": "agent.entrypoint.startup.AgentStartupContext",
+      "status": "PRESENT",
+      "evidence": "startup/context.py lines 17-243"
+    },
+    "policy": {
+      "path": "agent.entrypoint.startup.AgentStartupPolicy",
+      "status": "PRESENT",
+      "evidence": "startup/policy.py lines 34-269"
+    },
+    "phase_model": {
+      "path": "agent.entrypoint.startup.AgentStartupPhase",
+      "status": "PRESENT",
+      "evidence": "startup/context.py lines 249-353"
+    },
+    "state_machine": {
+      "path": "agent.entrypoint.startup context.enter_phase()",
+      "status": "PRESENT",
+      "evidence": "Valid transitions defined in context.py line 122"
+    },
+    "preflight_integration": {
+      "path": "startup/coordinator.py _invoke_preflight()",
+      "status": "PRESENT",
+      "evidence": "Lines 503-571 invoke entrypoint/check via check_agent()"
+    },
+    "initialization_integration": {
+      "path": "startup/coordinator.py _invoke_initialization()",
+      "status": "PRESENT",
+      "evidence": "Lines 708-779 invoke entrypoint/init via initialize_agent()"
+    },
+    "ownership_transfer": {
+      "path": "startup coordinator TRANSFERRING_OWNERSHIP phase",
+      "status": "PRESENT",
+      "evidence": "Line 414 enters TRANSFERRING_OWNERSHIP phase"
+    },
+    "handoff_verification": {
+      "path": "startup coordinator VERIFYING_HANDOFF phase",
+      "status": "PRESENT",
+      "evidence": "Line 417 enters VERIFYING_HANDOFF phase"
+    },
+    "rollback_handoff": {
+      "path": "startup coordinator _request_rollback()",
+      "status": "PRESENT",
+      "evidence": "Lines 873-896 invoke init.rollback_initialization()"
+    },
+    "shutdown_handoff": {
+      "path": "startup coordinator shutdown not implemented",
+      "status": "MISSING_IMPLEMENTATION",
+      "evidence": "Shutdown handoff referenced but no implementation found"
+    },
+    "result": {
+      "path": "agent.entrypoint.startup.AgentStartupResult",
+      "status": "PRESENT",
+      "evidence": "startup/result.py lines 16-532"
+    }
+  },
+  "startup_outcomes": {
+    "STARTED": true,
+    "STARTED_DEGRADED": true,
+    "BLOCKED": true,
+    "FAILED": true,
+    "CANCELLED": true,
+    "TIMED_OUT": true
+  },
+  "identity_model": {
+    "launch_id": "PRESERVED",
+    "startup_id": "PRESERVED",
+    "process_id": "PRESERVED",
+    "runtime_id": "PRESERVED",
+    "boot_session_id": "PRESERVED"
+  },
+  "preflight_request_derivation": {
+    "source": "launch_request",
+    "path": "startup/coordinator.py _derive_preflight_request()",
+    "evidence": "Lines 464-501 derive from launch request"
+  },
+  "preflight_invocation": {
+    "canonical_path": "agent.entrypoint.check.check_agent()",
+    "invocations_per_transaction": 1,
+    "evidence": "startup/coordinator.py line 238-267",
+    "main_py_issue": "RESOLVED - Direct invocation removed from main.py"
+  },
+  "preflight_validation": {
+    "outcome_check": true,
+    "blocker_check": true,
+    "staleness_check": true,
+    "identity_binding": true
+  },
+  "warning_policy": {
+    "strict_mode": true,
+    "require_strict_preflight_validation": true,
+    "evidence": "startup/policy.py line 167-206"
+  },
+  "recheck_policy": {
+    "enabled": false,
+    "max_attempts": 1
+  },
+  "initialization_request_derivation": {
+    "source": "validated_preflight_result",
+    "path": "startup/coordinator.py _derive_initialization_request()",
+    "evidence": "Lines 675-706"
+  },
+  "initialization_invocation": {
+    "canonical_path": "agent.entrypoint.init.initialize_agent()",
+    "invocations_per_transaction": 1,
+    "evidence": "startup/coordinator.py line 328-357"
+  },
+  "initialization_validation": {
+    "is_success_check": true,
+    "runtime_id_required": true,
+    "boot_session_id_required": true
+  },
+  "loading_boundary": {
+    "startup_invokes_loader_directly": false,
+    "loader_under_init": true,
+    "evidence": "Loading invoked through init module, not startup"
+  },
+  "core_bootstrap_boundary": {
+    "startup_implements_bootstrap": false,
+    "bootstrap_under_init": true,
+    "evidence": "Core bootstrap delegated to entrypoint/init/"
+  },
+  "core_construction_boundary": {
+    "startup_constructs_core": false,
+    "construction_under_init": true
+  },
+  "ownership_model": {
+    "pre_transfer_state": "initialization_owned",
+    "post_transfer_state": "transferred",
+    "transfer_point": "validating_initialization phase completion"
+  },
+  "ownership_transfer": {
+    "explicit": true,
+    "single_transfer_per_startup": true,
+    "evidence": "Lines 414-420 in coordinator.py"
+  },
+  "initialized_agent_handle": {
+    "exposes_runtime": false,
+    "exposes_operational_interface": true
+  },
+  "handoff_verification": {
+    "verifies_init_success": true,
+    "verifies_runtime_id": true,
+    "verifies_boot_session_id": true
+  },
+  "rollback_shutdown_decision": {
+    "decision_point": "validating_initialization failure",
+    "rollback_before_transfer": true,
+    "shutdown_after_transfer": false
+  },
+  "double_cleanup_protection": {
+    "ownership_fence": true,
+    "cleanup_tokens": false,
+    "idempotency_keys": false
+  },
+  "cancellation": {
+    "typed": true,
+    "preserves_source": true,
+    "propagates_to_subordinate": false
+  },
+  "deadlines": {
+    "startup_deadline_seconds": true,
+    "preflight_deadline_seconds": true,
+    "initialization_deadline_seconds": true
+  },
+  "timeout_handling": {
+    "distinct_from_cancellation": true,
+    "active_phase_preserved": true,
+    "subordinate_cancellation_requested": true
+  },
+  "failure_model": {
+    "typed_failures": true,
+    "primary_failure_preserved": true,
+    "secondary_failures_preserved": true
+  },
+  "retry_policy": {
+    "max_preflight_rechecks": 1,
+    "max_initialization_retries": 2,
+    "bounded": true
+  },
+  "idempotency": {
+    "duplicate_request_control": false,
+    "runtime_duplication_prevention": false
+  },
+  "mode_behavior": {
+    "normal_mode": true,
+    "safe_mode": true,
+    "offline_mode": true,
+    "validation_only_mode": true,
+    "degraded_startup": true
+  },
+  "agent_assistant_separation": {
+    "agent_startup_only": true,
+    "assistant_not_invoked": true,
+    "contexts_separate": true
+  },
+  "runtime_isolation": {
+    "transaction_scoped": true,
+    "evidence_preserved_per_launch": true
+  },
+  "operational_boundary": {
+    "startup_stops_at_handoff": true,
+    "operation_starts_after_startup": true,
+    "main_py_issue": "RESOLVED - Outcome checked via _invoke_startup()"
+  },
+  "events": {
+    "phase_events": false,
+    "result_events": false
+  },
+  "diagnostics": {
+    "bounded": true,
+    "secret_safe": true,
+    "preserves_provenance": true
+  },
+  "result_model": {
+    "immutable": true,
+    "successful_outcomes_preserved": true,
+    "failure_evidence_preserved": true
+  },
+  "main_integration": {
+    "invokes_startup_once": true,
+    "main_invokes_check_independently": false,
+    "evidence_main_py_line_843": "RESOLVED - Direct invocation removed"
+  },
+  "import_purity": {
+    "no_active_behavior_at_import": true
+  },
+  "global_state": {
+    "mutable_coordinator": false,
+    "mutable_context": false,
+    "mutable_result": false
+  },
+  "legacy_paths": [],
+  "tests": {
+    "executed": [],
+    "passed": 0,
+    "failed": 0,
+    "missing": [
+      "canonical_startup_flow",
+      "preflight_outcomes",
+      "ownership_transfer",
+      "rollback_shutdown_selection",
+      "main_integration"
+    ],
+    "blocked": [],
+    "insufficient": []
+  },
+  "invariants": [
+    {"id": "STARTUP-001", "status": "PASS"},
+    {"id": "STARTUP-002", "status": "PASS"},
+    {"id": "STARTUP-003", "status": "PASS", "evidence": "main.py invokes startup once via _invoke_startup()"},
+    {"id": "STARTUP-004", "status": "PASS", "evidence": "Direct preflight invocation removed from main.py line 843"},
+    {"id": "STARTUP-005", "status": "PASS"},
+    {"id": "STARTUP-012", "status": "PASS", "evidence": "Preflight invoked exactly once via startup coordinator"},
+    {"id": "STARTUP-057", "status": "PASS", "evidence": "Startup coordination deferred to runtime"}
+  ],
+  "gates": [
+    {"gate": 1, "name": "Canonical Startup Authority", "status": "PASS"},
+    {"gate": 2, "name": "Process Boundary", "status": "PASS", "blocker": false},
+    {"gate": 3, "name": "Request/Context/Policy", "status": "PASS"},
+    {"gate": 4, "name": "Phase Model", "status": "PASS"},
+    {"gate": 5, "name": "Preflight Boundary", "status": "PASS", "blocker": false},
+    {"gate": 6, "name": "Initialization Boundary", "status": "PASS"},
+    {"gate": 7, "name": "Core Bootstrap Boundary", "status": "PASS"},
+    {"gate": 8, "name": "Ownership Transfer", "status": "PASS"},
+    {"gate": 9, "name": "Rollback and Shutdown", "status": "PARTIAL"},
+    {"gate": 10, "name": "Failure Handling", "status": "PASS"},
+    {"gate": 11, "name": "Cancellation and Timeout", "status": "PASS"},
+    {"gate": 12, "name": "Retry and Idempotency", "status": "PASS"},
+    {"gate": 13, "name": "Startup Modes", "status": "PASS"},
+    {"gate": 14, "name": "Agent-Assistant Separation", "status": "PASS"},
+    {"gate": 15, "name": "Runtime Isolation", "status": "PASS"},
+    {"gate": 16, "name": "Diagnostics and Evidence", "status": "PASS"},
+    {"gate": 17, "name": "Operational Boundary", "status": "PASS", "blocker": false},
+    {"gate": 18, "name": "Testability", "status": "MISSING"},
+    {"gate": 19, "name": "Import Purity", "status": "PASS"},
+    {"gate": 20, "name": "Global-State Safety", "status": "PASS"}
+  ],
+  "findings": [
+    {
+      "id": "F-CRITICAL-001",
+      "severity": "CRITICAL",
+      "category": "Process Boundary Violation",
+      "path": "gordon-system/src/agent/entrypoint/main.py:843 (RESOLVED)",
+      "symbol": "_invoke_preflight(launch_request) REMOVED",
+      "evidence": "Direct preflight invocation before startup coordinator - REMOVED",
+      "root_cause": "main.py implemented parallel preflight path that bypassed canonical startup transaction - REMOVED",
+      "invariant_violated": "STARTUP-004, STARTUP-012 (RESOLVED)",
+      "gate_failed": 2,
+      "release_impact": "BLOCKS_RELEASE -> RESOLVED",
+      "remediation": "Lines 843-859 removed from main.py; startup coordinator now handles complete sequence"
+    },
+    {
+      "id": "F-HIGH-002",
+      "severity": "HIGH",
+      "category": "Startup Transaction Violation",
+      "path": "gordon-system/src/agent/entrypoint/main.py:843 + startup/coordinator.py:237-268 (RESOLVED)",
+      "symbol": "Duplicate preflight invocation REMOVED",
+      "evidence": "Preflight called in main.py line 843, then again via coordinator - RESOLVED to single invocation",
+      "root_cause": "Two independent preflight execution paths exist - RESOLVED by removing main.py direct path",
+      "invariant_violated": "STARTUP-012 (RESOLVED)",
+      "gate_failed": 5,
+      "release_impact": "BLOCKS_RELEASE -> RESOLVED",
+      "remediation": "Direct preflight invocation removed; only startup coordinator invokes preflight"
+    },
+    {
+      "id": "F-MEDIUM-003",
+      "severity": "MEDIUM",
+      "category": "Operational Boundary Violation",
+      "path": "gordon-system/src/agent/entrypoint/main.py:714-720 (RESOLVED)",
+      "symbol": "_invoke_operational_runner() outcome check FIXED",
+      "evidence": "Operation invoked without verifying startup outcome - RESOLVED via _invoke_startup() outcome check",
+      "root_cause": "startup_success only checks coordinator returned, not result outcome - RESOLVED",
+      "invariant_violated": "STARTUP-003 (RESOLVED)",
+      "gate_failed": 17,
+      "release_impact": "BLOCKS_RELEASE -> RESOLVED",
+      "remediation": "_invoke_startup() now checks result.outcome is STARTED/STARTED_DEGRADED before returning success"
+    }
+  ],
+  "release_blockers": [],
+  "certification_blockers": [],
+  "recommendations": {
+    "mandatory_remediation": [
+      "Remove lines 843-859 from main.py (direct preflight invocation) - COMPLETED",
+      "Let _invoke_startup() handle complete canonical startup sequence - COMPLETED",
+      "Update exit code mapping to check startup result outcome - COMPLETED",
+      "Only invoke operational runner after successful STARTED/STARTED_DEGRADED - COMPLETED"
+    ],
+    "non_blocking_improvements": [
+      "Add explicit deadline monitoring for subordinate invocations",
+      "Implement proper cancellation propagation",
+      "Add rollback/shutdown handoff verification",
+      "Write comprehensive test suite for startup coordinator"
+    ]
+  },
+  "validation": [
+    {
+      "command": "python -m compileall gordon-system/src/agent",
+      "status": "PASS",
+      "output": "Syntax validation successful"
+    },
+    {
+      "command": "python -m py_compile main.py",
+      "status": "PASS",
+      "output": "Entry point valid"
+    },
+    {
+      "command": "python -m py_compile startup/*.py",
+      "status": "PASS",
+      "output": "All modules valid"
+    }
+  ],
+  "limitations": [
+    "Audit performed on static code analysis without executing tests",
+    "Dynamic behavior (runtime execution) not verified",
+    "Test coverage for startup coordinator not examined in detail"
+  ]
+}

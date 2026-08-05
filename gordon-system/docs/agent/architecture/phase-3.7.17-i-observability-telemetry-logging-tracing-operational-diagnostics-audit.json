@@ -1,0 +1,296 @@
+{
+  "report": {
+    "title": "Gordon System Phase 3.7.17-I Audit Report",
+    "subtitle": "Observability, Telemetry, Logging, Tracing & Operational Diagnostics",
+    "audit_date": "2026-08-04",
+    "phase": "3.7.17-I",
+    "classification": "CERTIFIED"
+  },
+  "repository": {
+    "path": "gordon-system/src/agent/components/core/observability/",
+    "source_files": [
+      "__init__.py",
+      "correlation_manager.py",
+      "correlation.py",
+      "diagnostics_manager.py",
+      "events.py",
+      "logging_manager.py",
+      "metrics_manager.py",
+      "models.py",
+      "observability_manager.py",
+      "sinks.py",
+      "telemetry_manager.py",
+      "tracing.py"
+    ]
+  },
+  "observability_architecture": {
+    "authorities": [
+      {
+        "authority_id": "OBS-001",
+        "name": "ObservabilityManager",
+        "classification": "Canonical Runtime Observability Authority",
+        "symbol": "ObservabilityManager",
+        "path": "gordon-system/src/agent/components/core/observability/__init__.py",
+        "scope": "runtime",
+        "runtime_scope": true,
+        "owner": "Runtime",
+        "construction": "ObservabilityManager(config: Optional[ObservabilityConfig])",
+        "public_api": [
+          "debug(message, **payload)",
+          "info(message, **payload)",
+          "notice(message, **payload)",
+          "warning(message, **payload)",
+          "error(message, exception=None, **payload)",
+          "critical(message, **payload)",
+          "get_correlation_id()",
+          "record_counter(name, amount, **tags)",
+          "set_gauge(name, value, **tags)",
+          "trace_context(span_name, trace_id=None)",
+          "info_finding(source, code, title, **evidence)",
+          "warning_finding(source, code, title, **evidence)",
+          "error_finding(source, code, title, **evidence)",
+          "critical_finding(source, code, title, **evidence)"
+        ],
+        "dependencies": ["LoggingManager", "CorrelationManager", "MetricsManager", "TelemetryManager", "DiagnosticsManager"],
+        "delegated_authorities": [],
+        "telemetry_domains": ["runtime", "component", "task", "model", "tool", "plugin", "resource", "security", "persistence"],
+        "failure_behavior": "Observability is observational - never changes runtime behavior",
+        "evidence": "Lines 69-459 in observability_manager.py",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "OBS-002",
+        "name": "LoggingManager",
+        "classification": "Canonical Structured Logging Authority",
+        "symbol": "LoggingManager",
+        "path": "gordon-system/src/agent/components/core/observability/logging_manager.py",
+        "scope": "runtime",
+        "runtime_scope": true,
+        "owner": "Runtime",
+        "construction": "LoggingManager(runtime_id: Optional[str], sampling_config: Optional[SamplingConfig], max_history: int)",
+        "public_api": [
+          "trace(message, **payload)",
+          "debug(message, **payload)",
+          "info(message, **payload)",
+          "notice(message, **payload)",
+          "warning(message, **payload)",
+          "error(message, exception=None, **payload)",
+          "critical(message, **payload)",
+          "add_sink(sink: LogSink)",
+          "remove_sink(sink: LogSink)",
+          "emit(record: LogRecord)",
+          "get_recent_logs(limit: int)"
+        ],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "telemetry_domains": ["runtime", "component", "task"],
+        "failure_behavior": "Sink failures don't prevent other emissions",
+        "evidence": "Lines 243-683 in logging_manager.py",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "OBS-003",
+        "name": "TraceManager",
+        "classification": "Canonical Distributed Tracing Authority",
+        "symbol": "TraceManager",
+        "path": "gordon-system/src/agent/components/core/observability/tracing.py",
+        "scope": "runtime",
+        "runtime_scope": true,
+        "owner": "Runtime",
+        "construction": "TraceManager(runtime_id: Optional[str], max_spans_per_trace: int)",
+        "public_api": [
+          "start_span(name, parent_span_id=None, trace_id=None)",
+          "finish_span(span_record, status, error_message=None, stack_trace=None)",
+          "add_span_event(span_record, event_name, **attributes)",
+          "get_trace_snapshot(trace_id: str)",
+          "get_span(span_id: str)"
+        ],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "telemetry_domains": ["runtime", "task", "model", "tool", "plugin"],
+        "failure_behavior": "Tracing is observational - never changes runtime behavior",
+        "evidence": "Lines 281-590 in tracing.py",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "OBS-004",
+        "name": "MetricsManager",
+        "classification": "Canonical Metric Collection Authority",
+        "symbol": "MetricsManager",
+        "path": "gordon-system/src/agent/components/core/observability/metrics_manager.py",
+        "scope": "runtime",
+        "runtime_scope": true,
+        "owner": "Runtime",
+        "construction": "MetricsManager(runtime_id: Optional[str])",
+        "public_api": [
+          "create_counter(name, help_text=\"\", labels=[])",
+          "create_gauge(name, help_text=\"\", labels=[])",
+          "create_histogram(name, help_text=\"\", labels=[], max_age_seconds=60.0)",
+          "get_snapshot()",
+          "record_counter(name, amount=1.0)",
+          "set_gauge(name, value)",
+          "observe_histogram(name, value)"
+        ],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "telemetry_domains": ["runtime", "resource"],
+        "failure_behavior": "Metrics are observational - never change runtime behavior",
+        "evidence": "Lines 507-761 in metrics_manager.py",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "OBS-005",
+        "name": "CorrelationManager",
+        "classification": "Canonical Correlation Context Authority",
+        "symbol": "CorrelationManager",
+        "path": "gordon-system/src/agent/components/core/observability/correlation_manager.py",
+        "scope": "runtime",
+        "runtime_scope": true,
+        "owner": "Runtime",
+        "construction": "CorrelationManager(runtime_id: Optional[str], initial_correlation_id: Optional[str])",
+        "public_api": [
+          "get_current_context()",
+          "get_correlation_id()",
+          "extract_context(ctx)",
+          "inject_context(props)",
+          "request_context(request_id=None, session_id=None)",
+          "span_context(span_name, trace_id=None, parent_span_id=None)",
+          "session_context(session_id, correlation_id=None)",
+          "task_context(task_id, parent_task_id=None, correlation_id=None)"
+        ],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "telemetry_domains": ["runtime", "task"],
+        "failure_behavior": "Correlation never changes runtime behavior",
+        "evidence": "Lines 70-366 in correlation_manager.py",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "OBS-006",
+        "name": "DiagnosticsManager",
+        "classification": "Canonical Diagnostic Reporting Authority",
+        "symbol": "DiagnosticsManager",
+        "path": "gordon-system/src/agent/components/core/observability/diagnostics_manager.py",
+        "scope": "runtime",
+        "runtime_scope": true,
+        "owner": "Runtime",
+        "construction": "DiagnosticsManager(runtime_id: Optional[str], max_findings_per_scope: int, retention_seconds: float)",
+        "public_api": [
+          "finding(source, code, severity, title, description=\"\", **evidence)",
+          "info(source, code, title, **evidence)",
+          "warning(source, code, title, **evidence)",
+          "error(source, code, title, **evidence)",
+          "critical(source, code, title, **evidence)",
+          "get_report(subject: str)",
+          "capture_snapshot()",
+          "get_findings(scope=\"runtime\", severity=None, source=None)"
+        ],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "telemetry_domains": ["runtime", "component", "resource"],
+        "failure_behavior": "Diagnostics never mutate runtime behavior",
+        "evidence": "Lines 162-513 in diagnostics_manager.py",
+        "confidence": "HIGH"
+      }
+    ],
+    "telemetry_context": {
+      "context_id": "TC-001",
+      "runtime_id": "required",
+      "correlation_id": "optional",
+      "causation_id": "optional",
+      "session_id": "optional",
+      "request_id": "optional",
+      "entity_id": "optional",
+      "task_id": "optional",
+      "parent_task_id": "optional",
+      "trace_id": "optional",
+      "span_id": "optional",
+      "parent_span_id": "optional"
+    }
+  },
+  "logging": {
+    "schema": {
+      "version": "1.0",
+      "required_fields": ["level", "message", "context", "metadata"],
+      "optional_fields": ["payload", "redacted_fields", "is_redacted"],
+      "timestamp_source": "wall-clock (timestamp_utc) and monotonic (monotonic_time)",
+      "level_model": {
+        "levels": [
+          {"name": "TRACE", "priority": 0},
+          {"name": "DEBUG", "priority": 1},
+          {"name": "INFO", "priority": 2},
+          {"name": "NOTICE", "priority": 3},
+          {"name": "WARNING", "priority": 4},
+          {"name": "ERROR", "priority": 5},
+          {"name": "CRITICAL", "priority": 6}
+        ],
+        "is_error_levels": ["ERROR", "CRITICAL"],
+        "is_warning_levels": ["WARNING", "ERROR", "CRITICAL"]
+      },
+      "logger_namespace": "agent.components.core.observability.logging_manager",
+      "message_model": "human-readable string with optional structured payload",
+      "structured_attributes": true,
+      "exception_model": {
+        "exception_type": "optional str",
+        "exception_message": "optional str"
+      },
+      "correlation_fields": ["correlation_id", "trace_id", "span_id"],
+      "redaction": "RedactingSink decorator for sensitive fields"
+    },
+    "configuration": {
+      "sampling_policies": [
+        {"name": "ALWAYS", "description": "Log everything (except when disabled)"},
+        {"name": "NEVER", "description": "Log nothing except CRITICAL"},
+        {"name": "PROBABILISTIC", "description": "Random sampling with configurable rate"},
+        {"name": "ERROR_PRIORITY", "description": "All errors + sampled others"},
+        {"name": "PERFORMANCE_PRIORITY", "description": "Low overhead, only high-value logs"}
+      ],
+      "formatters": [
+        {"type": "PlainTextFormatter", "include_timestamp": true, "include_level": true, "include_source": true},
+        {"type": "JsonFormatter", "include_timestamp": true, "include_level": true}
+      ],
+      "sinks": ["ConsoleSink", "MemorySink", "FakeSink"],
+      "buffering": {
+        "bounded": true,
+        "max_history_default": 10000
+      },
+      "flush_behavior": "async close() on all sinks"
+    }
+  },
+  "metrics": {
+    "taxonomy": [
+      {"type": "COUNTER", "description": "Monotonically increasing count"},
+      {"type": "GAUGE", "description": "Value that can go up or down"},
+      {"type": "HISTOGRAM", "description": "Distribution with percentiles (p50, p95, p99)"},
+      {"type": "TIMER", "description": "Duration measurements"}
+    ],
+    "cardinality_controls": {
+      "bounded_buffers": true,
+      "max_history_size_default": 10000
+    }
+  },
+  "tracing": {
+    "span_types": ["RUNNING", "SUCCESS", "ERROR", "CANCELLED", "TIMEOUT"],
+    "parent_rules": "Explicit parent_span_id for nesting",
+    "sampling_policy": "Always on - no sampling at span level"
+  },
+  "correlation": {
+    "scopes": [
+      {"name": "GLOBAL", "description": "All operations in this runtime"},
+      {"name": "SESSION", "description": "User session scope"},
+      {"name": "REQUEST", "description": "Single request/response cycle"},
+      {"name": "TASK", "description": "Task execution scope"},
+      {"name": "SPAN", "description": "Distributed trace span"}
+    ]
+  },
+  "failure_model": {
+    "buffer_overflow_behavior": "Eviction (DROP_OLDEST or DROP_LOWEST_SEVERITY)",
+    "drop_behavior": "Dropped count tracked via total_dropped property",
+    "sink_failure_isolation": true,
+    "exporter_failure_isolation": true
+  },
+  "multi_runtime_isolation": {
+    "runtime_id_scoping": true,
+    "isolation_enforced": true
+  }
+}

@@ -1,0 +1,1151 @@
+{
+  "repository": {
+    "root": "/home/bvrznski/Gordon",
+    "branch": "main",
+    "commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "persistence_path": "gordon-system/src/agent/components/core/persistence/",
+    "documentation_path": "gordon-system/docs/agent/architecture/"
+  },
+  "scope": {
+    "phase": "3.7.15",
+    "audit_type": "Architecture Acceptance Audit",
+    "title": "Persistence, State, Serialization & Checkpoint Architecture"
+  },
+  "methodology": {
+    "static_analysis": true,
+    "dynamic_tests": true,
+    "coverage": ["persistence", "serialization", "snapshots", "checkpoints", "journals", "restore", "migration"],
+    "gates_evaluated": ["mandatory", "conditional"]
+  },
+  "persistence_architecture": {
+    "authorities": [
+      {
+        "authority_id": "PersistenceManager",
+        "name": "PersistenceManager",
+        "classification": "CANONICAL",
+        "symbol": "PersistenceManager",
+        "path": "gordon-system/src/agent/components/core/persistence/manager.py",
+        "scope": "runtime_instance",
+        "runtime_scope": "Per-runtime instance",
+        "owner": "Runtime Instance",
+        "construction": "PersistenceManager(runtime_id=str)",
+        "public_api": ["register_domain", "register_participant", "register_backend", "capture_and_persist", "restore"],
+        "dependencies": [],
+        "delegated_authorities": ["CheckpointManager", "SnapshotManager", "JournalManager", "RestoreManager"],
+        "storage_domains": [
+          "runtime_state",
+          "scheduler_state",
+          "task_state",
+          "resource_state",
+          "configuration_state"
+        ],
+        "evidence": {
+          "type": "CODE",
+          "file": "manager.py",
+          "lines": [214, 350],
+          "description": "PersistenceManager class with runtime_id constructor and capture/restore methods"
+        },
+        "confidence": "CONFIRMED"
+      }
+    ],
+    "state_authority": {
+      "authority_id": "StateDomainRegistry",
+      "name": "StateDomainRegistry",
+      "classification": "CANONICAL",
+      "scope": "Runtime state domains",
+      "ownership": "Runtime Instance owns state, PersistenceManager coordinates persistence",
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [217, 240],
+        "description": "StateDomainRegistry class with register/get/list methods"
+      },
+      "confidence": "CONFIRMED"
+    }
+  },
+  "authorities": [
+    {
+      "authority_id": "PersistenceManager",
+      "name": "Persistence Manager",
+      "classification": "CANONICAL",
+      "symbol": "PersistenceManager",
+      "path": "gordon-system/src/agent/components/core/persistence/manager.py",
+      "scope": "Runtime-wide persistence coordination",
+      "runtime_scope": "Per-runtime instance",
+      "owner": "Runtime Instance",
+      "construction": "PersistenceManager(runtime_id=str)",
+      "public_api": [
+        "register_domain(domain_id, owner, durability_class, **kwargs)",
+        "register_participant(participant_id, protocol)",
+        "register_backend(backend_id, backend, is_default=False)",
+        "get_domain(domain_id) -> RegisteredDomain",
+        "list_domains() -> List[RegisteredDomain]",
+        "capture_and_persist(request: PersistenceRequest) -> PersistenceResult"
+      ],
+      "dependencies": [
+        "SerializationManager",
+        "StorageBackendProtocol implementations"
+      ],
+      "storage_domains": [
+        "runtime_state",
+        "scheduler_state", 
+        "task_state",
+        "resource_state",
+        "configuration_state"
+      ],
+      "evidence": {
+        "type": "CODE",
+        "file": "manager.py",
+        "lines": [214, 350],
+        "description": "PersistenceManager is the canonical persistence authority per runtime instance"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "authority_id": "SerializationManager",
+      "name": "Serialization Manager",
+      "classification": "CANONICAL",
+      "symbol": "SerializationManager",
+      "path": "gordon-system/src/agent/components/core/persistence/serialization.py",
+      "scope": "Serialization format management and codec registry",
+      "runtime_scope": "Singleton per runtime",
+      "owner": "Runtime Instance",
+      "construction": "SerializationManager()",
+      "public_api": [
+        "register_codec(codec: SerializationCodec)",
+        "get_codec(fmt: SerializationFormat) -> Optional[SerializationCodec]",
+        "serialize(value, format=CANONICAL_JSON) -> bytes",
+        "deserialize(data, expected_type=None) -> Any"
+      ],
+      "dependencies": [],
+      "storage_domains": [],
+      "evidence": {
+        "type": "CODE",
+        "file": "serialization.py",
+        "lines": [391, 416],
+        "description": "SerializationManager manages codec registration and serialization/deserialization operations"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "authority_id": "CheckpointManager",
+      "name": "Checkpoint Manager",
+      "classification": "CANONICAL",
+      "symbol": "CheckpointManager",
+      "path": "gordon-system/src/agent/components/core/persistence/checkpoints.py",
+      "scope": "Checkpoint lifecycle management",
+      "runtime_scope": "Per-runtime instance",
+      "owner": "Runtime Instance",
+      "construction": "CheckpointManager(runtime_id=str)",
+      "public_api": [
+        "create_checkpoint(request: CheckpointRequest) -> CheckpointResult",
+        "find_checkpoint(checkpoint_id=None, runtime_id=None, before_time=None) -> Optional[CheckpointManifest]",
+        "list_checkpoints(runtime_id=None) -> List[CheckpointManifest]"
+      ],
+      "dependencies": ["PersistenceManager"],
+      "storage_domains": [],
+      "evidence": {
+        "type": "CODE",
+        "file": "checkpoints.py",
+        "lines": [152, 179],
+        "description": "CheckpointManager is the canonical checkpoint authority per runtime instance"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "authority_id": "SnapshotManager",
+      "name": "Snapshot Manager",
+      "classification": "CANONICAL",
+      "symbol": "SnapshotManager",
+      "path": "gordon-system/src/agent/components/core/persistence/snapshots.py",
+      "scope": "Snapshot capture and storage management",
+      "runtime_scope": "Per-runtime instance",
+      "owner": "Runtime Instance",
+      "construction": "SnapshotManager(runtime_id=str)",
+      "public_api": [
+        "create_snapshot(request: SnapshotRequest) -> SnapshotResult",
+        "find_snapshot(snapshot_id=None, runtime_id=None, before_time=None) -> Optional[SnapshotManifest]",
+        "list_snapshots(runtime_id=None) -> List[SnapshotManifest]"
+      ],
+      "dependencies": ["PersistenceManager"],
+      "storage_domains": [],
+      "evidence": {
+        "type": "CODE",
+        "file": "snapshots.py",
+        "lines": [135, 147],
+        "description": "SnapshotManager is the canonical snapshot authority per runtime instance"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "authority_id": "JournalManager",
+      "name": "Journal Manager",
+      "classification": "CANONICAL",
+      "symbol": "JournalManager",
+      "path": "gordon-system/src/agent/components/core/persistence/journal.py",
+      "scope": "Append-only journal management",
+      "runtime_scope": "Per-runtime instance",
+      "owner": "Runtime Instance",
+      "construction": "JournalManager(runtime_id=str)",
+      "public_api": [
+        "append(request: JournalAppendRequest) -> JournalAppendResult",
+        "replay(request: JournalReplayRequest) -> JournalReplayResult",
+        "get_journal_state(journal_id=None) -> Dict[str, Any]"
+      ],
+      "dependencies": ["PersistenceManager"],
+      "storage_domains": [],
+      "evidence": {
+        "type": "CODE",
+        "file": "journal.py",
+        "lines": [177, 192],
+        "description": "JournalManager is the canonical journal authority per runtime instance"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "authority_id": "RestoreManager",
+      "name": "Restore Manager",
+      "classification": "CANONICAL",
+      "symbol": "RestoreManager",
+      "path": "gordon-system/src/agent/components/core/persistence/restore.py",
+      "scope": "Restore and rehydration management",
+      "runtime_scope": "Per-runtime instance",
+      "owner": "Runtime Instance",
+      "construction": "RestoreManager(runtime_id=str)",
+      "public_api": [
+        "restore(request: RestoreRequest) -> RestoreResult",
+        "_discover_and_select(request) -> Optional[Dict[str, Any]]",
+        "_find_checkpoint(selection) -> Optional[Dict[str, Any]]"
+      ],
+      "dependencies": ["PersistenceManager", "MigrationManager"],
+      "storage_domains": [],
+      "evidence": {
+        "type": "CODE",
+        "file": "restore.py",
+        "lines": [169, 209],
+        "description": "RestoreManager is the canonical restore authority per runtime instance"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "authority_id": "MigrationManager",
+      "name": "Migration Manager",
+      "classification": "CANONICAL",
+      "symbol": "MigrationManager",
+      "path": "gordon-system/src/agent/components/core/persistence/migration.py",
+      "scope": "Schema migration and evolution management",
+      "runtime_scope": "Singleton per runtime",
+      "owner": "Runtime Instance",
+      "construction": "MigrationManager()",
+      "public_api": [
+        "register_migration(domain, source_version, target_version, migration_fn, deterministic=True, reversible=False)",
+        "check_compatibility(domain, source_version, target_version) -> CompatibilityResult",
+        "migrate(request: MigrationRequest) -> MigrationResult"
+      ],
+      "dependencies": [],
+      "storage_domains": [],
+      "evidence": {
+        "type": "CODE",
+        "file": "migration.py",
+        "lines": [239, 286],
+        "description": "MigrationManager is the canonical migration authority for schema evolution"
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "state_domains": [
+    {
+      "domain_id": "runtime_state",
+      "name": "Runtime Control State",
+      "live_state_authority": "PersistenceManager",
+      "persistent_state_authority": "PersistenceManager",
+      "scope": "Core runtime control state",
+      "durability_class": "RESTART_RECOVERABLE",
+      "authoritativeness": "AUTHORITATIVE",
+      "checkpointable": true,
+      "snapshotable": true,
+      "journaled": false,
+      "schema_id": "runtime_state:v1",
+      "schema_version": 1,
+      "serialization_format": "canonical_json",
+      "storage_backend": "default",
+      "transaction_boundary": "Per-capture",
+      "restore_order": 0,
+      "retention_policy": "24 hours minimum",
+      "sensitivity": "LOW",
+      "evidence": {
+        "type": "CODE",
+        "file": "manager.py",
+        "lines": [275, 304],
+        "description": "register_domain method with durability_class parameter"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "domain_id": "scheduler_state",
+      "name": "Scheduler State",
+      "live_state_authority": "CheckpointManager",
+      "persistent_state_authority": "CheckpointManager",
+      "scope": "Task queue, scheduling policy",
+      "durability_class": "DURABLE",
+      "authoritativeness": "AUTHORITATIVE",
+      "checkpointable": true,
+      "snapshotable": true,
+      "journaled": false,
+      "schema_id": "scheduler_state:v1",
+      "schema_version": 1,
+      "serialization_format": "canonical_json",
+      "storage_backend": "default",
+      "transaction_boundary": "Per-capture",
+      "restore_order": 0,
+      "retention_policy": "7 days minimum",
+      "sensitivity": "LOW",
+      "evidence": {
+        "type": "CODE",
+        "file": "checkpoints.py",
+        "lines": [152, 249],
+        "description": "CheckpointManager handles checkpoint with participants and manifest"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "domain_id": "task_state",
+      "name": "Task State",
+      "live_state_authority": "CheckpointManager",
+      "persistent_state_authority": "CheckpointManager",
+      "scope": "Task metadata, execution progress",
+      "durability_class": "DURABLE",
+      "authoritativeness": "AUTHORITATIVE",
+      "checkpointable": true,
+      "snapshotable": true,
+      "journaled": false,
+      "schema_id": "task_state:v1",
+      "schema_version": 1,
+      "serialization_format": "canonical_json",
+      "storage_backend": "default",
+      "transaction_boundary": "Per-capture",
+      "restore_order": 0,
+      "retention_policy": "7 days minimum",
+      "sensitivity": "LOW",
+      "evidence": {
+        "type": "CODE",
+        "file": "checkpoints.py",
+        "lines": [83, 195],
+        "description": "CheckpointParticipant with domain_ids list"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "domain_id": "resource_state",
+      "name": "Resource State",
+      "live_state_authority": "CheckpointManager",
+      "persistent_state_authority": "CheckpointManager",
+      "scope": "GPU allocations, worker slots",
+      "durability_class": "DURABLE",
+      "authoritativeness": "AUTHORITATIVE",
+      "checkpointable": true,
+      "snapshotable": true,
+      "journaled": false,
+      "schema_id": "resource_state:v1",
+      "schema_version": 1,
+      "serialization_format": "canonical_json",
+      "storage_backend": "default",
+      "transaction_boundary": "Per-capture",
+      "restore_order": 0,
+      "retention_policy": "7 days minimum",
+      "sensitivity": "LOW",
+      "evidence": {
+        "type": "CODE",
+        "file": "checkpoints.py",
+        "lines": [83, 249],
+        "description": "CheckpointParticipant with domain_ids list"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "domain_id": "configuration_state",
+      "name": "Configuration State",
+      "live_state_authority": "PersistenceManager",
+      "persistent_state_authority": "PersistenceManager",
+      "scope": "System config, feature flags",
+      "durability_class": "REPLICATED",
+      "authoritativeness": "AUTHORITATIVE",
+      "checkpointable": true,
+      "snapshotable": true,
+      "journaled": false,
+      "schema_id": "configuration_state:v1",
+      "schema_version": 1,
+      "serialization_format": "canonical_json",
+      "storage_backend": "default",
+      "transaction_boundary": "Per-capture",
+      "restore_order": 0,
+      "retention_policy": "30 days minimum",
+      "sensitivity": "MEDIUM",
+      "evidence": {
+        "type": "CODE",
+        "file": "manager.py",
+        "lines": [275, 304],
+        "description": "PersistenceManager register_domain with REPLICATED durability"
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "state_taxonomy": {
+    "ephemeral": ["runtime_state"],
+    "reconstructable": ["task_state", "scheduler_state"],
+    "derived": [],
+    "cached": [],
+    "session_scoped": [],
+    "task_scoped": [],
+    "component_scoped": [],
+    "runtime_scoped": ["configuration_state"],
+    "durable": ["task_state", "scheduler_state", "resource_state"],
+    "replicated": ["configuration_state"],
+    "archival": []
+  },
+  "durability_classes": [
+    {
+      "class_id": "NONE",
+      "name": "none",
+      "description": "No persistence required - state lives only during runtime",
+      "write_acknowledgment_point": "Immediate (in-memory)",
+      "failure_guarantees": "None",
+      "power_loss_guarantees": "No survival",
+      "process_crash_guarantees": "Lost on crash",
+      "storage_failure_guarantees": "Not applicable",
+      "replay_guarantees": "N/A",
+      "diagnostics": false,
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [68],
+        "description": "DurabilityClass.NONE enum value"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "class_id": "PROCESS_LIFETIME",
+      "name": "process_lifetime",
+      "description": "State survives only the current process lifetime",
+      "write_acknowledgment_point": "In-memory",
+      "failure_guarantees": "Lost on process crash",
+      "power_loss_guarantees": "Lost on power loss",
+      "process_crash_guarantees": "Lost on crash",
+      "storage_failure_guarantees": "Not applicable",
+      "replay_guarantees": "N/A",
+      "diagnostics": false,
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [71],
+        "description": "DurabilityClass.PROCESS_LIFETIME enum value"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "class_id": "RESTART_RECOVERABLE",
+      "name": "restart_recoverable",
+      "description": "State survives process restart (default for recoverable state)",
+      "write_acknowledgment_point": "fsync after write",
+      "failure_guarantees": "Survives restart, may be lost on storage failure",
+      "power_loss_guarantees": "Survives power loss with fsync",
+      "process_crash_guarantees": "Survives crash with fsync",
+      "storage_failure_guarantees": "May be lost if storage fails before fsync",
+      "replay_guarantees": "N/A (full state restored)",
+      "diagnostics": true,
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [77],
+        "description": "DurabilityClass.RESTART_RECOVERABLE enum value"
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "class_id": "DURABLE",
+      "name": "durable",
+      "description": "State is durable with strong guarantees",
+      "write_acknowledgment_point": "Transaction commit after fsync",
+      "failure_guarantees": "Survives crash, may be lost on replication failure",
+      "power_loss_guarantees": "Survives power loss",
+      "process_crash_guarantees": "Survives crash",
+      "storage_failure_guarantees": "Replication provides redundancy",
+      "replay_guarantees": "N/A (full state restored)",
+      "diagnostics": true,
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [83],
+        "description": "DurabilityClass.DURABLE enum value"
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "state_identity": {
+    "runtime_id": {
+      "field_type": "str (UUID v4)",
+      "scope": "Global uniqueness",
+      "generation": "uuid.uuid4()",
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [28, 35]
+      }
+    },
+    "boot_session_id": {
+      "field_type": "str (UUID v4)",
+      "scope": "Per-runtime instance",
+      "generation": "uuid.uuid4()",
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [42, 49]
+      }
+    },
+    "state_domain_id": {
+      "field_type": "str",
+      "scope": "Within runtime",
+      "generation": "Application-defined",
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [151, 276]
+      }
+    },
+    "schema_version": {
+      "field_type": "int",
+      "scope": "Per domain",
+      "generation": "Application-defined with versioning policy",
+      "evidence": {
+        "type": "CODE",
+        "file": "domains.py",
+        "lines": [161, 203]
+      }
+    }
+  },
+  "state_ownership": {
+    "live_state_authority": "PersistenceManager (coordinates runtime state)",
+    "serialized_state_authority": "SerializationManager (manages encoding)",
+    "stored_state_authority": "Backend implementations (InMemoryBackend, FilesystemBackend)",
+    "checkpoint_state_authority": "CheckpointManager (manages checkpoint state)",
+    "journal_records_authority": "JournalManager (manages journal entries)",
+    "restored_state_authority": "RestoreManager (manages restoration)",
+    "migrated_state_authority": "MigrationManager (manages schema migrations)",
+    "archived_state_authority": "RetentionManager (policy-driven archival)",
+    "permissions": {
+      "read": ["PersistenceManager", "RestoreManager"],
+      "write": ["PersistenceManager"],
+      "append": ["JournalManager"],
+      "replace": ["PersistenceManager"],
+      "delete": ["RetentionManager"],
+      "compact": ["JournalManager (planned)"],
+      "migrate": ["MigrationManager"],
+      "restore": ["RestoreManager"],
+      "invalidate": ["PersistenceManager"],
+      "quarantine": ["PersistenceManager"]
+    }
+  },
+  "serialization_formats": [
+    {
+      "format_id": "canonical_json",
+      "name": "Canonical JSON",
+      "authority": "SerializationManager",
+      "deterministic": true,
+      "portable": true,
+      "security_risk": "LOW",
+      "schema_governed": true,
+      "compression": false,
+      "encryption": false,
+      "supported_types": [
+        "primitives (str, int, bool, float)",
+        "dict with sorted keys",
+        "list/tuple converted to list"
+      ],
+      "evidence": {
+        "type": "CODE",
+        "file": "serialization.py",
+        "lines": [312, 334],
+        "description": "CanonicalJsonCodec with sort_keys=True"
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "schemas": [
+    {
+      "schema_id": "SnapshotManifest",
+      "domain": "snapshots",
+      "version": 1,
+      "fields": {
+        "snapshot_id": "str (UUID)",
+        "runtime_id": "str",
+        "boot_session_id": "Optional[str]",
+        "snapshot_type": "SnapshotType",
+        "capture_mode": "SnapshotMode",
+        "parent_snapshot_id": "Optional[SnapshotId]",
+        "chain_depth": "int",
+        "created_at": "float (monotonic)",
+        "runtime_state_version": "int",
+        "configuration_version": "Optional[int]",
+        "sections": "List[SnapshotSection]"
+      },
+      "validation": true,
+      "evidence": {
+        "type": "CODE",
+        "file": "snapshots.py",
+        "lines": [100, 120]
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "schema_id": "CheckpointManifest",
+      "domain": "checkpoints",
+      "version": 1,
+      "fields": {
+        "checkpoint_id": "str (UUID)",
+        "runtime_id": "str",
+        "boot_session_id": "Optional[str]",
+        "checkpoint_type": "CheckpointType",
+        "capture_mode": "CheckpointMode",
+        "parent_checkpoint_id": "Optional[CheckpointId]",
+        "chain_depth": "int",
+        "created_at": "float (monotonic)",
+        "runtime_state_version": "int",
+        "configuration_version": "Optional[int]",
+        "participants": "List[CheckpointParticipant]"
+      },
+      "validation": true,
+      "evidence": {
+        "type": "CODE",
+        "file": "checkpoints.py",
+        "lines": [58, 79]
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "snapshots": [
+    {
+      "snapshot_type": "full",
+      "authority": "SnapshotManager",
+      "scope": "Per-runtime instance",
+      "identity_fields": ["snapshot_id", "runtime_id"],
+      "generation_model": "uuid.uuid4() for snapshot_id, monotonic timestamp for created_at",
+      "consistency_model": {
+        "quiescent": "Blocks mutations during capture",
+        "versioned": "Version boundary captures state versions",
+        "copy_on_write": "COW snapshot without blocking"
+      },
+      "capture_model": {
+        "quiescent": true,
+        "versioned": true,
+        "copy_on_write": true
+      },
+      "manifest_schema": "SnapshotManifest",
+      "payload_model": {
+        "domain_id": "str",
+        "schema_version": "int",
+        "storage_key": "str",
+        "content_digest": "str"
+      },
+      "storage_backend": ["InMemoryBackend", "FilesystemBackend (planned)"],
+      "integrity_model": {
+        "checksum_algorithm": ["SHA256", "SHA3_256", "BLAKE2B"],
+        "verification_on_read": true
+      },
+      "retention_policy": "Configurable per domain via RetentionPolicy",
+      "restore_eligibility": "Verified before restore, partial snapshots ineligible",
+      "failure_behavior": {
+        "capture_failure": "SnapshotStatus.FAILED or PARTIAL",
+        "integrity_failure": "SnapshotStatus.PARTIAL",
+        "write_failure": "SnapshotStatus.FAILED"
+      },
+      "evidence": {
+        "type": "CODE",
+        "file": "snapshots.py",
+        "lines": [135, 200]
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "journals": [
+    {
+      "journal_id": "default",
+      "authority": "JournalManager",
+      "scope": "Per-runtime instance",
+      "record_schema": {
+        "record_id": "str (UUID)",
+        "sequence": "int (monotonic per journal)",
+        "runtime_id": "str",
+        "kind": "JournalRecordKind (EVENT, MUTATION, COMMAND, SNAPSHOT_BOUNDARY)",
+        "domain_id": "str",
+        "payload": "Dict[str, Any]"
+      },
+      "record_identity": {
+        "unique_within_scope": true,
+        "ordering": "Monotonic sequence per journal"
+      },
+      "ordering_model": {
+        "global_sequence": true,
+        "per_journal_ordering": true
+      },
+      "append_model": {
+        "single_writer": true,
+        "batching": false,
+        "buffering": false
+      },
+      "durability": "Backend-dependent (InMemory: volatile, Filesystem: persistent with fsync)",
+      "flush_model": "Immediate on append",
+      "rotation_model": {
+        "by_size": false,
+        "by_count": false
+      },
+      "compaction_model": {
+        "implemented": false,
+        "method": null
+      },
+      "replay_model": {
+        "from_sequence": true,
+        "to_sequence": true,
+        "gap_detection": true,
+        "side_effect_suppression": true
+      },
+      "gap_handling": {
+        "detection": true,
+        "GapInfo": ["from_sequence", "to_sequence", "reason"]
+      },
+      "corruption_handling": {
+        "checksum_verification": true,
+        "quarantine": false,
+        "repair": false
+      },
+      "storage_backend": ["InMemoryBackend"],
+      "evidence": {
+        "type": "CODE",
+        "file": "journal.py",
+        "lines": [177, 236]
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "checkpoints": [
+    {
+      "checkpoint_type": "full",
+      "authority": "CheckpointManager",
+      "scope": "Per-runtime instance",
+      "request_model": {
+        "request_id": "str",
+        "runtime_id": "str",
+        "checkpoint_type": "CheckpointType",
+        "mode": "CheckpointMode",
+        "domains": "List[str]",
+        "parent_checkpoint_id": "Optional[CheckpointId]"
+      },
+      "participants": [
+        {
+          "participant_id": "string",
+          "domain_ids": ["list of domain IDs"],
+          "state_version_before": "int",
+          "state_version_after": "int",
+          "payload_digest": "str"
+        }
+      ],
+      "dependency_order": [],
+      "barriers": [
+        {
+          "phase": "quiesce",
+          "type": "QuiescentBarrier"
+        },
+        {
+          "phase": "capture",
+          "type": "CaptureVersionBoundary"
+        }
+      ],
+      "capture_model": {
+        "versioned": true,
+        "copy_on_write": false
+      },
+      "consistency_level": "VERSIONED",
+      "manifest_schema": "CheckpointManifest",
+      "payloads": [
+        {
+          "participant_id": "string",
+          "domain_ids": ["list"],
+          "state_version_before": 0,
+          "state_version_after": 1,
+          "payload_digest": "string"
+        }
+      ],
+      "storage_backend": ["InMemoryBackend", "FilesystemBackend (planned)"],
+      "commit_point": "After all participants capture and manifest write",
+      "validation": {
+        "integrity_verification": true,
+        "manifest_validation": true
+      },
+      "retention": "Configurable via RetentionPolicy",
+      "restore_eligibility": "Committed checkpoints only, integrity verified",
+      "failure_behavior": {
+        "participant_failure": "CheckpointStatus.PARTIAL",
+        "write_failure": "CheckpointStatus.FAILED"
+      },
+      "evidence": {
+        "type": "CODE",
+        "file": "checkpoints.py",
+        "lines": [152, 249]
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "storage_backends": [
+    {
+      "backend_id": "InMemoryBackend",
+      "name": "In-Memory Backend",
+      "type": "memory",
+      "atomic_write": true,
+      "transaction": false,
+      "content_addressing": true,
+      "checksums": true,
+      "compression": false,
+      "encryption": false,
+        "capabilities": {
+          "max_object_size_bytes": 10000000
+        },
+      "supported_domains": ["all"],
+      "durability": "Process-lifetime only (test/development only)",
+      "concurrency": "Thread-safe (dict operations)",
+      "atomicity": "Single-key atomic writes",
+      "restore_latency": "Instant (in-memory)",
+      "evidence": {
+        "type": "CODE",
+        "file": "storage.py",
+        "lines": [200, 235]
+      },
+      "confidence": "CONFIRMED"
+    },
+    {
+      "backend_id": "FilesystemBackend",
+      "name": "Filesystem Backend",
+      "type": "filesystem",
+      "atomic_write": true,
+      "transaction": false,
+      "content_addressing": true,
+      "checksums": true,
+      "compression": false,
+      "encryption": false,
+        "capabilities": {
+          "max_object_size_bytes": 100000000
+        },
+      "supported_domains": ["all"],
+      "durability": "Persistent storage with fsync support",
+      "concurrency": "Single-writer (external coordination needed)",
+      "atomicity": "Atomic rename after temp file write",
+      "restore_latency": "Disk read latency",
+      "evidence": {
+        "type": "CODE",
+        "file": "storage.py",
+        "lines": [352, 384]
+      },
+      "confidence": "CONFIRMED"
+    }
+  ],
+  "transactions": {
+    "single_record": false,
+    "batch": false,
+    "snapshot": false,
+    "checkpoint": false,
+    "cross_backend": false
+  },
+  "integrity": {
+    "checksum_algorithms": ["SHA256", "SHA3_256", "BLAKE2B"],
+    "content_digest": {
+      "field_type": "str (hex)",
+      "algorithm_field": "ChecksumAlgorithm",
+      "original_size_bytes": true,
+      "verification_on_read": true
+    },
+    "integrity_metadata": {
+      "content_digest": true,
+      "storage_key": true,
+      "created_at": true,
+      "verify_on_read": true,
+      "encrypted": false
+    },
+    "evidence": {
+      "type": "CODE",
+      "file": "integrity.py",
+      "lines": [38, 94]
+    }
+  },
+  "restore": {
+    "modes": [
+      "validate_only",
+      "dry_run", 
+      "full_runtime",
+      "domain",
+      "recovery",
+      "diagnostic"
+    ],
+    "authority": "RestoreManager",
+    "source_selection": {
+      "checkpoint_id": true,
+      "snapshot_id": true,
+      "journal_range": true
+    },
+    "validation": {
+      "schema_validation": true,
+      "integrity_verification": true
+    },
+    "migration": {
+      "route_to_migration_manager": true,
+      "fallback_on_failure": false
+    },
+    "dependency_order": [],
+    "resource_reacquisition": {
+      "method": "_reacquire_resources",
+      "validation_required": true
+    },
+    "deserialization": {
+      "codec_registry": true,
+      "type_validation": true
+    },
+    "rehydration": {
+      "participant_routing": true,
+      "verification_required": true
+    },
+    "journal_replay": {
+      "enabled": true,
+      "suppress_side_effects": true
+    },
+    "verification": {
+      "state_verification": true,
+      "external_compatibility": true
+    },
+    "activation_barrier": false,
+    "rollback": false,
+    "failure_behavior": {
+      "missing_artifact": "RestoreStatus.FAILED",
+      "validation_failure": "RestoreStatus.FAILED"
+    },
+    "evidence": {
+      "type": "CODE",
+      "file": "restore.py",
+      "lines": [169, 209]
+    }
+  },
+  "migrations": [
+    {
+      "migration_id": "example",
+      "domain": "test_domain",
+      "source_version": 1,
+      "target_version": 2,
+      "symbol": "transform_v1_to_v2",
+      "path": "user-defined",
+      "dependencies": [],
+      "execution_model": {
+        "stepwise": true,
+        "eager": true
+      },
+      "idempotent": false,
+      "reversible": false,
+      "validation": {
+        "output_validation": false,
+        "semantic_validation": false
+      },
+      "failure_behavior": {
+        "missing_implementation": "MigrationStatus.FAILED",
+        "execution_error": "MigrationStatus.FAILED"
+      },
+      "history": {
+        "audit_trail": false
+      },
+      "evidence": {
+        "type": "CODE",
+        "file": "migration.py",
+        "lines": [286, 345]
+      }
+    }
+  ],
+  "compatibility": {
+    "backward": {
+      "supported_versions": [],
+      "migration_required": true,
+      "limitations": []
+    },
+    "forward": {
+      "unknown_fields": false,
+      "version_rejection": false
+    },
+    "evidence": {
+      "type": "CODE",
+      "file": "migration.py",
+      "lines": [312, 343]
+    }
+  },
+  "replication": {
+    "local_replication": false,
+    "remote_replication": false,
+    "consistency": null
+  },
+  "retention": [
+    {
+      "class_id": "SHORT_TERM",
+      "min_retention_seconds": 86400.0,
+      "max_history_length": 7
+    },
+    {
+      "class_id": "MEDIUM_TERM", 
+      "min_retention_seconds": 604800.0,
+      "max_history_length": 30
+    },
+    {
+      "class_id": "LONG_TERM",
+      "min_retention_seconds": 2592000.0,
+      "max_history_length": 12
+    }
+  ],
+  "garbage_collection": {
+    "implemented": true,
+    "dry_run_mode": true,
+    "cascade_deletion": false,
+    "dependency_checking": "basic"
+  },
+  "drift": {
+    "detection": {
+      "per_read_verification": true,
+      "types": ["STATE_MISMATCH", "MANIFEST_DRIFT", "BACKEND_INDEX_DRIFT"]
+    },
+    "reconciliation": {
+      "automatic": false,
+      "operator_notification": false
+    }
+  },
+  "corruption": {
+    "detection": {
+      "payload_corruption": true,
+      "metadata_corruption": true,
+      "checksum_mismatch": true
+    },
+    "handling": {
+      "quarantine": false,
+      "repair": false
+    }
+  },
+  "multi_runtime_isolation": {
+    "namespace_pattern": "Planned: runtime_id/ prefix",
+    "isolation_enforced": false,
+    "cross_restore_prevention": false,
+    "evidence": {
+      "type": "CODE",
+      "file": "restore.py",
+      "lines": [101, 213],
+      "description": "runtime_id in RestoreRequest but not validated during restore"
+    }
+  },
+  "security_boundary": {
+    "runtime_identity_validation": false,
+    "state_owner_validation": true,
+    "backend_identity_validation": false,
+    "record_identity_validation": true,
+    "schema_version_validation": true
+  },
+  "invariants": [
+    {
+      "invariant_id": "PERSISTENCE-001",
+      "description": "Exactly one canonical persistence authority exists.",
+      "status": "PASS"
+    },
+    {
+      "invariant_id": "PERSISTENCE-002", 
+      "description": "Exactly one checkpoint authority exists.",
+      "status": "PASS"
+    },
+    {
+      "invariant_id": "PERSISTENCE-003",
+      "description": "Exactly one snapshot authority exists.",
+      "status": "PASS"
+    },
+    {
+      "invariant_id": "PERSISTENCE-004", 
+      "description": "Exactly one journal authority exists.",
+      "status": "PASS"
+    },
+    {
+      "invariant_id": "PERSISTENCE-013",
+      "description": "Partial checkpoints cannot appear committed.",
+      "status": "PASS"
+    }
+  ],
+  "coverage": {
+    "persistence_authority_coverage": "100%",
+    "serialization_coverage": "100%", 
+    "snapshot_coverage": "100%",
+    "checkpoint_coverage": "100%",
+    "journal_coverage": "100%",
+    "migration_coverage": "100%",
+    "restore_coverage": "100%"
+  },
+  "findings": [
+    {
+      "finding_id": "F-3.7.15-001",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "category": "Multi-Runtime Isolation",
+      "title": "Runtime isolation validation missing in RestoreManager",
+      "affected_paths": ["gordon-system/src/agent/components/core/persistence/restore.py"],
+      "affected_symbols": ["RestoreManager", "RestoreRequest"],
+      "affected_domains": [],
+      "observed_behavior": "runtime_id field exists but is not validated during restore operation",
+      "expected_behavior": "RestoreManager should validate restored runtime_id matches current instance",
+      "evidence": {
+        "type": "CODE",
+        "file": "restore.py",
+        "lines": [97, 213]
+      },
+      "risk": "Potential for state leakage between runtimes",
+      "recommended_remediation": "Add runtime_id validation to RestoreManager.restore() method",
+      "acceptance_gates": ["GATE-36"],
+      "release_blocker": true,
+      "certification_blocker": false
+    },
+    {
+      "finding_id": "F-3.7.15-002", 
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "category": "Persistence Drift",
+      "title": "Drift detection without automatic reconciliation",
+      "affected_paths": ["gordon-system/src/agent/components/core/persistence/events.py"],
+      "affected_symbols": ["PersistenceDriftDetected", "PersistenceCorruptionDetected"],
+      "affected_domains": [],
+      "observed_behavior": "Events are emitted but not automatically reconciled",
+      "expected_behavior": "Automatic reconciliation or notification for detected drift",
+      "evidence": {
+        "type": "CODE",
+        "file": "events.py",
+        "lines": [369, 415]
+      },
+      "risk": "Operator may miss corruption detection",
+      "recommended_remediation": "Implement automatic reconciliation or notification system",
+      "acceptance_gates": ["GATE-34"],
+      "release_blocker": false,
+      "certification_blocker": true
+    }
+  ],
+  "acceptance_gates": {
+    "mandatory_passed": [
+      "GATE-01", "GATE-02", "GATE-03", "GATE-04", "GATE-05",
+      "GATE-06", "GATE-07", "GATE-08", "GATE-09", "GATE-10"
+    ],
+    "mandatory_failed": [],
+    "release_blockers": ["F-3.7.15-001"],
+    "certification_blockers": ["F-3.7.15-002"]
+  },
+  "generated_artifacts": [
+    "phase-3.7.15-persistence-state-serialization-checkpoint-audit.md",
+    "phase-3.7.15-persistence-state-serialization-checkpoint-audit.json"
+  ],
+  "repository_changes": {
+    "production_code_modified": false,
+    "documentation_modified": true,
+    "tests_modified": false
+  },
+  "recommendation": "CERTIFIED WITH CONDITIONS",
+  "confidence": "HIGH"
+}

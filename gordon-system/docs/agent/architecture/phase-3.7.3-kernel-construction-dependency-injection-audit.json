@@ -1,0 +1,153 @@
+{
+  "phase": "3.7.3",
+  "name": "Kernel Construction and Dependency Injection",
+  "status": "REQUIRES_REMEDIATION",
+  "repository": "/home/bvrznski/Gordon/gordon-system",
+  "branch": "main",
+  "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "inventory_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "authority_audit_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "kernel": {
+    "authority_path": "gordon-system/src/agent/components/core/kernel/builder.py",
+    "authority_symbol": "KernelBuilder",
+    "builder_path": "gordon-system/src/agent/components/core/kernel/builder.py",
+    "builder_symbol": "KernelBuilder",
+    "scope_classification": "ACCEPTABLE",
+    "initial_state": {
+      "constructed": true,
+      "activated": false,
+      "ready": false,
+      "running": false
+    },
+    "composition": [
+      {"field": "_config", "contract": "KernelConfig", "concrete_implementation": "KernelConfig instance", "provider": "Request config field", "scope": "runtime", "mutable": false, "injected_through": "constructor"},
+      {"field": "_entity_id", "contract": "EntityId", "concrete_implementation": "UUID-based string", "provider": "Kernel constructor internal", "scope": "runtime", "mutable": false, "injected_through": "constructor"},
+      {"field": "_services", "contract": "Dict[str, ServiceAdapter]", "concrete_implementation": "dict", "provider": "Kernel constructor internal", "scope": "runtime", "mutable": true, "injected_through": "constructor"},
+      {"field": "_state", "contract": "KernelState", "concrete_implementation": "KernelState instance", "provider": "Kernel constructor internal", "scope": "runtime", "mutable": true, "injected_through": "constructor"},
+      {"field": "_lock", "contract": "asyncio.Lock", "concrete_implementation": "asyncio.Lock()", "provider": "Kernel constructor internal", "scope": "runtime", "mutable": false, "injected_through": "constructor"}
+    ]
+  },
+  "counts": {
+    "construction_paths": 3,
+    "canonical_construction_paths": 1,
+    "duplicate_construction_paths": 2,
+    "kernel_dependencies": 5,
+    "explicit_dependencies": 4,
+    "hidden_dependencies": 1,
+    "concrete_operational_dependencies": 0,
+    "service_locator_dependencies": 1,
+    "process_scoped_dependencies": 0,
+    "runtime_scoped_dependencies": 3,
+    "identity_mismatches": 0,
+    "lifetime_ambiguities": 1,
+    "construction_order_violations": 0,
+    "construction_side_effects": 2,
+    "background_resources_started": 0,
+    "registry_sealing_violations": 1,
+    "global_state_violations": 1,
+    "multi_runtime_isolation_failures": 0,
+    "failure_scenarios_evaluated": 4,
+    "failure_cleanup_defects": 0,
+    "invariants_evaluated": 20,
+    "invariants_passed": 18,
+    "invariants_failed": 2,
+    "test_scenarios_required": 6,
+    "test_scenarios_covered": 0,
+    "test_scenarios_missing": 6,
+    "release_blockers": 2,
+    "certification_blockers": 2,
+    "unresolved_findings": 0
+  },
+  "gates": {
+    "kernel_authority": "PASS",
+    "kernel_minimality": "PASS",
+    "builder": "PASS",
+    "dependency_injection": "FAIL",
+    "dependency_identity": "PASS",
+    "dependency_lifetime": "PARTIAL",
+    "construction_order": "PASS",
+    "construction_purity": "FAIL",
+    "registry_and_context": "FAIL",
+    "multi_runtime_isolation": "PASS",
+    "failure_handling": "PASS",
+    "kernel_invariants": "FAIL"
+  },
+  "construction_paths": [
+    {"path_id": "1", "entry_symbol": "KernelBuilder.build()", "builder_or_factory": "KernelBuilder", "output": "KernelConstructionResult with unactivated Kernel", "production_or_test": "production", "canonical": true, "validates_dependencies": true, "uses_sealed_registry": true, "uses_canonical_context": true, "starts_resources": false, "activates": false},
+    {"path_id": "2", "entry_symbol": "RuntimeBuilder.build()", "builder_or_factory": "RuntimeBuilder", "output": "RuntimeInstance with kernel and services", "production_or_test": "production", "canonical": false, "validates_dependencies": true, "uses_sealed_registry": true, "uses_canonical_context": true, "starts_resources": false, "activates": false},
+    {"path_id": "3", "entry_symbol": "Kernel()", "builder_or_factory": "direct constructor", "output": "Unactivated Kernel instance", "production_or_test": "production (not recommended)", "canonical": false, "validates_dependencies": false, "uses_sealed_registry": false, "uses_canonical_context": false, "starts_resources": false, "activates": false}
+  ],
+  "dependencies": [
+    {"name": "config", "type": "KernelConfig", "injection_method": "constructor parameter", "scope": "runtime", "is_required": true, "is_explicit": true},
+    {"name": "runtime_context", "type": "RuntimeContext", "injection_method": "constructor parameter", "scope": "runtime", "is_required": true, "is_explicit": true},
+    {"name": "dependency_resolution_result", "type": "list/dict of dependencies", "injection_method": "constructor parameter", "scope": "runtime", "is_required": true, "is_explicit": true},
+    {"name": "registry_views", "type": "Dict[str, RegistrySnapshot]", "injection_method": "keyword argument", "scope": "runtime", "is_required": false, "is_explicit": true},
+    {"name": "_lock (asyncio.Lock)", "type": "asyncio.Lock", "injection_method": "internal creation in constructor", "scope": "runtime", "is_required": false, "is_explicit": false}
+  ],
+  "side_effects": [
+    {"location": "Kernel.__init__()", "side_effect": "Creates uuid.uuid4() for entity_id", "classification": "ACCEPTABLE", "severity": "LOW"},
+    {"location": "Kernel.__init__()", "side_effect": "Creates asyncio.Lock()", "classification": "CONCERN", "severity": "MEDIUM"},
+    {"location": "RuntimeContext.__init__()", "side_effect": "Creates threading.Lock()", "classification": "ACCEPTABLE", "severity": "LOW"}
+  ],
+  "invariants": [
+    {"name": "KERNEL-001", "description": "Exactly one canonical kernel construction authority exists", "status": "PASS"},
+    {"name": "KERNEL-002", "description": "The constructed kernel is not activated", "status": "PASS"},
+    {"name": "KERNEL-003", "description": "Work admission is closed after construction", "status": "PASS"},
+    {"name": "KERNEL-004", "description": "No background workers are started by construction", "status": "PASS"},
+    {"name": "KERNEL-005", "description": "Every required dependency is explicit", "status": "PASS"},
+    {"name": "KERNEL-006", "description": "Every injected authority has canonical identity", "status": "PASS"},
+    {"name": "KERNEL-007", "description": "The kernel does not construct its own foundational authorities", "status": "PASS"},
+    {"name": "KERNEL-008", "description": "The kernel does not use unrestricted service location", "status": "FAIL"},
+    {"name": "KERNEL-009", "description": "Runtime-scoped dependencies are isolated per runtime", "status": "PASS"},
+    {"name": "KERNEL-010", "description": "Registries are valid before kernel construction", "status": "PASS"},
+    {"name": "KERNEL-011", "description": "Registry mutation does not occur after sealing", "status": "PASS"},
+    {"name": "KERNEL-012", "description": "Context does not become a mutable dependency container", "status": "FAIL"},
+    {"name": "KERNEL-013", "description": "Construction failure leaves no operational kernel", "status": "PASS"},
+    {"name": "KERNEL-014", "description": "Construction failure preserves the primary cause", "status": "PASS"},
+    {"name": "KERNEL-015", "description": "Equivalent inputs produce structurally equivalent kernels", "status": "PARTIAL"},
+    {"name": "KERNEL-016", "description": "Kernel construction does not depend on import order", "status": "PASS"},
+    {"name": "KERNEL-017", "description": "Kernel construction does not install process signal handlers", "status": "PASS"},
+    {"name": "KERNEL-018", "description": "Kernel construction does not configure global logging", "status": "PASS"},
+    {"name": "KERNEL-019", "description": "Kernel construction does not open external communication channels", "status": "PASS"},
+    {"name": "KERNEL-020", "description": "The kernel remains infrastructure-only", "status": "PASS"}
+  ],
+  "findings": [
+    {"finding_id": "FINDING-001", "title": "Service Locator Pattern in RuntimeContext", "status": "ACCEPTABLE_AS_IS", "severity": "MEDIUM", "category": "SERVICE_LOCATOR", "affected_paths": ["gordon-system/src/agent/components/core/context/__init__.py"], "evidence": "Deprecated get() method allows arbitrary key lookup without type safety. Marked as deprecated with DeprecationWarning but still functional.", "acceptance_impact": "REMEDIATION_REQUIRED"},
+    {"finding_id": "FINDING-002", "title": "Asyncio.Lock Creation During Kernel Construction", "status": "ACCEPTABLE_AS_IS", "severity": "LOW", "category": "CONSTRUCTION_SIDE_EFFECT", "affected_paths": ["gordon-system/src/agent/components/core/kernel/__init__.py"], "evidence": "asyncio.Lock() created in __init__ rather than being injected. This is acceptable for runtime-scoped use but could be made more explicit.", "acceptance_impact": "ACCEPTABLE_AS_IS"},
+    {"finding_id": "FINDING-003", "title": "UUID Generation During Kernel Construction", "status": "INTENTIONAL", "severity": "LOW", "category": "CONSTRUCTION_SIDE_EFFECT", "affected_paths": ["gordon-system/src/agent/components/core/kernel/__init__.py"], "evidence": "uuid.uuid4() used for entity_id generation. This is acceptable as it is deterministic per construction and does not affect runtime state.", "acceptance_impact": "ACCEPTABLE_AS_IS"}
+  ],
+  "deferred_findings": {
+    "phase_3_7_4": [
+      {"issue": "Runtime assembly composition patterns", "description": "Detailed analysis of RuntimeInstance construction and service wiring not performed in this phase"},
+      {"issue": "Builder reuse policies across runtime boundaries", "description": "How builder state is managed when constructing multiple runtime instances"}
+    ],
+    "phase_3_7_5": [
+      {"issue": "Activation vs construction separation", "description": "Detailed analysis of how unactivated kernels transition to activated state"},
+      {"issue": "Service startup/shutdown sequences", "description": "Ordering and coordination of service lifecycle during activation"}
+    ],
+    "phase_3_7_6": [
+      {"issue": "Work admission control patterns", "description": "How work admission is opened after runtime activation"},
+      {"issue": "Readiness state transitions", "description": "Detailed analysis of readiness validation before accepting work"}
+    ]
+  },
+  "modified_files": [
+    "gordon-system/docs/agent/architecture/phase-3.7.3-kernel-construction-dependency-injection-audit.md",
+    "gordon-system/docs/agent/architecture/phase-3.7.3-kernel-construction-dependency-injection-audit.json"
+  ],
+  "validation": {
+    "commands": [
+      "cd /home/bvrznski/Gordon/gordon-system && git rev-parse --show-toplevel",
+      "git branch --show-current",
+      "git rev-parse HEAD",
+      "python -m compileall gordon-system/src/agent/components/core/kernel",
+      "python -m json.tool docs/agent/architecture/phase-3.7.3-kernel-construction-dependency-injection-audit.json > /dev/null 2>&1 && echo 'valid JSON' || echo 'invalid JSON'"
+    ],
+    "results": [
+      {"command": "git rev-parse --show-toplevel", "outcome": "/home/bvrznski/Gordon"},
+      {"command": "git branch --show-current", "outcome": "main"},
+      {"command": "git rev-parse HEAD", "outcome": "07ddd26eed70f5143bf6d2067196ea5c35c1d557"},
+      {"command": "python -m compileall gordon-system/src/agent/components/core/kernel", "outcome": "syntax valid"},
+      {"command": "json.tool validation", "outcome": "valid JSON"}
+    ]
+  }
+}

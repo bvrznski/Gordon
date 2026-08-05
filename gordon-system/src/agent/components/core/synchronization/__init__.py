@@ -256,7 +256,7 @@ class GuardedResource(Generic[T]):
 
 
 __all__ = [
-    # Shutdown signal (not duplicated - unique to this module)
+    # Shutdown signal
     "ShutdownSignal",
     # Concurrency primitives
     "AsyncLock",

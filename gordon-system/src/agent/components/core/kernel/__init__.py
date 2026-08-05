@@ -19,8 +19,45 @@ import asyncio
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Any, Callable
 
-from ..types import EntityId, Timestamp
+from ..types import EntityId, RuntimeId, Timestamp
 from ..exceptions import StartupError, ShutdownError
+
+# Phase 3.7.21: Data Governance integration
+try:
+    from ..data_governance import (
+        DataGovernanceManager,
+        InformationRecord,
+        OwnerIdentity,
+        ClassificationLevel,
+        LifecycleState,
+    )
+except ImportError:
+    # Data governance not available - set up stub types
+    class DataGovernanceManager:
+        pass
+    
+    InformationRecord = None
+    OwnerIdentity = None
+    ClassificationLevel = None
+    LifecycleState = None
+
+# Re-export builder components
+from .builder import (
+    ConstructionStage,
+    ConstructionStatus,
+    KernelConstructionId,
+    ConstructionInputSnapshot,
+    ConstructionStageRecord,
+    KernelConstructionResult,
+    KernelConstructionSnapshot,
+    KernelConstructionReceipt,
+    KernelBuilderState,
+    KernelConstructionRequest,
+    KernelConstructionContext,
+    KernelBuilder,
+    KernelConstructionPlan,
+    dataclass_replace as _dataclass_replace,
+)
 
 
 @dataclass(frozen=True)
@@ -60,6 +97,21 @@ class KernelState:
     start_time: Optional[float] = None
     stop_time: Optional[float] = None
 
+
+@dataclass(frozen=True)
+class KernelGovernanceConfig:
+    """
+    Kernel governance configuration.
+    
+    Args:
+        data_governance_manager: Canonical DataGovernanceManager instance
+        govern_all_information: Whether to automatically govern all information
+        default_classification: Default classification level for new information
+    """
+    
+    data_governance_manager: Optional[DataGovernanceManager] = None
+    govern_all_information: bool = True
+    default_classification: ClassificationLevel = ClassificationLevel.INTERNAL if hasattr(ClassificationLevel, 'INTERNAL') else None
 
 class ServiceAdapter:
     """
@@ -120,7 +172,11 @@ class Kernel:
     - Interpret observations
     """
     
-    def __init__(self, config: Optional[KernelConfig] = None) -> None:
+    def __init__(
+        self,
+        config: Optional[KernelConfig] = None,
+        governance_config: Optional[KernelGovernanceConfig] = None,
+    ) -> None:
         import uuid
         self._config = config or KernelConfig()
         self._entity_id = EntityId(str(uuid.uuid4()))
@@ -128,6 +184,20 @@ class Kernel:
         # Service management
         self._services: Dict[str, ServiceAdapter] = {}
         self._service_instances: Dict[str, Any] = {}
+        
+        # Phase 3.7.21: Governance integration
+        self._governance_config = governance_config or KernelGovernanceConfig()
+        self._data_governance_mgr: Optional[DataGovernanceManager] = None
+        
+        if self._governance_config.data_governance_manager is not None:
+            self._data_governance_mgr = self._governance_config.data_governance_manager
+        elif self._governance_config.govern_all_information:
+            # Create default governance manager
+            try:
+                from ..data_governance import DataGovernanceManager
+                self._data_governance_mgr = DataGovernanceManager()
+            except ImportError:
+                pass
         
         # State
         self._state = KernelState()
@@ -329,6 +399,11 @@ class Kernel:
         except ValueError:
             pass  # Service not found in order
     
+    @property
+    def data_governance_manager(self) -> Optional[DataGovernanceManager]:
+        """Get the kernel's DataGovernanceManager instance."""
+        return self._data_governance_mgr
+    
     async def get_health_report(self) -> Dict[str, Any]:
         """
         Get kernel health status.
@@ -345,6 +420,7 @@ class Kernel:
             "is_running": self._state.is_running,
             "services_registered": len(self._services),
             "services_started": len(self._service_instances),
+            "governance_manager_present": self._data_governance_mgr is not None,
             "uptime_seconds": (
                 Timestamp.now().value - self._state.start_time
                 if self._state.start_time else 0.0
@@ -359,12 +435,76 @@ class Kernel:
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         """Async context manager exit."""
         await self.stop_all_services()
+    
+    async def govern_information(
+        self,
+        information_id: str,
+        content_hash: str,
+        owner: OwnerIdentity,
+        classification: Optional[ClassificationLevel] = None,
+        lifecycle_state: LifecycleState = LifecycleState.CREATED,
+    ) -> Optional[InformationRecord]:
+        """
+        Govern a piece of information through the kernel's governance manager.
+        
+        Args:
+            information_id: Unique identifier for the information
+            content_hash: Hash of the content (integrity guarantee)
+            owner: Owner identity
+            classification: Classification level (auto-assigned if None)
+            lifecycle_state: Initial lifecycle state
+            
+        Returns:
+            InformationRecord with full governance context, or None if
+            data_governance is not available
+        """
+        if self._data_governance_mgr is None:
+            return None
+        
+        try:
+            record = await self._data_governance_mgr.govern(
+                information_id=information_id,
+                content_hash=content_hash,
+                owner=owner,
+                classification=classification,
+                lifecycle_state=lifecycle_state,
+            )
+            return record
+        except Exception:
+            return None
 
 
 __all__ = [
+    # Kernel types (existing)
     "KernelConfig",
     "ServiceInfo",
     "KernelState",
     "ServiceAdapter",
     "Kernel",
+    "KernelGovernanceConfig",
+    
+    # Builder components (new)
+    "ConstructionStage",
+    "ConstructionStatus",
+    "KernelConstructionId",
+    "ConstructionInputSnapshot",
+    "ConstructionStageRecord",
+    "KernelConstructionResult",
+    "KernelConstructionSnapshot",
+    "KernelConstructionReceipt",
+    "KernelBuilderState",
+    "KernelConstructionRequest",
+    "KernelConstructionContext",
+    "KernelBuilder",
+    "KernelConstructionPlan",
 ]
+
+# Phase 3.7.21 exports
+if DataGovernanceManager is not None:
+    __all__.extend([
+        "DataGovernanceManager",
+        "InformationRecord",
+        "OwnerIdentity",
+        "ClassificationLevel",
+        "LifecycleState",
+    ])

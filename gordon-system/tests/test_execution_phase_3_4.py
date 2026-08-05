@@ -369,8 +369,8 @@ class TestWaitingQueue:
         queue.add(spec1)
         queue.add(spec2)
         
-        # Mark dep_task as completed
-        ready_tasks = queue.dependency_completed(dep_task)
+        # Mark dep_task as completed with its priority for inheritance testing
+        ready_tasks = queue.dependency_completed(dep_task, Priority.NORMAL)
         
         # spec1 should now be ready (spec2 still waiting)
         assert len(ready_tasks) == 1

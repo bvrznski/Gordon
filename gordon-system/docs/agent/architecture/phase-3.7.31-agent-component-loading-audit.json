@@ -1,0 +1,547 @@
+{
+  "phase": "3.7.31-A",
+  "name": "Agent Component Loading Architecture",
+  "audit_type": "architecture_acceptance",
+  "target": "/src/agent/entrypoint/load/",
+  "status": "REMEDIATION_REQUIRED",
+  "certification": "FAIL",
+  "confidence": "LOW - Insufficient Evidence",
+  "repository": {
+    "root": "/home/bvrznski/Gordon",
+    "branch": "main",
+    "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "working_tree": "Modified (see git status)",
+    "python_version": "3.10.12"
+  },
+  "canonical_authorities": {
+    "loader": {
+      "claimed": "/src/agent/entrypoint/load/manager.py:AgentLoadManager",
+      "duplicate_found": "/src/agent/entrypoint/load/loader.py:CanonicalLoader",
+      "status": "DUPLICATE_VIOLATION"
+    },
+    "discovery": {
+      "path": "/src/agent/entrypoint/load/manager.py:_discover_descriptors()",
+      "has_actual_sources": false,
+      "source_roots": ["src/agent/components"],
+      "status": "STUB_ONLY"
+    },
+    "descriptor_contract": {
+      "schema_version": "1.0.0",
+      "export_convention": "__load__.py files (none found)",
+      "status": "NOT_APPLICABLE_NO_SOURCES"
+    },
+    "descriptor_parser": {
+      "path": "/src/agent/entrypoint/load/types.py:LoadDescriptor",
+      "type": "FROZEN_DATACLASS",
+      "status": "DEFINED"
+    },
+    "descriptor_validator": {
+      "status": "MISSING"
+    },
+    "dependency_graph": {
+      "path": "/src/agent/entrypoint/load/manager.py:DependencyGraph",
+      "is_used_in_load_flow": false,
+      "has_cycle_detection": false,
+      "status": "DEFINED_BUT_NOT_USED"
+    },
+    "dependency_resolver": {
+      "status": "MISSING_REQUIRED_CHECKS"
+    },
+    "capability_resolver": {
+      "path": "/src/agent/entrypoint/load/manager.py:_resolve_capabilities()",
+      "has_ambiguity_detection": false,
+      "status": "DEFINED_BUT_INCOMPLETE"
+    },
+    "phase_authority": {
+      "enum_path": "/src/agent/entrypoint/load/types.py:LoadPhase",
+      "phases_count": 17,
+      "status": "DEFINED"
+    },
+    "planner": {
+      "path": "/src/agent/entrypoint/load/manager.py:_generate_load_plan()",
+      "deterministic": true,
+      "has_fingerprint_computation": false,
+      "status": "DEFINED_BUT_INCOMPLETE"
+    },
+    "plan_validator": {
+      "path": "/src/agent/entrypoint/load/manager.py:_validate_and_freeze_plan()",
+      "validates_before_import": false,
+      "fingerprint_check_missing": true,
+      "status": "DEFINED_BUT_INCOMPLETE"
+    },
+    "importer": {
+      "path": "/src/agent/entrypoint/load/manager.py:_import_implementation()",
+      "allowed_prefixes": ["src.agent.components.", "gordon.system.src.agent.components."],
+      "purity_violations": ["os.walk direct usage"],
+      "status": "DEFINED_BUT_NOT_PURE"
+    },
+    "factory_resolver": {
+      "path": "/src/agent/entrypoint/load/manager.py:_construct_component()",
+      "returns_none": true,
+      "status": "STUB_ONLY"
+    },
+    "construction": {
+      "ownership_tracking_missing": true,
+      "rollback_registration_missing": true,
+      "status": "NOT_IMPLEMENTED"
+    },
+    "ownership_transfer": {
+      "path": "/src/agent/entrypoint/load/types.py:ComponentConstructionResult",
+      "constructor_reference_always_none": true,
+      "rollback_registration_id_always_none": true,
+      "status": "DEFINED_BUT_NOT_USED"
+    },
+    "rollback": {
+      "exists": false,
+      "status": "NOT_IMPLEMENTED"
+    }
+  },
+  "load_request": {
+    "path": "/src/agent/entrypoint/load/request.py:AgentLoadRequest",
+    "is_frozen": true,
+    "duplicate_definition_found": "/src/agent/entrypoint/load/types.py:681",
+    "missing_fields_in_duplicate": ["included_packages", "excluded_packages"],
+    "status": "DEFINED_BUT_HAS_DUPLICATE"
+  },
+  "identities": {
+    "load_operation_identity_path": "/src/agent/entrypoint/load/manager.py:LoadOperationIdentity",
+    "ids_defined_but_not_propagated_to_results": true,
+    "status": "DEFINED_BUT_UNUSED"
+  },
+  "descriptor_schema": {
+    "component_id_required": true,
+    "required_fields": ["component_id", "component_kind", "package_id", "implementation_path", "load_phase"],
+    "optional_fields_count": 18,
+    "frozen_dataclass": true,
+    "status": "DEFINED"
+  },
+  "descriptor_export_convention": {
+    "name": "__load__.py",
+    "files_found": 0,
+    "expected_location": "/src/agent/components/*/",
+    "status": "NOT_FOUND"
+  },
+  "descriptor_inventory": [],
+  "discovery": {
+    "method": "os.walk",
+    "search_roots": ["src/agent/components"],
+    "has_allowed_prefixes_check": false,
+    "path_traversal_prevention_missing": true,
+    "is_testable": false,
+    "status": "STUB_ONLY"
+  },
+  "trust_model": {
+    "trusted_built_in_roots": true,
+    "external_plugin_policy_missing": true,
+    "signature_verification_missing": true,
+    "descriptor_timeout_missing": true,
+    "status": "INCOMPLETE"
+  },
+  "dependency_model": {
+    "types": ["required", "optional", "conflict", "capability"],
+    "cycle_detection_missing": true,
+    "version_constraint_checking_missing": true,
+    "phase_constraint_violation_check_missing": true,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "dependency_graph": {
+    "is_immutable": true,
+    "graph_id_provided": true,
+    "nodes_type": "FrozenSet[str]",
+    "edges_type": "Tuple[DependencyEdge, ...]",
+    "used_in_load_flow": false,
+    "status": "DEFINED_BUT_NOT_USED"
+  },
+  "capability_model": {
+    "capability_id_required": true,
+    "version_field_present": true,
+    "scope_field_present": true,
+    "priority_field_present": true,
+    "exclusive_flag_present": true,
+    "status": "DEFINED"
+  },
+  "capability_resolution": {
+    "provider_selection_method": "/src/agent/entrypoint/load/manager.py:_resolve_capabilities()",
+    "deterministic_selection": true,
+    "ambiguity_detection_missing": true,
+    "missing_required_capability_handling_missing": true,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "phase_model": {
+    "phases_count": 17,
+    "phases": [
+      "foundation",
+      "core_contracts", 
+      "core_authorities",
+      "runtime_infrastructure",
+      "communication",
+      "observability",
+      "security",
+      "persistence",
+      "resources",
+      "services",
+      "models",
+      "memory",
+      "perception",
+      "cognition",
+      "supervision",
+      "bridge",
+      "operational_controllers"
+    ],
+    "phase_inversion_checks_missing": true,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "load_plan": {
+    "is_immutable": true,
+    "entries_count": 0,
+    "has_fingerprint_field": true,
+    "fingerprint_computed_before_freezing": false,
+    "stale_plan_detection_impossible": true,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "plan_validation": {
+    "validates_required_components_present": false,
+    "validates_dependency_ordering": false,
+    "validates_capability_providers": false,
+    "fingerprint_check_missing": true,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "plan_freezing": {
+    "compute_fingerprint_before_freeze": false,
+    "mutation_after_validation_allowed": true,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "stale_plan_policy": {
+    "detects_config_change": false,
+    "detects_descriptor_set_change": false,
+    "reuses_stale_plans": true,
+    "status": "MISSING"
+  },
+  "import_model": {
+    "allowed_paths": ["src.agent.components.", "gordon.system.src.agent.components."],
+    "user_supplied_import_strings_allowed": false,
+    "import_before_freeze_blocked": false,
+    "side_effects_during_import_detected": true,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "factory_model": {
+    "constructs_components": false,
+    "activates_components": false,
+    "mutates_registries": false,
+    "returns_none": true,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "construction_model": {
+    "occurs_after_freezing": false,
+    "deterministic_order_missing": true,
+    "dependencies_bound_explicitly": false,
+    "ownership_transferred": false,
+    "rollback_registered": false,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "ownership_model": {
+    "transfer_point_not_explicit": true,
+    "loader_cleanup_transferred_components": false,
+    "runtime_cleans_untransferred": false,
+    "partial_construction_ownership_unknown": true,
+    "status": "MISSING"
+  },
+  "rollback_model": {
+    "exists": false,
+    "reverse_order": false,
+    "primary_failure_preserved": false,
+    "residual_resources_tracked": false,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "result_model": {
+    "is_immutable": true,
+    "includes_fingerprint": false,
+    "includes_provenance": false,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "failure_model": {
+    "typed_failures": [
+      "AgentLoadError",
+      "DescriptorDiscoveryError",
+      "DescriptorValidationError",
+      "DuplicateComponentError",
+      "MissingDependencyError",
+      "AmbiguousCapabilityProviderError",
+      "LoadPlanError",
+      "StaleLoadPlanError"
+    ],
+    "primary_failure_tracking_missing": true,
+    "secondary_failures_tracking_missing": true,
+    "status": "DEFINED_BUT_INCOMPLETE"
+  },
+  "security": {
+    "trusted_roots_defined": true,
+    "external_plugin_policy_missing": true,
+    "path_traversal_prevention_missing": true,
+    "signature_verification_missing": true,
+    "descriptor_timeout_missing": true,
+    "allowed_prefixes_hardcoded": true,
+    "status": "INCOMPLETE"
+  },
+  "core_boundary": {
+    "loader_becomes_core_authority": false,
+    "runtime_registration_delegated": false,
+    "canonical_core_root": "/src/agent/components/core/",
+    "core_override_protection_missing": true,
+    "status": "BOUNDARY_LABELED_BUT_NOT_ENFORCED"
+  },
+  "runtime_isolation": {
+    "operation_scoped_ids_defined": true,
+    "ids_propagated_to_results": false,
+    "cross_runtime_mutation_possible": true,
+    "runtime_a_cannot_mutate_b": false,
+    "status": "DEFINED_BUT_NOT_ENFORCED"
+  },
+  "agent_assistant_separation": {
+    "agent_roots_only_scanned": true,
+    "assistant_components_constructed": false,
+    "separate_loading_state": false,
+    "bridge_contracts_explicitly_handled": false,
+    "status": "NOT_IMPLEMENTED"
+  },
+  "import_purity": {
+    "imports_do_not_scan": false,
+    "imports_do_not_discover": false,
+    "imports_do_not_import_implementation": true,
+    "imports_do_not_construct_components": true,
+    "imports_do_not_populate_registries": true,
+    "os_walk_usage_in_discovery": true,
+    "status": "PARTIALLY_PURIFIED_BUT_HAS_VIOLATIONS"
+  },
+  "global_state": {
+    "mutable_global_loader": false,
+    "mutable_global_descriptor_registry": false,
+    "mutable_global_graph": false,
+    "mutable_global_plan": false,
+    "operation_scoped_state_only": true,
+    "status": "PASS"
+  },
+  "legacy_paths": [
+    {
+      "path": "/src/agent/entrypoint/load/loader.py",
+      "type": "DUPLICATE_AUTHORITY",
+      "deprecation_status": "MISSING",
+      "issues": ["CanonicalLoader duplicates AgentLoadManager", "Top-level load_components() function"]
+    }
+  ],
+  "tests": {
+    "executed": [
+      {
+        "name": "test_architecture_contract.py",
+        "status": "PASS"
+      }
+    ],
+    "passed": [
+      "test_architecture_contract.py"
+    ],
+    "failed": [],
+    "missing": [
+      "test_loading_discovery.py",
+      "test_loading_planning.py",
+      "test_loading_rollback.py",
+      "test_loading_import_purity.py",
+      "test_dependency_graph_cycles.py",
+      "test_capability_resolution.py"
+    ],
+    "blocked": [
+      "Cannot run without fixing duplicate authorities"
+    ],
+    "insufficient": [
+      "Architecture contract tests do not cover loading authority",
+      "No determinism tests for load plan generation"
+    ]
+  },
+  "invariants": [
+    {"id": "LOAD-001", "status": "FAIL", "evidence": "Two loaders: AgentLoadManager and CanonicalLoader"},
+    {"id": "LOAD-002", "status": "PASS", "evidence": "AgentLoadManager exported from agent.entrypoint.load"},
+    {"id": "LOAD-003", "status": "PASS", "evidence": "Request pattern enforces one request per load"},
+    {"id": "LOAD-004", "status": "PARTIAL", "evidence": "Request frozen but duplicate definition exists"},
+    {"id": "LOAD-005", "status": "PASS", "evidence": "Single LoadDescriptor dataclass"},
+    {"id": "LOAD-006", "status": "PASS", "evidence": "Frozen dataclass - no side effects by design"},
+    {"id": "LOAD-007", "status": "FAIL", "evidence": "No __load__.py files exist to discover"},
+    {"id": "LOAD-008", "status": "PARTIAL", "evidence": "os.walk used directly in discovery"},
+    {"id": "LOAD-009", "status": "PASS", "evidence": "LoadDescriptor has typed fields"},
+    {"id": "LOAD-010", "status": "FAIL", "evidence": "_build_dependency_graph called without validation"},
+    {"id": "LOAD-012", "status": "FAIL", "evidence": "Graph created but never used in load flow"},
+    {"id": "LOAD-013", "status": "FAIL", "evidence": "No cycle detection implementation"},
+    {"id": "LOAD-014", "status": "FAIL", "evidence": "_execute_load_plan doesn't verify dependencies exist"},
+    {"id": "LOAD-015", "status": "FAIL", "evidence": "Skipped components don't record outcome"},
+    {"id": "LOAD-016", "status": "PASS", "evidence": "Single _resolve_capabilities method"},
+    {"id": "LOAD-017", "status": "PARTIAL", "evidence": "Sort by priority is deterministic but no ambiguity check"},
+    {"id": "LOAD-018", "status": "FAIL", "evidence": "_resolve_capabilities doesn't raise AmbiguousCapabilityProviderError"},
+    {"id": "LOAD-021", "status": "FAIL", "evidence": "Fingerprint not computed before freezing"},
+    {"id": "LOAD-024", "status": "FAIL", "evidence": "No fingerprint comparison in validation"},
+    {"id": "LOAD-033", "status": "FAIL", "evidence": "No rollback implementation exists"},
+    {"id": "LOAD-053", "status": "PASS", "evidence": "Manager instantiated per load operation"},
+    {"id": "LOAD-057", "status": "PASS", "evidence": "Imports are function-level only"}
+  ],
+  "gates": [
+    {"gate": 1, "name": "Canonical Loading Authority", "status": "FAIL", "blockers": ["Duplicate loaders"]},
+    {"gate": 2, "name": "Request and Identity", "status": "PASS", "blockers": []},
+    {"gate": 3, "name": "Descriptor Contract", "status": "FAIL", "blockers": ["No __load__.py files"]},
+    {"gate": 4, "name": "Discovery", "status": "FAIL", "blockers": ["Stub discovery only"]},
+    {"gate": 5, "name": "Descriptor Validation", "status": "FAIL", "blockers": ["No validation before graph construction"]},
+    {"gate": 6, "name": "Dependency Graph", "status": "FAIL", "blockers": ["Graph not used, no cycle detection"]},
+    {"gate": 7, "name": "Capability Resolution", "status": "FAIL", "blockers": ["Ambiguity detection missing"]},
+    {"gate": 8, "name": "Phase Model", "status": "PASS", "blockers": []},
+    {"gate": 9, "name": "Load Plan", "status": "FAIL", "blockers": ["Fingerprint not computed; stale-plan check missing"]},
+    {"gate": 10, "name": "Import Security", "status": "PARTIAL", "blockers": ["No signature verification"]},
+    {"gate": 11, "name": "Factory and Construction", "status": "FAIL", "blockers": ["Returns None; no construction"]},
+    {"gate": 12, "name": "Ownership Transfer and Rollback", "status": "FAIL", "blockers": ["No rollback registration"]},
+    {"gate": 13, "name": "Required/Optional Components", "status": "FAIL", "blockers": ["Missing dependency check"]},
+    {"gate": 14, "name": "Core Boundary", "status": "PASS", "blockers": []},
+    {"gate": 15, "name": "Agent-Assistant Separation", "status": "FAIL", "blockers": ["No separation logic"]},
+    {"gate": 16, "name": "Runtime Isolation", "status": "PARTIAL", "blockers": ["IDs not propagated to results"]},
+    {"gate": 17, "name": "Diagnostics and Evidence", "status": "FAIL", "blockers": ["No fingerprint preservation"]},
+    {"gate": 18, "name": "Testability", "status": "FAIL", "blockers": ["No tests for loading, discovery, rollback"]}
+  ],
+  "findings": [
+    {
+      "id": "FINDING-001",
+      "severity": "CRITICAL",
+      "category": "Architecture Violation",
+      "path": "/src/agent/entrypoint/load/loader.py",
+      "symbol": "CanonicalLoader, load_components()",
+      "evidence": "Two independent loading authorities with overlapping public APIs",
+      "root_cause": "Redundant loader implementation without deprecation path",
+      "invariant_violated": ["LOAD-001", "LOAD-053"],
+      "gate_failed": 1,
+      "release_impact": "BLOCKING",
+      "recommendation": "Delete loader.py or refactor to stateless delegation"
+    },
+    {
+      "id": "FINDING-002",
+      "severity": "CRITICAL",
+      "category": "Missing Implementation",
+      "path": "/src/agent/components/*/",
+      "symbol": "__load__.py (none found)",
+      "evidence": "Zero __load__.py files discovered in component directories",
+      "root_cause": "Declarative descriptor files not created",
+      "invariant_violated": ["LOAD-007", "LOAD-008"],
+      "gate_failed": 3,
+      "release_impact": "BLOCKING",
+      "recommendation": "Create __load__.py files in all component packages"
+    },
+    {
+      "id": "FINDING-010",
+      "severity": "HIGH",
+      "category": "Type System Error",
+      "path": "/src/agent/entrypoint/load/types.py",
+      "symbol": "AgentLoadRequest (lines 681-750)",
+      "evidence": "Duplicate AgentLoadRequest definition with missing fields",
+      "root_cause": "Incomplete type definition duplication",
+      "invariant_violated": ["LOAD-004"],
+      "gate_failed": 2,
+      "release_impact": "BLOCKING",
+      "recommendation": "Remove duplicate definition, keep only request.py version"
+    },
+    {
+      "id": "FINDING-015",
+      "severity": "HIGH",
+      "category": "Algorithm Missing",
+      "path": "/src/agent/entrypoint/load/manager.py",
+      "symbol": "_build_dependency_graph()",
+      "evidence": "Graph created but cycle detection not implemented",
+      "root_cause": "Kahn's algorithm or DFS-based cycle detection missing",
+      "invariant_violated": ["LOAD-013"],
+      "gate_failed": 6,
+      "release_impact": "BLOCKING",
+      "recommendation": "Implement cycle detection using Kahn's algorithm"
+    },
+    {
+      "id": "FINDING-020",
+      "severity": "HIGH",
+      "category": "Resource Management Failure",
+      "path": "/src/agent/entrypoint/load/manager.py",
+      "symbol": "_execute_load_plan()",
+      "evidence": "No rollback registration for constructed components",
+      "root_cause": "Rollback tracking not implemented",
+      "invariant_violated": ["LOAD-033"],
+      "gate_failed": 12,
+      "release_impact": "BLOCKING",
+      "recommendation": "Implement rollback registration with cleanup on failure"
+    },
+    {
+      "id": "FINDING-025",
+      "severity": "HIGH",
+      "category": "Plan Validation Missing",
+      "path": "/src/agent/entrypoint/load/manager.py",
+      "symbol": "_validate_and_freeze_plan()",
+      "evidence": "Fingerprint not computed or verified before plan execution",
+      "root_cause": "Stale-plan detection impossible without fingerprint",
+      "invariant_violated": ["LOAD-024"],
+      "gate_failed": 9,
+      "release_impact": "BLOCKING",
+      "recommendation": "Compute and store fingerprint for stale-plan validation"
+    }
+  ],
+  "release_blockers": [
+    "FINDING-001: Duplicate loading authorities",
+    "FINDING-002: No __load__.py files exist",
+    "FINDING-010: Duplicate AgentLoadRequest definition",
+    "FINDING-015: Missing dependency cycle detection",
+    "FINDING-020: No rollback registration"
+  ],
+  "certification_blockers": [
+    "Incomplete audit evidence due to missing tests for loading architecture",
+    "Multiple conflicting implementations without clear deprecation path",
+    "No __load__.py files means discovery is untested stub code",
+    "Type system errors in load request definitions"
+  ],
+  "recommendations": {
+    "mandatory_remediation": [
+      "Delete /src/agent/entrypoint/load/loader.py to remove duplicate authority",
+      "Create __load__.py descriptor files in all component packages",
+      "Implement cycle detection using Kahn's algorithm",
+      "Compute and store plan fingerprint before validation",
+      "Remove duplicate AgentLoadRequest definition"
+    ],
+    "non_blocking_improvements": [
+      "Add tests for discovery with actual __load__.py files",
+      "Property-based tests for deterministic load plan generation",
+      "Implement rollback registration and cleanup",
+      "Verify import purity - ensure no side effects on import"
+    ],
+    "test_improvements_needed": {
+      "directory": "tests/test_loading/",
+      "modules": [
+        "test_discovery.py - Test __load__.py discovery",
+        "test_dependency_graph.py - Test cycle detection, missing deps",
+        "test_planning.py - Test deterministic plan generation", 
+        "test_import_purity.py - Test no side effects on import",
+        "test_rollback.py - Test rollback ordering and idempotency"
+      ]
+    }
+  },
+  "validation": {
+    "commands_attempted": [
+      "git rev-parse --show-toplevel",
+      "git branch --show-current", 
+      "git rev-parse HEAD",
+      "git status --short --branch",
+      "python --version"
+    ],
+    "static_analysis": {
+      "executed": true,
+      "result": "PASSED",
+      "description": "All Python files compiled without syntax errors"
+    },
+    "tests_attempted": [
+      {
+        "name": "pytest tests/ -k loading",
+        "status": "NO_MATCHING_TESTS"
+      }
+    ]
+  },
+  "limitations": {
+    "audit_scope": "Static analysis only - runtime behavior not observed",
+    "coverage_notes": "Discovery and construction paths are stubbed, cannot verify runtime behavior", 
+    "test_coverage_missing": true,
+    "determinism_unverified": true
+  }
+}

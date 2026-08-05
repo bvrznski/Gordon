@@ -1,0 +1,11791 @@
+GORDON PHASE 3.7.21
+
+# ARCHITECTURE ACCEPTANCE AUDIT
+
+# DATA GOVERNANCE, PRIVACY, PROVENANCE &
+
+# INFORMATION LIFECYCLE
+
+#
+
+# PART I
+
+#
+
+# Data Architecture
+
+# Data Governance
+
+# Information Ownership
+
+# Privacy
+
+# Classification
+
+# Metadata
+
+# Provenance
+
+#
+
+# =============================================================================
+
+# =============================================================================
+
+# DATA GOVERNANCE PRINCIPLE
+
+# =============================================================================
+
+This phase certifies one architectural question:
+
+**Can Gordon identify, classify, govern, protect, trace, retain and safely
+dispose of every piece of information throughout its entire lifecycle while
+preserving integrity, provenance, privacy and architectural ownership?**
+
+Information shall be treated as a first-class architectural asset.
+
+Recover the complete repository information architecture including:
+
+data authorities
+
+information ownership
+
+data governance
+
+metadata
+
+classification
+
+provenance
+
+privacy
+
+confidentiality
+
+retention
+
+archival
+
+deletion
+
+lineage
+
+traceability
+
+knowledge ownership
+
+memory ownership
+
+checkpoint ownership
+
+configuration ownership
+
+audit ownership
+
+artifact ownership
+
+dataset governance
+
+model provenance
+
+information lifecycle
+
+# =============================================================================
+
+# 1. DATA GOVERNANCE AUTHORITY
+
+# =============================================================================
+
+Locate the canonical data-governance authority.
+
+Search for:
+
+DataGovernanceManager
+
+DataManager
+
+DataAuthority
+
+InformationManager
+
+GovernanceService
+
+Determine:
+
+owner
+
+scope
+
+construction
+
+configuration
+
+public API
+
+delegated responsibilities
+
+# =============================================================================
+
+# 2. INFORMATION AUTHORITY
+
+# =============================================================================
+
+Locate canonical information authority.
+
+Possible names:
+
+InformationRegistry
+
+InformationManager
+
+KnowledgeRegistry
+
+MetadataAuthority
+
+Determine:
+
+ownership
+
+scope
+
+relationships
+
+lifecycle
+
+# =============================================================================
+
+# 3. DATA GOVERNANCE MODEL
+
+# =============================================================================
+
+Recover governance architecture.
+
+Determine:
+
+ownership
+
+approval
+
+classification
+
+retention
+
+sharing
+
+disposal
+
+review
+
+audit
+
+# =============================================================================
+
+# 4. INFORMATION OWNERSHIP
+
+# =============================================================================
+
+Recover ownership model.
+
+Possible owners:
+
+kernel
+
+core
+
+service
+
+runtime
+
+component
+
+memory
+
+operator
+
+user
+
+plugin
+
+provider
+
+tool
+
+Determine:
+
+authority
+
+ownership transfer
+
+ownership revocation
+
+ownership persistence
+
+# =============================================================================
+
+# 5. DATA DOMAINS
+
+# =============================================================================
+
+Inventory data domains.
+
+Possible domains:
+
+configuration
+
+runtime state
+
+memory
+
+knowledge
+
+telemetry
+
+audit
+
+artifacts
+
+logs
+
+models
+
+datasets
+
+plugins
+
+Determine:
+
+owner
+
+scope
+
+criticality
+
+dependencies
+
+# =============================================================================
+
+# 6. DATA ARCHITECTURE
+
+# =============================================================================
+
+Recover repository-wide data architecture.
+
+Generate Mermaid data architecture diagram.
+
+Include:
+
+sources
+
+processing
+
+storage
+
+memory
+
+checkpoints
+
+artifacts
+
+telemetry
+
+deletion
+
+# =============================================================================
+
+# 7. INFORMATION FLOW
+
+# =============================================================================
+
+Recover complete information flow.
+
+Determine:
+
+origin
+
+transformations
+
+storage
+
+sharing
+
+retention
+
+destruction
+
+Generate Mermaid information-flow diagram.
+
+# =============================================================================
+
+# 8. DATA SOURCES
+
+# =============================================================================
+
+Inventory information sources.
+
+Possible sources:
+
+user
+
+filesystem
+
+network
+
+providers
+
+plugins
+
+tools
+
+models
+
+configuration
+
+memory
+
+Determine:
+
+trust
+
+ownership
+
+validation
+
+# =============================================================================
+
+# 9. DATA SINKS
+
+# =============================================================================
+
+Inventory destinations.
+
+Possible sinks:
+
+logs
+
+memory
+
+telemetry
+
+storage
+
+providers
+
+network
+
+artifacts
+
+Determine:
+
+owner
+
+retention
+
+security
+
+# =============================================================================
+
+# 10. DATA LINEAGE
+
+# =============================================================================
+
+Recover lineage.
+
+Determine:
+
+origin
+
+derived information
+
+transformations
+
+dependencies
+
+consumers
+
+destruction
+
+# =============================================================================
+
+# 11. METADATA AUTHORITY
+
+# =============================================================================
+
+Locate metadata authority.
+
+Possible names:
+
+MetadataRegistry
+
+MetadataManager
+
+SchemaRegistry
+
+Catalog
+
+Determine:
+
+ownership
+
+scope
+
+schema evolution
+
+# =============================================================================
+
+# 12. METADATA MODEL
+
+# =============================================================================
+
+Recover metadata architecture.
+
+Possible metadata:
+
+creation time
+
+owner
+
+version
+
+origin
+
+classification
+
+retention
+
+checksum
+
+signature
+
+relationships
+
+# =============================================================================
+
+# 13. SCHEMA REGISTRY
+
+# =============================================================================
+
+Locate schema authority.
+
+Determine:
+
+schema ownership
+
+versioning
+
+validation
+
+migration
+
+compatibility
+
+# =============================================================================
+
+# 14. DATA SCHEMAS
+
+# =============================================================================
+
+Inventory schemas for:
+
+configuration
+
+messages
+
+events
+
+memory
+
+telemetry
+
+artifacts
+
+checkpoints
+
+Determine:
+
+validation
+
+versioning
+
+migration
+
+# =============================================================================
+
+# 15. INFORMATION CLASSIFICATION
+
+# =============================================================================
+
+Recover classification model.
+
+Possible classes:
+
+PUBLIC
+
+INTERNAL
+
+CONFIDENTIAL
+
+RESTRICTED
+
+SECRET
+
+SYSTEM
+
+Determine:
+
+authority
+
+inheritance
+
+handling requirements
+
+# =============================================================================
+
+# 16. CLASSIFICATION RULES
+
+# =============================================================================
+
+Determine classification criteria.
+
+Possible dimensions:
+
+sensitivity
+
+ownership
+
+privacy
+
+criticality
+
+availability
+
+integrity
+
+origin
+
+# =============================================================================
+
+# 17. DEFAULT CLASSIFICATION
+
+# =============================================================================
+
+Determine default classification for newly created information.
+
+Evaluate whether default behavior minimizes accidental disclosure.
+
+# =============================================================================
+
+# 18. CLASSIFICATION PROPAGATION
+
+# =============================================================================
+
+Determine whether derived information inherits or recomputes classification.
+
+Recover propagation rules.
+
+# =============================================================================
+
+# 19. INFORMATION LABELS
+
+# =============================================================================
+
+Recover labeling mechanisms.
+
+Possible labels:
+
+classification
+
+owner
+
+retention
+
+source
+
+privacy
+
+integrity
+
+trust
+
+# =============================================================================
+
+# 20. INFORMATION TAGGING
+
+# =============================================================================
+
+Determine metadata tagging.
+
+Possible tags:
+
+runtime
+
+memory
+
+provider
+
+task
+
+identity
+
+security
+
+checkpoint
+
+dataset
+
+# =============================================================================
+
+# 21. DATA VALIDATION
+
+# =============================================================================
+
+Recover validation.
+
+Determine:
+
+schema validation
+
+semantic validation
+
+ownership validation
+
+classification validation
+
+integrity validation
+
+# =============================================================================
+
+# 22. DATA NORMALIZATION
+
+# =============================================================================
+
+Recover normalization pipeline.
+
+Possible operations:
+
+canonicalization
+
+encoding
+
+deduplication
+
+compression
+
+format conversion
+
+# =============================================================================
+
+# 23. DATA DEDUPLICATION
+
+# =============================================================================
+
+Determine deduplication.
+
+Possible targets:
+
+events
+
+memory
+
+artifacts
+
+logs
+
+telemetry
+
+knowledge
+
+Determine:
+
+algorithm
+
+authority
+
+verification
+
+# =============================================================================
+
+# 24. CANONICAL REPRESENTATION
+
+# =============================================================================
+
+Recover canonical representation of information.
+
+Determine:
+
+authority
+
+serialization
+
+compatibility
+
+migration
+
+# =============================================================================
+
+# 25. DATA INTEGRITY
+
+# =============================================================================
+
+Recover integrity verification.
+
+Possible mechanisms:
+
+checksums
+
+hashes
+
+signatures
+
+schema validation
+
+ownership validation
+
+# =============================================================================
+
+# 26. INFORMATION CONSISTENCY
+
+# =============================================================================
+
+Determine consistency guarantees.
+
+Possible domains:
+
+memory
+
+storage
+
+telemetry
+
+configuration
+
+knowledge
+
+artifacts
+
+# =============================================================================
+
+# 27. DATA QUALITY
+
+# =============================================================================
+
+Recover quality controls.
+
+Possible dimensions:
+
+accuracy
+
+completeness
+
+consistency
+
+timeliness
+
+uniqueness
+
+validity
+
+# =============================================================================
+
+# 28. DATA QUALITY METRICS
+
+# =============================================================================
+
+Determine metrics for:
+
+duplicate rate
+
+missing values
+
+schema violations
+
+integrity failures
+
+normalization failures
+
+# =============================================================================
+
+# 29. DATA CATALOG
+
+# =============================================================================
+
+Determine whether repository maintains a catalog of managed information assets.
+
+# =============================================================================
+
+# 30. DATASET INVENTORY
+
+# =============================================================================
+
+Inventory datasets.
+
+Possible datasets:
+
+training
+
+evaluation
+
+configuration
+
+benchmarks
+
+examples
+
+test fixtures
+
+Determine:
+
+owner
+
+license
+
+origin
+
+version
+
+integrity
+
+# =============================================================================
+
+# 31. MODEL DATA
+
+# =============================================================================
+
+Recover governance for:
+
+weights
+
+tokenizers
+
+embeddings
+
+vector stores
+
+feature stores
+
+Determine:
+
+ownership
+
+versioning
+
+provenance
+
+# =============================================================================
+
+# 32. MEMORY GOVERNANCE
+
+# =============================================================================
+
+Recover governance for:
+
+episodic memory
+
+semantic memory
+
+working memory
+
+autobiographical memory
+
+procedural memory
+
+Determine:
+
+ownership
+
+retention
+
+privacy
+
+deletion
+
+# =============================================================================
+
+# 33. CHECKPOINT GOVERNANCE
+
+# =============================================================================
+
+Determine governance of:
+
+runtime checkpoints
+
+memory checkpoints
+
+configuration snapshots
+
+recovery checkpoints
+
+# =============================================================================
+
+# 34. LOG GOVERNANCE
+
+# =============================================================================
+
+Recover governance for:
+
+application logs
+
+audit logs
+
+security logs
+
+performance logs
+
+diagnostics
+
+Determine:
+
+owner
+
+retention
+
+privacy
+
+access
+
+# =============================================================================
+
+# 35. TELEMETRY GOVERNANCE
+
+# =============================================================================
+
+Recover governance for telemetry.
+
+Determine:
+
+collection
+
+aggregation
+
+storage
+
+sharing
+
+retention
+
+deletion
+
+# =============================================================================
+
+# 36. CONFIGURATION GOVERNANCE
+
+# =============================================================================
+
+Recover governance for:
+
+configuration files
+
+environment variables
+
+runtime overrides
+
+generated configuration
+
+# =============================================================================
+
+# 37. ARTIFACT GOVERNANCE
+
+# =============================================================================
+
+Determine governance of:
+
+generated code
+
+reports
+
+checkpoints
+
+exports
+
+cache
+
+temporary files
+
+# =============================================================================
+
+# 38. DATA LIFECYCLE
+
+# =============================================================================
+
+Recover lifecycle:
+
+creation
+
+modification
+
+sharing
+
+storage
+
+archival
+
+deletion
+
+verification
+
+Generate Mermaid lifecycle diagram.
+
+# =============================================================================
+
+# 39. LIFECYCLE STATES
+
+# =============================================================================
+
+Possible states:
+
+created
+
+validated
+
+classified
+
+active
+
+shared
+
+archived
+
+deprecated
+
+scheduled for deletion
+
+deleted
+
+# =============================================================================
+
+# 40. STATE TRANSITIONS
+
+# =============================================================================
+
+Recover transition rules.
+
+Determine:
+
+authority
+
+validation
+
+audit
+
+rollback
+
+# =============================================================================
+
+# 41. DATA RETENTION
+
+# =============================================================================
+
+Recover retention policies.
+
+Possible categories:
+
+logs
+
+memory
+
+artifacts
+
+telemetry
+
+configuration
+
+datasets
+
+Determine:
+
+duration
+
+authority
+
+exceptions
+
+# =============================================================================
+
+# 42. RETENTION EXCEPTIONS
+
+# =============================================================================
+
+Recover exceptions.
+
+Determine:
+
+authority
+
+reason
+
+expiry
+
+audit
+
+# =============================================================================
+
+# 43. ARCHIVAL
+
+# =============================================================================
+
+Recover archival process.
+
+Determine:
+
+criteria
+
+storage
+
+compression
+
+encryption
+
+verification
+
+# =============================================================================
+
+# 44. DELETION POLICY
+
+# =============================================================================
+
+Recover deletion rules.
+
+Possible categories:
+
+temporary
+
+expired
+
+revoked
+
+orphaned
+
+duplicate
+
+obsolete
+
+# =============================================================================
+
+# 45. SECURE DELETION
+
+# =============================================================================
+
+Determine whether secure deletion is implemented where repository requirements
+call for it.
+
+# =============================================================================
+
+# 46. ORPHANED INFORMATION
+
+# =============================================================================
+
+Recover detection of:
+
+unused files
+
+unused checkpoints
+
+unused datasets
+
+unused cache
+
+unused metadata
+
+# =============================================================================
+
+# 47. PRIVACY AUTHORITY
+
+# =============================================================================
+
+Locate canonical privacy authority.
+
+Possible names:
+
+PrivacyManager
+
+PrivacyService
+
+PrivacyPolicy
+
+PrivacyController
+
+Determine:
+
+owner
+
+scope
+
+configuration
+
+# =============================================================================
+
+# 48. PRIVACY MODEL
+
+# =============================================================================
+
+Recover repository privacy model.
+
+Possible domains:
+
+user information
+
+runtime information
+
+operator information
+
+telemetry
+
+logs
+
+memory
+
+configuration
+
+# =============================================================================
+
+# 49. PERSONAL INFORMATION
+
+# =============================================================================
+
+Determine whether repository explicitly recognizes personal information.
+
+Possible categories:
+
+names
+
+email
+
+identifiers
+
+IP addresses
+
+behavioral data
+
+conversation history
+
+Determine:
+
+handling
+
+classification
+
+retention
+
+# =============================================================================
+
+# 50. PRIVACY CLASSIFICATION
+
+# =============================================================================
+
+Recover privacy labels.
+
+Possible labels:
+
+PII
+
+Sensitive
+
+Operational
+
+Anonymous
+
+Derived
+
+Synthetic
+
+# =============================================================================
+
+# 51. PRIVACY BOUNDARIES
+
+# =============================================================================
+
+Determine where personal or sensitive information crosses subsystem boundaries.
+
+Generate Mermaid privacy-boundary diagram.
+
+# =============================================================================
+
+# 52. DATA MINIMIZATION
+
+# =============================================================================
+
+Determine whether only required information is collected and retained.
+
+Identify unnecessary persistence where supported by repository evidence.
+
+# =============================================================================
+
+# 53. PURPOSE LIMITATION
+
+# =============================================================================
+
+Determine whether information use is bounded by explicit purpose.
+
+Recover:
+
+purpose definition
+
+purpose enforcement
+
+purpose review
+
+# =============================================================================
+
+# 54. STORAGE LIMITATION
+
+# =============================================================================
+
+Determine whether retained information is bounded by retention policy.
+
+# =============================================================================
+
+# 55. PRIVACY BY DESIGN
+
+# =============================================================================
+
+Evaluate whether privacy considerations are integrated into the architecture
+rather than added afterward.
+
+# =============================================================================
+
+# 56. PART I STATIC VERIFICATION
+
+# =============================================================================
+
+Search for:
+
+duplicate metadata systems
+
+missing ownership
+
+missing classification
+
+missing retention
+
+orphan datasets
+
+orphan checkpoints
+
+missing provenance
+
+hardcoded personal information
+
+missing lifecycle definitions
+
+Do not modify production implementation.
+
+# =============================================================================
+
+# 57. PART I ACCEPTANCE INVARIANTS
+
+# =============================================================================
+
+Evaluate:
+
+DATA-001
+
+Canonical ownership exists.
+
+DATA-002
+
+Information lifecycle is explicit.
+
+DATA-003
+
+Classification is explicit.
+
+DATA-004
+
+Retention is explicit.
+
+DATA-005
+
+Privacy ownership is explicit.
+
+DATA-006
+
+Metadata is consistent.
+
+DATA-007
+
+Lineage is recoverable.
+
+DATA-008
+
+Repository information architecture is internally consistent.
+
+# =============================================================================
+
+# 58. REQUIRED OUTPUTS
+
+# =============================================================================
+
+Produce:
+
+Data Governance Report
+
+Information Ownership Report
+
+Data Architecture Report
+
+Information Flow Report
+
+Metadata Report
+
+Schema Registry Report
+
+Classification Report
+
+Dataset Inventory
+
+Memory Governance Report
+
+Checkpoint Governance Report
+
+Telemetry Governance Report
+
+Privacy Report
+
+Retention Report
+
+Lifecycle Report
+
+Data Quality Report
+
+Static Verification Report
+
+Mermaid Data Architecture Diagram
+
+Mermaid Information Flow Diagram
+
+Mermaid Lifecycle Diagram
+
+Mermaid Privacy Boundary Diagram
+
+# =============================================================================
+
+# END OF PART I
+
+#
+
+# CONTINUED IN PART II
+
+#
+
+# Part II covers:
+
+#
+
+# • Provenance
+
+# • Lineage
+
+# • Data Integrity
+
+# • Data Sharing
+
+# • Privacy Controls
+
+# • Compliance Mapping
+
+# • Information Traceability
+
+#
+
+# =============================================================================
+
+GORDON PHASE 3.7.21
+
+# ARCHITECTURE ACCEPTANCE AUDIT
+
+# DATA GOVERNANCE, PRIVACY, PROVENANCE &
+
+# INFORMATION LIFECYCLE
+
+#
+
+# PART II
+
+#
+
+# Scope:
+
+# src/agent/core/
+
+# src/agent/components/core/
+
+#
+
+# Data Provenance
+
+# Information Lineage
+
+# Data Contracts
+
+# Data Quality
+
+# Data Sharing
+
+# Privacy Controls
+
+# Retention Enforcement
+
+# Deletion Architecture
+
+#
+
+# =============================================================================
+
+# =============================================================================
+
+# PHASE SCOPE RESTRICTION
+
+# =============================================================================
+
+This phase audits only data and information infrastructure implemented inside
+the current Core scope.
+
+Primary scope:
+
+src/agent/core/
+
+src/agent/components/core/
+
+The audit shall not assume the existence of:
+
+semantic memory
+
+episodic memory
+
+working memory
+
+autobiographical memory
+
+cognitive knowledge graphs
+
+learning datasets
+
+model-training pipelines
+
+cognitive-state governance
+
+agent capability networks
+
+distributed cognition
+
+perception pipelines
+
+reasoning traces
+
+These systems shall be classified as:
+
+OUT OF CURRENT SCOPE
+
+PLANNED
+
+NOT YET IMPLEMENTED
+
+NOT AUDITABLE
+
+where applicable.
+
+Current Core data-governance concerns may include:
+
+configuration
+
+runtime state
+
+component state
+
+service state
+
+task infrastructure
+
+lifecycle records
+
+registries
+
+events
+
+messages
+
+queues
+
+logs
+
+telemetry
+
+diagnostics
+
+checkpoints
+
+runtime artifacts
+
+resource metadata
+
+structural metadata
+
+package metadata
+
+integrity reports
+
+# =============================================================================
+
+# 59. PROVENANCE AUTHORITY
+
+# =============================================================================
+
+Locate the canonical authority responsible for information provenance.
+
+Search for:
+
+ProvenanceManager
+
+ProvenanceRegistry
+
+ProvenanceService
+
+LineageManager
+
+TraceabilityManager
+
+ArtifactProvenance
+
+SourceMetadata
+
+Determine:
+
+owner
+
+scope
+
+construction
+
+public API
+
+storage
+
+lifecycle
+
+validation
+
+If no dedicated provenance authority exists, determine whether provenance is
+owned by individual data-producing subsystems.
+
+Report fragmented ownership.
+
+# =============================================================================
+
+# 60. PROVENANCE MODEL
+
+# =============================================================================
+
+Recover the canonical provenance model.
+
+Possible fields:
+
+record identifier
+
+source identifier
+
+source type
+
+producer
+
+producer version
+
+creation timestamp
+
+collection timestamp
+
+transformation timestamp
+
+runtime identifier
+
+task identifier
+
+component identifier
+
+service identifier
+
+configuration revision
+
+parent records
+
+transformation history
+
+integrity hash
+
+classification
+
+retention policy
+
+Determine:
+
+required fields
+
+optional fields
+
+field ownership
+
+field types
+
+serialization
+
+validation
+
+# =============================================================================
+
+# 61. PROVENANCE RECORD IDENTITY
+
+# =============================================================================
+
+Determine how provenance records are identified.
+
+Possible mechanisms:
+
+UUID
+
+content hash
+
+monotonic sequence
+
+composite identifier
+
+source-relative identifier
+
+artifact-relative identifier
+
+Determine:
+
+uniqueness scope
+
+stability
+
+collision handling
+
+persistence
+
+reconstruction
+
+# =============================================================================
+
+# 62. SOURCE IDENTITY
+
+# =============================================================================
+
+Determine how information sources are represented.
+
+Possible sources:
+
+operator input
+
+configuration file
+
+environment variable
+
+runtime component
+
+service
+
+provider
+
+tool
+
+filesystem
+
+network endpoint
+
+generated process
+
+restored checkpoint
+
+Determine whether source identity distinguishes:
+
+human-provided information
+
+machine-generated information
+
+derived information
+
+restored information
+
+externally retrieved information
+
+# =============================================================================
+
+# 63. PRODUCER IDENTITY
+
+# =============================================================================
+
+Determine whether every generated record can identify its producer.
+
+Possible producers:
+
+module
+
+package
+
+component
+
+service
+
+kernel
+
+scheduler
+
+resource manager
+
+integrity checker
+
+configuration loader
+
+diagnostic subsystem
+
+Determine whether producer identity includes:
+
+canonical path
+
+component ID
+
+service ID
+
+implementation version
+
+runtime instance
+
+# =============================================================================
+
+# 64. CREATION PROVENANCE
+
+# =============================================================================
+
+Determine whether information creation records:
+
+creation authority
+
+creation time
+
+input sources
+
+active configuration
+
+runtime version
+
+schema version
+
+initial classification
+
+initial retention policy
+
+# =============================================================================
+
+# 65. TRANSFORMATION PROVENANCE
+
+# =============================================================================
+
+Recover provenance for transformations such as:
+
+normalization
+
+validation
+
+serialization
+
+deserialization
+
+aggregation
+
+filtering
+
+redaction
+
+compression
+
+migration
+
+conversion
+
+merging
+
+splitting
+
+Determine whether transformed outputs retain links to all contributing inputs.
+
+# =============================================================================
+
+# 66. DERIVATION CHAINS
+
+# =============================================================================
+
+Determine whether derived information preserves a complete derivation chain.
+
+Possible chain:
+
+source
+
+collection
+
+validation
+
+normalization
+
+transformation
+
+storage
+
+export
+
+deletion
+
+Determine whether the chain is:
+
+complete
+
+partial
+
+best effort
+
+not implemented
+
+# =============================================================================
+
+# 67. PROVENANCE GRANULARITY
+
+# =============================================================================
+
+Determine provenance granularity.
+
+Possible levels:
+
+package
+
+module
+
+service
+
+component
+
+task
+
+event
+
+record
+
+field
+
+artifact
+
+Determine the intended granularity for each Core information domain.
+
+# =============================================================================
+
+# 68. PROVENANCE IMMUTABILITY
+
+# =============================================================================
+
+Determine whether provenance records are:
+
+immutable
+
+append-only
+
+mutable with revision history
+
+fully mutable
+
+derived on demand
+
+Determine who may alter provenance.
+
+A producer shall not silently rewrite historical source information.
+
+# =============================================================================
+
+# 69. PROVENANCE VERSIONING
+
+# =============================================================================
+
+Determine whether provenance records contain:
+
+schema version
+
+producer version
+
+transformation version
+
+source version
+
+runtime version
+
+configuration version
+
+Determine migration behavior after schema changes.
+
+# =============================================================================
+
+# 70. PROVENANCE PERSISTENCE
+
+# =============================================================================
+
+Determine where provenance is stored.
+
+Possible locations:
+
+inside the record
+
+sidecar metadata
+
+central registry
+
+database table
+
+artifact manifest
+
+log stream
+
+checkpoint manifest
+
+Determine consistency between information and its provenance.
+
+# =============================================================================
+
+# 71. PROVENANCE LOSS
+
+# =============================================================================
+
+Identify operations that may discard provenance.
+
+Examples:
+
+serialization to simplified formats
+
+copying values without metadata
+
+aggregating records
+
+exporting artifacts
+
+checkpoint restoration
+
+queue transport
+
+event conversion
+
+legacy adapter conversion
+
+Report every lossy boundary.
+
+# =============================================================================
+
+# 72. LINEAGE AUTHORITY
+
+# =============================================================================
+
+Locate the canonical authority for data lineage.
+
+Determine whether lineage is:
+
+explicitly stored
+
+derived from provenance
+
+reconstructed from logs
+
+represented by parent identifiers
+
+not implemented
+
+# =============================================================================
+
+# 73. LINEAGE GRAPH
+
+# =============================================================================
+
+Recover lineage relationships among:
+
+sources
+
+records
+
+events
+
+messages
+
+tasks
+
+components
+
+services
+
+checkpoints
+
+artifacts
+
+reports
+
+Generate a Mermaid lineage graph.
+
+# =============================================================================
+
+# 74. UPSTREAM LINEAGE
+
+# =============================================================================
+
+Determine whether a record can identify:
+
+immediate source
+
+original source
+
+all contributing sources
+
+configuration source
+
+runtime producer
+
+# =============================================================================
+
+# 75. DOWNSTREAM LINEAGE
+
+# =============================================================================
+
+Determine whether the architecture can identify consumers and descendants of a
+record.
+
+Possible consumers:
+
+services
+
+components
+
+tasks
+
+registries
+
+logs
+
+diagnostics
+
+exports
+
+checkpoints
+
+Determine whether downstream lineage is explicit or inferred.
+
+# =============================================================================
+
+# 76. CROSS-SERVICE LINEAGE
+
+# =============================================================================
+
+Determine whether lineage survives movement across service boundaries.
+
+Inspect:
+
+method calls
+
+events
+
+queues
+
+messages
+
+serialization
+
+shared state
+
+registries
+
+Determine where correlation identifiers are preserved or lost.
+
+# =============================================================================
+
+# 77. CROSS-PROCESS LINEAGE
+
+# =============================================================================
+
+Where Core supports multiple processes or daemons, determine whether lineage
+survives:
+
+IPC
+
+sockets
+
+message brokers
+
+shared files
+
+shared databases
+
+subprocess execution
+
+Do not fail the audit where such architecture is not yet implemented.
+
+Classify unsupported paths as:
+
+NOT APPLICABLE
+
+NOT YET IMPLEMENTED
+
+# =============================================================================
+
+# 78. TASK LINEAGE
+
+# =============================================================================
+
+Audit Core task primitives.
+
+Determine whether a task records:
+
+task ID
+
+parent task
+
+origin
+
+creator
+
+creation time
+
+owner
+
+input references
+
+result references
+
+cancellation source
+
+failure source
+
+retry ancestry
+
+Do not interpret task lineage as cognitive reasoning lineage.
+
+# =============================================================================
+
+# 79. EVENT LINEAGE
+
+# =============================================================================
+
+Determine whether events record:
+
+event ID
+
+correlation ID
+
+causation ID
+
+publisher
+
+timestamp
+
+schema version
+
+parent event
+
+task association
+
+runtime association
+
+# =============================================================================
+
+# 80. MESSAGE LINEAGE
+
+# =============================================================================
+
+Determine whether runtime messages record:
+
+message ID
+
+sender
+
+recipient
+
+creation time
+
+delivery time
+
+correlation ID
+
+causation ID
+
+payload schema
+
+payload classification
+
+# =============================================================================
+
+# 81. ARTIFACT PROVENANCE
+
+# =============================================================================
+
+Recover provenance for generated Core artifacts.
+
+Possible artifacts:
+
+diagnostic reports
+
+integrity reports
+
+configuration exports
+
+runtime snapshots
+
+checkpoint manifests
+
+dependency graphs
+
+health reports
+
+Determine whether each artifact identifies:
+
+producer
+
+inputs
+
+creation time
+
+schema
+
+runtime version
+
+integrity hash
+
+# =============================================================================
+
+# 82. CHECKPOINT PROVENANCE
+
+# =============================================================================
+
+Determine whether checkpoints record:
+
+creator
+
+creation time
+
+runtime version
+
+configuration version
+
+included services
+
+included components
+
+state schema versions
+
+source runtime
+
+integrity checksums
+
+restoration history
+
+# =============================================================================
+
+# 83. CONFIGURATION PROVENANCE
+
+# =============================================================================
+
+Recover provenance for effective configuration.
+
+Determine whether each value can identify its source:
+
+default
+
+configuration file
+
+environment variable
+
+command-line argument
+
+runtime override
+
+test override
+
+generated value
+
+Determine precedence and override history.
+
+# =============================================================================
+
+# 84. STRUCTURAL METADATA PROVENANCE
+
+# =============================================================================
+
+Audit provenance of structural files such as:
+
+**meta**.py
+
+**tree**.py
+
+version.py
+
+constants.py
+
+interfaces.py
+
+Determine whether they are:
+
+manually authored
+
+generated
+
+templated
+
+migrated
+
+copied
+
+Determine whether schema and generation versions are recorded.
+
+# =============================================================================
+
+# 85. DATA CONTRACT AUTHORITY
+
+# =============================================================================
+
+Locate the canonical data-contract authority.
+
+Search for:
+
+DataContract
+
+SchemaContract
+
+MessageContract
+
+EventContract
+
+PayloadContract
+
+RecordSchema
+
+ContractRegistry
+
+Determine whether contracts are represented by:
+
+dataclasses
+
+Pydantic models
+
+TypedDict
+
+protocols
+
+abstract base classes
+
+JSON Schema
+
+manual validation
+
+untyped dictionaries
+
+# =============================================================================
+
+# 86. DATA CONTRACT INVENTORY
+
+# =============================================================================
+
+Inventory contracts for:
+
+configuration
+
+runtime state
+
+component state
+
+service state
+
+tasks
+
+events
+
+messages
+
+health reports
+
+diagnostics
+
+checkpoints
+
+resource records
+
+integrity reports
+
+structural metadata
+
+# =============================================================================
+
+# 87. CONTRACT OWNERSHIP
+
+# =============================================================================
+
+For every contract determine:
+
+canonical owner
+
+producer
+
+consumers
+
+schema version
+
+validation authority
+
+migration authority
+
+deprecation authority
+
+# =============================================================================
+
+# 88. CONTRACT REQUIRED FIELDS
+
+# =============================================================================
+
+Determine required fields for every Core data contract.
+
+Identify:
+
+implicitly required fields
+
+fields accepted as missing
+
+nullable fields
+
+defaulted fields
+
+computed fields
+
+conditionally required fields
+
+# =============================================================================
+
+# 89. CONTRACT OPTIONALITY
+
+# =============================================================================
+
+Determine whether optionality is explicit.
+
+Detect:
+
+Optional types with no semantic explanation
+
+None used as multiple different states
+
+missing-versus-null ambiguity
+
+empty string used as missing data
+
+empty collection used as unknown data
+
+# =============================================================================
+
+# 90. CONTRACT TYPE SAFETY
+
+# =============================================================================
+
+Determine whether runtime validation enforces declared field types.
+
+Identify:
+
+unchecked dictionaries
+
+Any
+
+object
+
+unvalidated JSON
+
+implicit coercion
+
+stringly typed enums
+
+unbounded arbitrary metadata
+
+# =============================================================================
+
+# 91. CONTRACT ENUMS
+
+# =============================================================================
+
+Inventory enumerated values used in Core contracts.
+
+Possible examples:
+
+lifecycle state
+
+health state
+
+task state
+
+service state
+
+resource state
+
+error category
+
+classification
+
+Determine:
+
+canonical enum authority
+
+unknown value handling
+
+serialization form
+
+forward compatibility
+
+# =============================================================================
+
+# 92. CONTRACT INVARIANTS
+
+# =============================================================================
+
+Recover cross-field invariants.
+
+Examples:
+
+completed tasks must have completion timestamps
+
+failed tasks must have failure information
+
+cancelled tasks must have cancellation source
+
+running services must have start timestamps
+
+stopped services must not report active resources
+
+checkpoint manifests must declare schema versions
+
+Determine enforcement location.
+
+# =============================================================================
+
+# 93. CONTRACT VALIDATION BOUNDARIES
+
+# =============================================================================
+
+Determine where validation occurs:
+
+construction
+
+registration
+
+serialization
+
+deserialization
+
+storage
+
+retrieval
+
+message receipt
+
+event publication
+
+checkpoint restoration
+
+export
+
+# =============================================================================
+
+# 94. CONTRACT VERSIONING
+
+# =============================================================================
+
+Determine versioning strategy.
+
+Possible mechanisms:
+
+integer schema version
+
+semantic version
+
+package version
+
+class version
+
+implicit Git version
+
+no versioning
+
+Determine compatibility policy.
+
+# =============================================================================
+
+# 95. BACKWARD COMPATIBILITY
+
+# =============================================================================
+
+Determine whether newer implementations can read older Core records.
+
+Audit:
+
+configuration
+
+state snapshots
+
+checkpoint manifests
+
+events
+
+messages
+
+reports
+
+structural contracts
+
+# =============================================================================
+
+# 96. FORWARD COMPATIBILITY
+
+# =============================================================================
+
+Determine behavior when older implementations encounter:
+
+unknown fields
+
+unknown enum values
+
+new record types
+
+new schema versions
+
+additional metadata
+
+# =============================================================================
+
+# 97. CONTRACT MIGRATION
+
+# =============================================================================
+
+Locate migration mechanisms.
+
+Search for:
+
+migrate
+
+migration
+
+upgrade_schema
+
+convert_version
+
+legacy_adapter
+
+compatibility_adapter
+
+Determine:
+
+migration authority
+
+ordering
+
+idempotency
+
+rollback
+
+validation
+
+# =============================================================================
+
+# 98. CONTRACT DEPRECATION
+
+# =============================================================================
+
+Determine how deprecated contracts or fields are:
+
+marked
+
+warned
+
+supported
+
+migrated
+
+removed
+
+tested
+
+# =============================================================================
+
+# 99. DATA VALIDATION AUTHORITY
+
+# =============================================================================
+
+Locate the canonical validation authority.
+
+Determine whether validation is:
+
+centralized
+
+contract-local
+
+service-local
+
+component-local
+
+distributed without policy
+
+# =============================================================================
+
+# 100. STRUCTURAL VALIDATION
+
+# =============================================================================
+
+Recover validation of:
+
+field presence
+
+field type
+
+collection type
+
+identifier format
+
+timestamp format
+
+path format
+
+enum membership
+
+schema version
+
+# =============================================================================
+
+# 101. SEMANTIC VALIDATION
+
+# =============================================================================
+
+Recover validation of meaning.
+
+Examples:
+
+start time precedes stop time
+
+parent task exists
+
+resource owner exists
+
+dependency references resolve
+
+canonical paths match actual paths
+
+retention duration is non-negative
+
+# =============================================================================
+
+# 102. REFERENTIAL INTEGRITY
+
+# =============================================================================
+
+Determine how references among Core records are validated.
+
+Possible references:
+
+task to parent task
+
+service to dependencies
+
+component to owner
+
+resource to allocator
+
+event to publisher
+
+checkpoint to runtime
+
+tree contract to package
+
+Determine behavior for missing targets.
+
+# =============================================================================
+
+# 103. IDENTIFIER INTEGRITY
+
+# =============================================================================
+
+Audit identifiers for:
+
+uniqueness
+
+stability
+
+format
+
+scope
+
+collision prevention
+
+reuse policy
+
+serialization
+
+# =============================================================================
+
+# 104. TIMESTAMP INTEGRITY
+
+# =============================================================================
+
+Determine canonical timestamp policy.
+
+Recover:
+
+clock source
+
+timezone
+
+precision
+
+monotonic versus wall clock
+
+serialization
+
+clock-skew handling
+
+Determine whether ordering-critical operations use monotonic time.
+
+# =============================================================================
+
+# 105. PATH INTEGRITY
+
+# =============================================================================
+
+Audit stored paths.
+
+Determine whether paths are:
+
+absolute
+
+repository-relative
+
+package-relative
+
+canonicalized
+
+normalized
+
+platform-dependent
+
+validated against traversal
+
+# =============================================================================
+
+# 106. DATA NORMALIZATION
+
+# =============================================================================
+
+Recover normalization of:
+
+paths
+
+module names
+
+package names
+
+identifiers
+
+timestamps
+
+enum values
+
+dependency expressions
+
+configuration keys
+
+# =============================================================================
+
+# 107. SERIALIZATION AUTHORITY
+
+# =============================================================================
+
+Locate canonical serialization infrastructure.
+
+Possible formats:
+
+JSON
+
+YAML
+
+TOML
+
+pickle
+
+MessagePack
+
+custom binary
+
+plain Python objects
+
+Determine:
+
+owner
+
+schema validation
+
+security
+
+compatibility
+
+determinism
+
+# =============================================================================
+
+# 108. SERIALIZATION DETERMINISM
+
+# =============================================================================
+
+Determine whether equivalent records serialize identically.
+
+Inspect:
+
+field ordering
+
+collection ordering
+
+timestamp formatting
+
+floating-point formatting
+
+path normalization
+
+encoding
+
+Deterministic serialization is required where content hashing or reproducible
+artifacts depend upon it.
+
+# =============================================================================
+
+# 109. DESERIALIZATION SAFETY
+
+# =============================================================================
+
+Determine protections against:
+
+arbitrary code execution
+
+unexpected types
+
+oversized payloads
+
+recursive payloads
+
+unknown fields
+
+invalid schema versions
+
+path injection
+
+resource exhaustion
+
+# =============================================================================
+
+# 110. DATA QUALITY AUTHORITY
+
+# =============================================================================
+
+Locate authority responsible for Core data quality.
+
+Where no explicit authority exists, recover distributed validation ownership.
+
+# =============================================================================
+
+# 111. DATA QUALITY DIMENSIONS
+
+# =============================================================================
+
+Evaluate:
+
+accuracy
+
+completeness
+
+consistency
+
+validity
+
+uniqueness
+
+timeliness
+
+traceability
+
+integrity
+
+availability
+
+# =============================================================================
+
+# 112. COMPLETENESS QUALITY
+
+# =============================================================================
+
+Determine whether required Core records contain all mandatory data.
+
+Examples:
+
+task records
+
+service registrations
+
+health reports
+
+resource allocations
+
+checkpoint manifests
+
+integrity findings
+
+tree contracts
+
+# =============================================================================
+
+# 113. CONSISTENCY QUALITY
+
+# =============================================================================
+
+Detect inconsistent representations of the same concept.
+
+Examples:
+
+package path formats
+
+task-state names
+
+health-state names
+
+service identifiers
+
+dependency patterns
+
+timestamps
+
+owners
+
+classification values
+
+# =============================================================================
+
+# 114. UNIQUENESS QUALITY
+
+# =============================================================================
+
+Detect duplicate:
+
+identifiers
+
+registrations
+
+configuration keys
+
+canonical paths
+
+structural contracts
+
+events
+
+resource records
+
+artifact records
+
+# =============================================================================
+
+# 115. TIMELINESS QUALITY
+
+# =============================================================================
+
+Determine whether information becomes stale.
+
+Possible stale information:
+
+health state
+
+resource availability
+
+service status
+
+task status
+
+configuration cache
+
+registry cache
+
+integrity results
+
+Determine expiration or refresh policy.
+
+# =============================================================================
+
+# 116. DATA QUALITY METRICS
+
+# =============================================================================
+
+Recover or define audit metrics for:
+
+missing required fields
+
+schema violations
+
+invalid references
+
+duplicate identifiers
+
+stale records
+
+provenance coverage
+
+lineage coverage
+
+classification coverage
+
+retention coverage
+
+deletion verification coverage
+
+# =============================================================================
+
+# 117. DATA QUALITY REPORTING
+
+# =============================================================================
+
+Determine how quality issues are reported.
+
+Possible channels:
+
+exceptions
+
+warnings
+
+logs
+
+metrics
+
+integrity reports
+
+diagnostics
+
+startup failures
+
+CI failures
+
+# =============================================================================
+
+# 118. DATA QUALITY GATES
+
+# =============================================================================
+
+Define quality gates for information entering:
+
+registries
+
+runtime state
+
+persistent storage
+
+checkpoints
+
+exports
+
+message queues
+
+event systems
+
+structural metadata
+
+# =============================================================================
+
+# 119. INFORMATION CLASSIFICATION AUTHORITY
+
+# =============================================================================
+
+Locate canonical classification authority.
+
+Determine whether classification applies to:
+
+configuration
+
+runtime state
+
+logs
+
+diagnostics
+
+artifacts
+
+checkpoints
+
+credentials
+
+environment values
+
+operator-provided data
+
+# =============================================================================
+
+# 120. CLASSIFICATION VOCABULARY
+
+# =============================================================================
+
+Recover the actual classification vocabulary used by Core.
+
+Possible labels may include:
+
+PUBLIC
+
+INTERNAL
+
+CONFIDENTIAL
+
+RESTRICTED
+
+SECRET
+
+SENSITIVE
+
+Do not invent labels absent from repository policy.
+
+Detect competing vocabularies.
+
+# =============================================================================
+
+# 121. DEFAULT CLASSIFICATION POLICY
+
+# =============================================================================
+
+Determine default classification when no label is provided.
+
+Evaluate whether default behavior risks under-classification.
+
+# =============================================================================
+
+# 122. CLASSIFICATION PROPAGATION
+
+# =============================================================================
+
+Determine classification of derived records.
+
+Possible rules:
+
+highest-source classification wins
+
+explicit recomputation
+
+fixed output classification
+
+producer-defined classification
+
+no propagation
+
+Determine whether aggregation can lower classification incorrectly.
+
+# =============================================================================
+
+# 123. CLASSIFICATION DOWNGRADE
+
+# =============================================================================
+
+Determine who may lower classification.
+
+Recover:
+
+authorization
+
+redaction requirements
+
+audit record
+
+reason
+
+approval
+
+verification
+
+# =============================================================================
+
+# 124. CLASSIFICATION UPGRADE
+
+# =============================================================================
+
+Determine whether classification is raised when:
+
+sensitive values are added
+
+multiple benign values become sensitive in combination
+
+credentials are detected
+
+operator data enters diagnostics
+
+# =============================================================================
+
+# 125. PRIVACY AUTHORITY
+
+# =============================================================================
+
+Locate Core privacy ownership.
+
+Search for:
+
+PrivacyPolicy
+
+PrivacyManager
+
+RedactionPolicy
+
+SensitiveDataPolicy
+
+PIIPolicy
+
+Determine whether privacy is centralized or delegated.
+
+# =============================================================================
+
+# 126. PRIVACY SCOPE
+
+# =============================================================================
+
+Identify Core information that may contain personal or sensitive information.
+
+Possible examples:
+
+operator names
+
+filesystem usernames
+
+home-directory paths
+
+email addresses
+
+network addresses
+
+process arguments
+
+environment variables
+
+conversation-derived task descriptions
+
+log payloads
+
+diagnostic dumps
+
+# =============================================================================
+
+# 127. PERSONAL DATA IDENTIFICATION
+
+# =============================================================================
+
+Determine whether Core can identify fields containing:
+
+direct identifiers
+
+indirect identifiers
+
+system-user identifiers
+
+machine identifiers
+
+network identifiers
+
+operator-provided free text
+
+Do not claim complete PII detection unless implemented and verified.
+
+# =============================================================================
+
+# 128. DATA MINIMIZATION
+
+# =============================================================================
+
+Determine whether Core collects only information required for runtime operation.
+
+Inspect:
+
+logs
+
+events
+
+task descriptions
+
+diagnostics
+
+error reports
+
+health snapshots
+
+configuration dumps
+
+Determine whether unnecessary payload copies are retained.
+
+# =============================================================================
+
+# 129. PURPOSE LIMITATION
+
+# =============================================================================
+
+Determine whether information is used only for its declared operational purpose.
+
+Possible purposes:
+
+execution
+
+diagnostics
+
+integrity validation
+
+recovery
+
+audit
+
+performance monitoring
+
+configuration
+
+Determine whether data collected for one purpose is reused without policy.
+
+# =============================================================================
+
+# 130. LOG REDACTION
+
+# =============================================================================
+
+Recover redaction for:
+
+credentials
+
+tokens
+
+passwords
+
+environment values
+
+filesystem paths
+
+usernames
+
+network addresses
+
+payload bodies
+
+configuration secrets
+
+Determine whether redaction occurs before log emission.
+
+# =============================================================================
+
+# 131. DIAGNOSTIC REDACTION
+
+# =============================================================================
+
+Determine whether diagnostic reports remove or mask:
+
+secrets
+
+personal paths
+
+operator identifiers
+
+private payloads
+
+environment variables
+
+raw exception context
+
+# =============================================================================
+
+# 132. ERROR-MESSAGE PRIVACY
+
+# =============================================================================
+
+Audit exception and error messages for accidental disclosure.
+
+Determine whether errors expose:
+
+credentials
+
+full file contents
+
+environment variables
+
+private paths
+
+network endpoints
+
+unredacted payloads
+
+# =============================================================================
+
+# 133. PRIVACY-PRESERVING TELEMETRY
+
+# =============================================================================
+
+Where telemetry exists determine:
+
+collection scope
+
+aggregation
+
+sampling
+
+identifiers
+
+redaction
+
+retention
+
+export
+
+Determine whether raw payload content is necessary.
+
+# =============================================================================
+
+# 134. CONSENT ARCHITECTURE
+
+# =============================================================================
+
+Where Core collects optional operator or user information, determine whether an
+explicit enablement mechanism exists.
+
+Possible mechanisms:
+
+configuration flag
+
+operator approval
+
+deployment policy
+
+feature opt-in
+
+Do not claim legal consent compliance.
+
+# =============================================================================
+
+# 135. PRIVACY CONFIGURATION
+
+# =============================================================================
+
+Recover configuration controlling:
+
+logging detail
+
+telemetry
+
+diagnostic collection
+
+payload storage
+
+redaction
+
+retention
+
+export
+
+Determine secure defaults.
+
+# =============================================================================
+
+# 136. GDPR-RELATED ARCHITECTURAL CONCEPTS
+
+# =============================================================================
+
+Evaluate only architectural support for concepts commonly associated with data
+protection systems, including:
+
+data minimization
+
+purpose limitation
+
+storage limitation
+
+access control
+
+export
+
+correction
+
+deletion
+
+auditability
+
+Do not claim GDPR compliance.
+
+Do not provide legal certification.
+
+Classify each concept as:
+
+SUPPORTED
+
+PARTIALLY SUPPORTED
+
+NOT IMPLEMENTED
+
+NOT APPLICABLE
+
+NOT AUDITABLE
+
+# =============================================================================
+
+# 137. INFORMATION EXPORT AUTHORITY
+
+# =============================================================================
+
+Locate export mechanisms for Core-managed information.
+
+Possible exports:
+
+configuration
+
+runtime state
+
+diagnostics
+
+logs
+
+reports
+
+checkpoints
+
+task records
+
+Determine:
+
+authorization
+
+scope
+
+format
+
+classification
+
+redaction
+
+provenance
+
+# =============================================================================
+
+# 138. EXPORT MANIFEST
+
+# =============================================================================
+
+Determine whether exports include a manifest containing:
+
+creation time
+
+producer
+
+scope
+
+record count
+
+schema versions
+
+classification
+
+integrity hashes
+
+redaction status
+
+source runtime
+
+# =============================================================================
+
+# 139. EXPORT COMPLETENESS
+
+# =============================================================================
+
+Determine whether an export can represent all information within its declared
+scope.
+
+Identify information omitted because it is:
+
+ephemeral
+
+unavailable
+
+unsupported
+
+restricted
+
+deleted
+
+corrupted
+
+# =============================================================================
+
+# 140. EXPORT PRIVACY
+
+# =============================================================================
+
+Determine whether export operations enforce:
+
+classification
+
+redaction
+
+access control
+
+scope limitation
+
+retention
+
+secure destination requirements
+
+# =============================================================================
+
+# 141. INFORMATION SHARING AUTHORITY
+
+# =============================================================================
+
+Locate authority controlling information exchange among Core components and
+services.
+
+Determine whether sharing occurs through:
+
+direct references
+
+immutable records
+
+events
+
+messages
+
+queues
+
+shared state
+
+registries
+
+files
+
+# =============================================================================
+
+# 142. SHARING CONTRACTS
+
+# =============================================================================
+
+For each sharing boundary determine:
+
+producer
+
+consumer
+
+schema
+
+ownership
+
+mutation rights
+
+classification
+
+retention
+
+error behavior
+
+# =============================================================================
+
+# 143. SHARED MUTABLE DATA
+
+# =============================================================================
+
+Identify shared mutable structures.
+
+Determine:
+
+owner
+
+locking
+
+mutation API
+
+copy policy
+
+snapshot policy
+
+consistency
+
+lifetime
+
+Unowned shared mutable data shall be reported as an architectural risk.
+
+# =============================================================================
+
+# 144. DATA COPYING
+
+# =============================================================================
+
+Determine whether records are:
+
+passed by reference
+
+shallow copied
+
+deep copied
+
+serialized
+
+reconstructed
+
+Determine whether copying preserves metadata and provenance.
+
+# =============================================================================
+
+# 145. DATA OWNERSHIP TRANSFER
+
+# =============================================================================
+
+Recover explicit ownership-transfer semantics.
+
+Possible cases:
+
+task submission
+
+queue insertion
+
+event publication
+
+resource handoff
+
+checkpoint restoration
+
+service result return
+
+Determine whether the sender retains mutation rights after transfer.
+
+# =============================================================================
+
+# 146. DATA ACCESS CONTROL
+
+# =============================================================================
+
+Determine whether Core restricts access based on:
+
+component identity
+
+service identity
+
+runtime role
+
+package boundary
+
+classification
+
+resource ownership
+
+operator permissions
+
+Do not invent identity or authorization systems that do not exist.
+
+# =============================================================================
+
+# 147. READ AUTHORITY
+
+# =============================================================================
+
+Determine which components may read:
+
+configuration
+
+runtime state
+
+task records
+
+service state
+
+resource metadata
+
+diagnostics
+
+credentials
+
+checkpoints
+
+# =============================================================================
+
+# 148. WRITE AUTHORITY
+
+# =============================================================================
+
+Determine which components may mutate:
+
+configuration
+
+runtime state
+
+registries
+
+task state
+
+service state
+
+resource records
+
+checkpoint metadata
+
+structural metadata
+
+# =============================================================================
+
+# 149. APPEND AUTHORITY
+
+# =============================================================================
+
+Determine which stores or logs permit append-only writes.
+
+Possible examples:
+
+audit records
+
+event journals
+
+diagnostic history
+
+integrity findings
+
+Determine whether existing records may be altered.
+
+# =============================================================================
+
+# 150. DATA RETENTION AUTHORITY
+
+# =============================================================================
+
+Locate canonical retention policy.
+
+Determine whether retention is controlled by:
+
+record type
+
+classification
+
+storage backend
+
+configuration
+
+service
+
+operator policy
+
+# =============================================================================
+
+# 151. RETENTION POLICY MODEL
+
+# =============================================================================
+
+Recover fields such as:
+
+retention duration
+
+retention start time
+
+expiration time
+
+retention owner
+
+legal or operational hold
+
+archival policy
+
+deletion method
+
+verification requirement
+
+# =============================================================================
+
+# 152. RETENTION CATEGORIES
+
+# =============================================================================
+
+Inventory retention policy for:
+
+logs
+
+telemetry
+
+diagnostics
+
+task records
+
+events
+
+messages
+
+configuration history
+
+runtime snapshots
+
+checkpoints
+
+artifacts
+
+temporary files
+
+integrity reports
+
+# =============================================================================
+
+# 153. RETENTION START
+
+# =============================================================================
+
+Determine when retention periods begin.
+
+Possible triggers:
+
+creation
+
+last access
+
+task completion
+
+runtime shutdown
+
+checkpoint supersession
+
+artifact export
+
+service termination
+
+# =============================================================================
+
+# 154. RETENTION EXPIRATION
+
+# =============================================================================
+
+Determine how expired information is detected.
+
+Possible mechanisms:
+
+scheduled scan
+
+access-time check
+
+startup cleanup
+
+shutdown cleanup
+
+backend TTL
+
+manual maintenance
+
+# =============================================================================
+
+# 155. RETENTION ENFORCEMENT
+
+# =============================================================================
+
+Locate enforcement authority.
+
+Determine:
+
+frequency
+
+failure behavior
+
+retry
+
+reporting
+
+metrics
+
+verification
+
+# =============================================================================
+
+# 156. RETENTION OVERRIDES
+
+# =============================================================================
+
+Determine whether retention can be overridden.
+
+Recover:
+
+authority
+
+reason
+
+duration
+
+scope
+
+approval
+
+audit trail
+
+# =============================================================================
+
+# 157. HOLD ARCHITECTURE
+
+# =============================================================================
+
+Where supported, determine whether information may be placed under:
+
+operational hold
+
+diagnostic hold
+
+incident hold
+
+manual hold
+
+Determine:
+
+authority
+
+expiry
+
+release
+
+audit
+
+Do not imply legal-hold compliance.
+
+# =============================================================================
+
+# 158. ARCHIVAL AUTHORITY
+
+# =============================================================================
+
+Locate archival infrastructure.
+
+Determine:
+
+eligible information
+
+trigger
+
+format
+
+compression
+
+encryption
+
+integrity verification
+
+restore support
+
+# =============================================================================
+
+# 159. ARCHIVE MANIFESTS
+
+# =============================================================================
+
+Determine whether archives include:
+
+contents
+
+schema versions
+
+creation time
+
+source
+
+classification
+
+retention
+
+checksums
+
+encryption metadata
+
+# =============================================================================
+
+# 160. ARCHIVE VALIDATION
+
+# =============================================================================
+
+Determine whether archives are validated:
+
+before storage
+
+after storage
+
+periodically
+
+before restoration
+
+after migration
+
+# =============================================================================
+
+# 161. ARCHIVE RESTORATION
+
+# =============================================================================
+
+Recover restoration behavior.
+
+Determine:
+
+authority
+
+schema migration
+
+integrity checks
+
+ownership restoration
+
+provenance preservation
+
+classification preservation
+
+# =============================================================================
+
+# 162. DELETION AUTHORITY
+
+# =============================================================================
+
+Locate canonical deletion authority.
+
+Determine who may delete:
+
+tasks
+
+events
+
+messages
+
+logs
+
+diagnostics
+
+checkpoints
+
+artifacts
+
+configuration history
+
+temporary files
+
+# =============================================================================
+
+# 163. DELETION REQUEST MODEL
+
+# =============================================================================
+
+Recover fields such as:
+
+request ID
+
+target
+
+scope
+
+requester
+
+reason
+
+creation time
+
+approval
+
+status
+
+execution time
+
+verification result
+
+# =============================================================================
+
+# 164. DELETION LIFECYCLE
+
+# =============================================================================
+
+Possible states:
+
+requested
+
+validated
+
+approved
+
+scheduled
+
+executing
+
+completed
+
+partially completed
+
+failed
+
+cancelled
+
+verified
+
+Determine canonical transitions.
+
+Generate a Mermaid deletion lifecycle diagram.
+
+# =============================================================================
+
+# 165. LOGICAL DELETION
+
+# =============================================================================
+
+Determine whether records may be:
+
+marked deleted
+
+hidden
+
+tombstoned
+
+disabled
+
+made inaccessible
+
+Determine whether logical deletion is sufficient for each information category.
+
+# =============================================================================
+
+# 166. PHYSICAL DELETION
+
+# =============================================================================
+
+Determine whether physical deletion removes:
+
+primary record
+
+indexes
+
+caches
+
+replicas
+
+temporary copies
+
+exports
+
+checkpoints
+
+derived artifacts
+
+# =============================================================================
+
+# 167. CASCADE DELETION
+
+# =============================================================================
+
+Determine whether deleting a source record affects:
+
+derived records
+
+artifacts
+
+indexes
+
+lineage records
+
+logs
+
+checkpoints
+
+references
+
+Determine whether provenance should remain while content is removed.
+
+# =============================================================================
+
+# 168. DELETION AND PROVENANCE
+
+# =============================================================================
+
+Recover how deletion affects provenance.
+
+Possible strategies:
+
+delete provenance entirely
+
+retain tombstone only
+
+retain non-sensitive audit metadata
+
+retain source hash
+
+retain deletion record
+
+Determine canonical policy by information category.
+
+# =============================================================================
+
+# 169. DELETION VERIFICATION
+
+# =============================================================================
+
+Determine how deletion completion is verified.
+
+Possible methods:
+
+backend confirmation
+
+filesystem existence check
+
+record lookup
+
+index verification
+
+checksum inventory comparison
+
+replica confirmation
+
+# =============================================================================
+
+# 170. DELETION FAILURE
+
+# =============================================================================
+
+Determine handling of:
+
+partial deletion
+
+locked files
+
+unavailable backends
+
+replica failure
+
+permission failure
+
+corrupt index
+
+unknown target
+
+Determine retry and escalation.
+
+# =============================================================================
+
+# 171. SECURE DESTRUCTION
+
+# =============================================================================
+
+Determine whether secure destruction is required or implemented.
+
+Possible concerns:
+
+encrypted storage
+
+key destruction
+
+temporary plaintext files
+
+memory buffers
+
+swap
+
+persistent disks
+
+Do not claim secure physical erasure unless technically demonstrated.
+
+# =============================================================================
+
+# 172. TEMPORARY INFORMATION
+
+# =============================================================================
+
+Inventory temporary information.
+
+Possible examples:
+
+temporary files
+
+staging files
+
+serialization buffers
+
+diagnostic dumps
+
+partial checkpoints
+
+lock files
+
+PID files
+
+cache entries
+
+Determine:
+
+owner
+
+location
+
+cleanup
+
+retention
+
+failure recovery
+
+# =============================================================================
+
+# 173. CACHE GOVERNANCE
+
+# =============================================================================
+
+Recover governance of caches.
+
+Determine:
+
+cached content
+
+owner
+
+keying
+
+classification
+
+expiration
+
+invalidation
+
+deletion
+
+provenance
+
+# =============================================================================
+
+# 174. ORPHANED DATA
+
+# =============================================================================
+
+Detect information with no valid owner or reference.
+
+Possible orphaned data:
+
+task results
+
+checkpoint files
+
+cache entries
+
+temporary files
+
+registry records
+
+artifact manifests
+
+diagnostic reports
+
+Determine cleanup policy.
+
+# =============================================================================
+
+# 175. DATA RECONCILIATION
+
+# =============================================================================
+
+Determine reconciliation between:
+
+filesystem and registry
+
+runtime state and checkpoint
+
+artifact and manifest
+
+record and index
+
+parent and child structural contracts
+
+configuration source and effective configuration
+
+# =============================================================================
+
+# 176. DATA CORRUPTION DETECTION
+
+# =============================================================================
+
+Recover mechanisms detecting:
+
+invalid serialization
+
+checksum mismatch
+
+schema mismatch
+
+truncated file
+
+missing fields
+
+invalid references
+
+unexpected record count
+
+inconsistent indexes
+
+# =============================================================================
+
+# 177. DATA CORRUPTION RESPONSE
+
+# =============================================================================
+
+Determine responses such as:
+
+reject
+
+quarantine
+
+restore
+
+rebuild index
+
+use backup
+
+enter degraded mode
+
+terminate startup
+
+report only
+
+# =============================================================================
+
+# 178. QUARANTINE ARCHITECTURE
+
+# =============================================================================
+
+Where supported, determine how invalid information is quarantined.
+
+Recover:
+
+location
+
+access restrictions
+
+retention
+
+diagnostics
+
+recovery
+
+deletion
+
+# =============================================================================
+
+# 179. BACKUP DATA GOVERNANCE
+
+# =============================================================================
+
+Determine governance of backups.
+
+Audit:
+
+ownership
+
+classification
+
+encryption
+
+retention
+
+integrity
+
+access
+
+deletion
+
+restore validation
+
+# =============================================================================
+
+# 180. REPLICA GOVERNANCE
+
+# =============================================================================
+
+Where replicas exist determine:
+
+authority
+
+consistency
+
+classification
+
+retention
+
+deletion propagation
+
+integrity verification
+
+# =============================================================================
+
+# 181. DATA AVAILABILITY
+
+# =============================================================================
+
+Determine availability requirements for:
+
+configuration
+
+runtime state
+
+registries
+
+task infrastructure
+
+health state
+
+checkpoints
+
+diagnostics
+
+Determine failure behavior when unavailable.
+
+# =============================================================================
+
+# 182. DATA RECOVERY OBJECTIVES
+
+# =============================================================================
+
+Where defined, recover:
+
+recovery-point objectives
+
+recovery-time objectives
+
+acceptable data loss
+
+acceptable unavailability
+
+Do not invent operational objectives.
+
+# =============================================================================
+
+# 183. AUDITABILITY
+
+# =============================================================================
+
+Determine whether sensitive data operations are auditable.
+
+Possible operations:
+
+creation
+
+modification
+
+classification change
+
+export
+
+sharing
+
+retention override
+
+archival
+
+restoration
+
+deletion
+
+# =============================================================================
+
+# 184. AUDIT RECORD MODEL
+
+# =============================================================================
+
+Recover audit fields such as:
+
+record ID
+
+operation
+
+target
+
+actor
+
+time
+
+result
+
+reason
+
+source runtime
+
+correlation ID
+
+previous state
+
+new state
+
+# =============================================================================
+
+# 185. AUDIT LOG INTEGRITY
+
+# =============================================================================
+
+Determine whether audit records are:
+
+append-only
+
+tamper-evident
+
+signed
+
+hashed
+
+access restricted
+
+retained separately
+
+Do not claim tamper-proof behavior without evidence.
+
+# =============================================================================
+
+# 186. AUDIT PRIVACY
+
+# =============================================================================
+
+Determine whether auditability is balanced against privacy.
+
+Identify audit records that unnecessarily retain:
+
+raw payloads
+
+credentials
+
+personal paths
+
+operator identifiers
+
+sensitive configuration
+
+# =============================================================================
+
+# 187. INFORMATION-LIFECYCLE STATE MODEL
+
+# =============================================================================
+
+Recover the complete lifecycle state model.
+
+Possible states:
+
+created
+
+received
+
+validated
+
+classified
+
+active
+
+shared
+
+persisted
+
+archived
+
+expired
+
+deletion requested
+
+deleted
+
+verified deleted
+
+quarantined
+
+corrupted
+
+Generate a Mermaid information-lifecycle diagram.
+
+# =============================================================================
+
+# 188. LIFECYCLE TRANSITION AUTHORITY
+
+# =============================================================================
+
+Determine which authority may perform each transition.
+
+Examples:
+
+producer creates
+
+validator validates
+
+classifier classifies
+
+store persists
+
+retention service expires
+
+deletion authority deletes
+
+integrity checker verifies
+
+# =============================================================================
+
+# 189. LIFECYCLE TRANSITION VALIDATION
+
+# =============================================================================
+
+Determine whether invalid transitions are rejected.
+
+Examples:
+
+deleted to active without restoration
+
+unvalidated to exported
+
+expired to shared
+
+quarantined to canonical without revalidation
+
+archived to active without restoration checks
+
+# =============================================================================
+
+# 190. LIFECYCLE OBSERVABILITY
+
+# =============================================================================
+
+Determine whether transitions emit:
+
+events
+
+logs
+
+metrics
+
+audit records
+
+state updates
+
+diagnostic findings
+
+# =============================================================================
+
+# 191. DATA ACCEPTANCE GATES
+
+# =============================================================================
+
+Define gates before information enters canonical Core state.
+
+DATA-GATE-01
+
+Schema is recognized.
+
+DATA-GATE-02
+
+Required fields are present.
+
+DATA-GATE-03
+
+Types are valid.
+
+DATA-GATE-04
+
+Identifiers are valid.
+
+DATA-GATE-05
+
+References resolve.
+
+DATA-GATE-06
+
+Source is identified.
+
+DATA-GATE-07
+
+Provenance is sufficient.
+
+DATA-GATE-08
+
+Classification is assigned where required.
+
+DATA-GATE-09
+
+Retention policy is assigned where required.
+
+DATA-GATE-10
+
+Integrity validation passes.
+
+# =============================================================================
+
+# 192. PRIVACY ACCEPTANCE GATES
+
+# =============================================================================
+
+Define:
+
+PRIVACY-GATE-01
+
+Sensitive fields are identified where supported.
+
+PRIVACY-GATE-02
+
+Secrets are not emitted to logs.
+
+PRIVACY-GATE-03
+
+Diagnostics apply required redaction.
+
+PRIVACY-GATE-04
+
+Exports enforce scope and redaction.
+
+PRIVACY-GATE-05
+
+Optional telemetry is explicitly controlled.
+
+PRIVACY-GATE-06
+
+Retention is bounded.
+
+PRIVACY-GATE-07
+
+Deletion paths exist where required.
+
+PRIVACY-GATE-08
+
+Access boundaries are explicit.
+
+# =============================================================================
+
+# 193. PROVENANCE ACCEPTANCE GATES
+
+# =============================================================================
+
+Define:
+
+PROVENANCE-GATE-01
+
+Every governed record identifies its producer.
+
+PROVENANCE-GATE-02
+
+Every external input identifies its source category.
+
+PROVENANCE-GATE-03
+
+Transformations preserve parent references where required.
+
+PROVENANCE-GATE-04
+
+Artifact manifests preserve source information.
+
+PROVENANCE-GATE-05
+
+Checkpoint provenance is complete.
+
+PROVENANCE-GATE-06
+
+Configuration provenance identifies override sources.
+
+PROVENANCE-GATE-07
+
+Provenance survives serialization.
+
+PROVENANCE-GATE-08
+
+Provenance loss is explicit and justified.
+
+# =============================================================================
+
+# 194. LINEAGE ACCEPTANCE GATES
+
+# =============================================================================
+
+Define:
+
+LINEAGE-GATE-01
+
+Task ancestry is recoverable.
+
+LINEAGE-GATE-02
+
+Event causation is recoverable where events are implemented.
+
+LINEAGE-GATE-03
+
+Message correlation survives transport where messaging is implemented.
+
+LINEAGE-GATE-04
+
+Artifacts link to producing inputs.
+
+LINEAGE-GATE-05
+
+Checkpoints link to source runtime state.
+
+LINEAGE-GATE-06
+
+Structural metadata links to its governing schema or generator where applicable.
+
+# =============================================================================
+
+# 195. RETENTION ACCEPTANCE GATES
+
+# =============================================================================
+
+Define:
+
+RETENTION-GATE-01
+
+Governed information has an explicit retention category.
+
+RETENTION-GATE-02
+
+Expiration can be determined.
+
+RETENTION-GATE-03
+
+Expiration is enforced.
+
+RETENTION-GATE-04
+
+Overrides are auditable.
+
+RETENTION-GATE-05
+
+Archives preserve classification and integrity.
+
+RETENTION-GATE-06
+
+Expired temporary information is removed.
+
+# =============================================================================
+
+# 196. DELETION ACCEPTANCE GATES
+
+# =============================================================================
+
+Define:
+
+DELETE-GATE-01
+
+Deletion authority is explicit.
+
+DELETE-GATE-02
+
+Deletion scope is explicit.
+
+DELETE-GATE-03
+
+Primary records are removed or tombstoned according to policy.
+
+DELETE-GATE-04
+
+Indexes and caches are reconciled.
+
+DELETE-GATE-05
+
+Replicas are handled where applicable.
+
+DELETE-GATE-06
+
+Deletion outcome is verified.
+
+DELETE-GATE-07
+
+Partial failures are reported.
+
+DELETE-GATE-08
+
+Deletion audit metadata does not retain prohibited content.
+
+# =============================================================================
+
+# 197. STATIC VERIFICATION
+
+# =============================================================================
+
+Perform static analysis limited to the current Core scope.
+
+Search for:
+
+records without stable identifiers
+
+records without source information
+
+untyped data contracts
+
+unchecked dictionaries
+
+duplicate schema definitions
+
+implicit schema versions
+
+unsafe deserialization
+
+pickle use
+
+unredacted logging
+
+environment-variable dumping
+
+credential leakage
+
+absolute user-specific paths
+
+unbounded retention
+
+temporary files without cleanup
+
+orphan artifacts
+
+checkpoint files without manifests
+
+exports without provenance
+
+deletion without verification
+
+shared mutable state without ownership
+
+legacy structural metadata schemas
+
+incomplete **tree**.py contracts
+
+Do not modify production implementation.
+
+# =============================================================================
+
+# 198. RUNTIME VERIFICATION
+
+# =============================================================================
+
+Where safe and supported, verify:
+
+contract validation
+
+serialization round trips
+
+invalid-field rejection
+
+unknown-schema rejection
+
+configuration-source tracking
+
+checkpoint-manifest generation
+
+retention expiration
+
+temporary-file cleanup
+
+redaction behavior
+
+deletion verification
+
+Do not activate unavailable higher-level subsystems.
+
+Do not require external services unless Core tests explicitly provide them.
+
+# =============================================================================
+
+# 199. DATA GOVERNANCE FINDING CLASSIFICATION
+
+# =============================================================================
+
+Classify findings as:
+
+CRITICAL
+
+HIGH
+
+MEDIUM
+
+LOW
+
+INFORMATIONAL
+
+Examples:
+
+CRITICAL
+
+credentials serialized into persistent diagnostics
+
+unsafe deserialization allowing arbitrary code execution
+
+deletion reports success while sensitive records remain accessible
+
+untrusted information enters canonical runtime state without validation in a
+security-critical path
+
+HIGH
+
+checkpoints lack schema and provenance metadata
+
+configuration exports expose secrets
+
+Core data contracts conflict across services
+
+retention policies are absent for persistent diagnostics
+
+incomplete structural contracts prevent package-integrity enforcement
+
+MEDIUM
+
+event causation IDs are absent
+
+schema versions are implicit
+
+temporary files rely only on normal shutdown cleanup
+
+classification propagation is inconsistent
+
+provenance is lost during aggregation
+
+LOW
+
+inconsistent timestamp formatting
+
+duplicate descriptive metadata
+
+unused optional schema fields
+
+stale documentation
+
+INFORMATIONAL
+
+ephemeral records intentionally lack persistence
+
+cross-process lineage is not applicable
+
+privacy export support is intentionally deferred
+
+# =============================================================================
+
+# 200. PART II ACCEPTANCE INVARIANTS
+
+# =============================================================================
+
+Evaluate:
+
+DATA-009
+
+Every canonical Core data contract has one owner.
+
+DATA-010
+
+Every persistent Core record has a stable schema.
+
+DATA-011
+
+Every persistent Core record identifies its source or producer.
+
+DATA-012
+
+Derived Core information preserves required provenance.
+
+DATA-013
+
+Task, event and artifact lineage is recoverable where implemented.
+
+DATA-014
+
+Configuration values preserve source precedence.
+
+DATA-015
+
+Serialization is deterministic where integrity hashing depends upon it.
+
+DATA-016
+
+Deserialization does not execute untrusted code.
+
+DATA-017
+
+Required references are validated.
+
+DATA-018
+
+Identifiers are unique within their declared scope.
+
+DATA-019
+
+Classification is explicit where sensitive data may exist.
+
+DATA-020
+
+Secrets are redacted before logging or diagnostics.
+
+DATA-021
+
+Optional telemetry is explicitly controlled.
+
+DATA-022
+
+Persistent information has an explicit retention policy.
+
+DATA-023
+
+Expired temporary information is cleaned up.
+
+DATA-024
+
+Deletion authority and scope are explicit.
+
+DATA-025
+
+Deletion success is verifiable.
+
+DATA-026
+
+Shared mutable information has one owner.
+
+DATA-027
+
+Exports preserve schema, provenance and classification metadata.
+
+DATA-028
+
+Checkpoints preserve schema, integrity and provenance metadata.
+
+DATA-029
+
+Structural metadata uses one supported contract schema.
+
+DATA-030
+
+Unsupported future data domains do not fail current Core certification.
+
+# =============================================================================
+
+# 201. REQUIRED OUTPUTS
+
+# =============================================================================
+
+Produce:
+
+Provenance Authority Report
+
+Provenance Model Report
+
+Source Identity Report
+
+Producer Identity Report
+
+Creation Provenance Report
+
+Transformation Provenance Report
+
+Derivation Chain Report
+
+Provenance Granularity Report
+
+Provenance Immutability Report
+
+Provenance Versioning Report
+
+Provenance Persistence Report
+
+Provenance Loss Report
+
+Lineage Authority Report
+
+Lineage Graph Report
+
+Upstream Lineage Report
+
+Downstream Lineage Report
+
+Cross-Service Lineage Report
+
+Cross-Process Lineage Report
+
+Task Lineage Report
+
+Event Lineage Report
+
+Message Lineage Report
+
+Artifact Provenance Report
+
+Checkpoint Provenance Report
+
+Configuration Provenance Report
+
+Structural Metadata Provenance Report
+
+Data Contract Authority Report
+
+Data Contract Inventory
+
+Contract Ownership Report
+
+Required Field Report
+
+Optionality Report
+
+Contract Type Safety Report
+
+Contract Enum Report
+
+Contract Invariant Report
+
+Contract Validation Boundary Report
+
+Contract Versioning Report
+
+Backward Compatibility Report
+
+Forward Compatibility Report
+
+Contract Migration Report
+
+Contract Deprecation Report
+
+Data Validation Authority Report
+
+Structural Validation Report
+
+Semantic Validation Report
+
+Referential Integrity Report
+
+Identifier Integrity Report
+
+Timestamp Integrity Report
+
+Path Integrity Report
+
+Normalization Report
+
+Serialization Authority Report
+
+Serialization Determinism Report
+
+Deserialization Safety Report
+
+Data Quality Authority Report
+
+Data Quality Dimension Report
+
+Completeness Quality Report
+
+Consistency Quality Report
+
+Uniqueness Quality Report
+
+Timeliness Quality Report
+
+Data Quality Metrics Report
+
+Data Quality Reporting Report
+
+Data Quality Gate Report
+
+Classification Authority Report
+
+Classification Vocabulary Report
+
+Default Classification Report
+
+Classification Propagation Report
+
+Classification Downgrade Report
+
+Classification Upgrade Report
+
+Privacy Authority Report
+
+Privacy Scope Report
+
+Personal Data Identification Report
+
+Data Minimization Report
+
+Purpose Limitation Report
+
+Log Redaction Report
+
+Diagnostic Redaction Report
+
+Error-Message Privacy Report
+
+Privacy-Preserving Telemetry Report
+
+Consent Architecture Report
+
+Privacy Configuration Report
+
+GDPR-Related Architecture Matrix
+
+Information Export Authority Report
+
+Export Manifest Report
+
+Export Completeness Report
+
+Export Privacy Report
+
+Information Sharing Authority Report
+
+Sharing Contract Report
+
+Shared Mutable Data Report
+
+Data Copying Report
+
+Ownership Transfer Report
+
+Data Access Control Report
+
+Read Authority Report
+
+Write Authority Report
+
+Append Authority Report
+
+Retention Authority Report
+
+Retention Policy Model Report
+
+Retention Category Report
+
+Retention Start Report
+
+Retention Expiration Report
+
+Retention Enforcement Report
+
+Retention Override Report
+
+Hold Architecture Report
+
+Archival Authority Report
+
+Archive Manifest Report
+
+Archive Validation Report
+
+Archive Restoration Report
+
+Deletion Authority Report
+
+Deletion Request Model Report
+
+Deletion Lifecycle Report
+
+Logical Deletion Report
+
+Physical Deletion Report
+
+Cascade Deletion Report
+
+Deletion Provenance Report
+
+Deletion Verification Report
+
+Deletion Failure Report
+
+Secure Destruction Report
+
+Temporary Information Report
+
+Cache Governance Report
+
+Orphaned Data Report
+
+Data Reconciliation Report
+
+Corruption Detection Report
+
+Corruption Response Report
+
+Quarantine Architecture Report
+
+Backup Data Governance Report
+
+Replica Governance Report
+
+Data Availability Report
+
+Recovery Objective Report
+
+Auditability Report
+
+Audit Record Model Report
+
+Audit Log Integrity Report
+
+Audit Privacy Report
+
+Information Lifecycle State Report
+
+Lifecycle Transition Authority Report
+
+Lifecycle Transition Validation Report
+
+Lifecycle Observability Report
+
+Data Acceptance Gate Report
+
+Privacy Acceptance Gate Report
+
+Provenance Acceptance Gate Report
+
+Lineage Acceptance Gate Report
+
+Retention Acceptance Gate Report
+
+Deletion Acceptance Gate Report
+
+Static Verification Report
+
+Runtime Verification Report
+
+Finding Report
+
+Part II Acceptance Invariant Report
+
+Mermaid Provenance Architecture Diagram
+
+Mermaid Data Lineage Graph
+
+Mermaid Task Lineage Diagram
+
+Mermaid Event Causation Diagram
+
+Mermaid Artifact Provenance Diagram
+
+Mermaid Configuration Provenance Diagram
+
+Mermaid Data Contract Flow
+
+Mermaid Classification Propagation Diagram
+
+Mermaid Privacy Boundary Diagram
+
+Mermaid Retention Lifecycle Diagram
+
+Mermaid Deletion Lifecycle Diagram
+
+Mermaid Information Lifecycle Diagram
+
+# =============================================================================
+
+# 202. IMPLEMENTATION RESTRICTION
+
+# =============================================================================
+
+This audit shall not automatically implement missing governance systems.
+
+It shall first identify:
+
+existing authorities
+
+existing contracts
+
+existing provenance fields
+
+existing retention mechanisms
+
+existing deletion mechanisms
+
+existing privacy controls
+
+schema conflicts
+
+ownership conflicts
+
+unsupported future domains
+
+Do not create speculative infrastructure merely to satisfy an audit heading.
+
+Do not treat future cognitive subsystems as missing Core implementation.
+
+Do not claim legal or regulatory compliance.
+
+Do not broaden the scope beyond Core without explicit authorization.
+
+# =============================================================================
+
+# END OF PHASE 3.7.21
+
+#
+
+# DATA GOVERNANCE, PRIVACY, PROVENANCE &
+
+# INFORMATION LIFECYCLE
+
+#
+
+# PART II
+
+#
+
+# =============================================================================
+
+# =============================================================================
+
+# PHASE 3.7.21 FINAL STATUS
+
+# =============================================================================
+
+Upon completion of Parts I and II, determine:
+
+CERTIFIED
+
+CERTIFIED WITH OBSERVATIONS
+
+CONDITIONALLY CERTIFIED
+
+NOT CERTIFIED
+
+The result applies only to Core data infrastructure currently present within
+the declared audit scope.
+
+Future cognitive information systems require separate audits after their
+implementation.
+
+# =============================================================================
+
+GORDON PHASE 3.7.20
+
+# ARCHITECTURE ACCEPTANCE AUDIT
+
+# SECURITY, TRUST, ISOLATION & RESILIENCE
+
+#
+
+# PART III
+
+#
+
+# Availability & Continuity
+
+# Fault Tolerance
+
+# Recovery Architecture
+
+# Security Operations
+
+# Incident Management
+
+# Compliance Evidence
+
+# Security Acceptance Gates
+
+# Final Security Certification
+
+#
+
+# =============================================================================
+
+# =============================================================================
+
+# 192. AVAILABILITY AUTHORITY
+
+# =============================================================================
+
+Locate the canonical availability authority.
+
+Search for:
+
+AvailabilityManager
+
+ContinuityManager
+
+ReliabilityManager
+
+ResilienceManager
+
+StabilityManager
+
+ServiceHealthManager
+
+Determine:
+
+owner
+
+scope
+
+construction
+
+public API
+
+configuration
+
+lifecycle
+
+delegated responsibilities
+
+Exactly one canonical authority should govern repository-wide availability policy
+where such an authority is architecturally intended.
+
+# =============================================================================
+
+# 193. CONTINUITY AUTHORITY
+
+# =============================================================================
+
+Locate the canonical continuity authority.
+
+Search for:
+
+ContinuityManager
+
+BusinessContinuityManager
+
+RuntimeContinuityManager
+
+ServiceContinuityManager
+
+Determine:
+
+owner
+
+scope
+
+continuity domains
+
+activation criteria
+
+recovery coordination
+
+# =============================================================================
+
+# 194. RELIABILITY AUTHORITY
+
+# =============================================================================
+
+Locate reliability ownership.
+
+Search for:
+
+ReliabilityManager
+
+ReliabilityPolicy
+
+ReliabilityService
+
+ReliabilityController
+
+Determine:
+
+owner
+
+scope
+
+metrics
+
+thresholds
+
+failure classification
+
+# =============================================================================
+
+# 195. AVAILABILITY MODEL
+
+# =============================================================================
+
+Recover the repository-supported availability model.
+
+Determine:
+
+availability objectives
+
+service criticality
+
+required dependencies
+
+optional dependencies
+
+degraded modes
+
+maintenance assumptions
+
+recovery expectations
+
+Do not invent numerical service-level objectives where repository evidence is
+absent.
+
+# =============================================================================
+
+# 196. CONTINUITY MODEL
+
+# =============================================================================
+
+Recover continuity assumptions for:
+
+single-process failure
+
+worker failure
+
+service failure
+
+provider failure
+
+model failure
+
+tool failure
+
+plugin failure
+
+runtime failure
+
+node failure
+
+storage failure
+
+network partition
+
+power interruption
+
+operator error
+
+# =============================================================================
+
+# 197. CRITICAL SERVICE INVENTORY
+
+# =============================================================================
+
+Inventory services whose failure can prevent Gordon from:
+
+starting
+
+executing tasks
+
+preserving state
+
+enforcing security
+
+shutting down safely
+
+recovering
+
+For each service record:
+
+path
+
+authority
+
+criticality
+
+dependencies
+
+failure effect
+
+fallback
+
+recovery path
+
+# =============================================================================
+
+# 198. CRITICAL DEPENDENCY INVENTORY
+
+# =============================================================================
+
+Inventory critical dependencies.
+
+Possible dependencies:
+
+configuration authority
+
+identity authority
+
+security policy
+
+scheduler
+
+resource manager
+
+state manager
+
+persistence
+
+event bus
+
+provider gateway
+
+model runtime
+
+tool executor
+
+telemetry
+
+clock
+
+Determine:
+
+hard dependency
+
+soft dependency
+
+startup dependency
+
+runtime dependency
+
+recovery dependency
+
+# =============================================================================
+
+# 199. SINGLE POINTS OF FAILURE
+
+# =============================================================================
+
+Identify single points of failure in:
+
+authority construction
+
+state ownership
+
+configuration loading
+
+credential access
+
+scheduling
+
+resource allocation
+
+storage
+
+network routing
+
+provider access
+
+model serving
+
+shutdown coordination
+
+# =============================================================================
+
+# 200. FAILURE DOMAIN MODEL
+
+# =============================================================================
+
+Recover explicit or inferable failure domains.
+
+Possible domains:
+
+task
+
+component
+
+worker
+
+service
+
+process
+
+runtime
+
+node
+
+provider
+
+cluster
+
+storage backend
+
+network segment
+
+Determine:
+
+containment boundary
+
+propagation boundary
+
+recovery authority
+
+# =============================================================================
+
+# 201. FAULT CONTAINMENT
+
+# =============================================================================
+
+Determine whether faults remain contained within their intended domain.
+
+Evaluate propagation from:
+
+tool → task
+
+plugin → host
+
+provider → service
+
+worker → pool
+
+service → runtime
+
+runtime → node
+
+node → cluster
+
+# =============================================================================
+
+# 202. FAILURE PROPAGATION
+
+# =============================================================================
+
+Recover failure propagation rules.
+
+Determine:
+
+exception propagation
+
+event propagation
+
+status propagation
+
+health propagation
+
+cancellation propagation
+
+shutdown propagation
+
+security-incident propagation
+
+# =============================================================================
+
+# 203. FAILURE CLASSIFICATION
+
+# =============================================================================
+
+Recover taxonomy.
+
+Possible classifications:
+
+transient
+
+persistent
+
+recoverable
+
+nonrecoverable
+
+local
+
+distributed
+
+security-related
+
+resource-related
+
+configuration-related
+
+dependency-related
+
+operator-induced
+
+unknown
+
+Determine:
+
+authority
+
+classification criteria
+
+response mapping
+
+# =============================================================================
+
+# 204. FAILURE SEVERITY
+
+# =============================================================================
+
+Recover failure severities.
+
+Possible levels:
+
+informational
+
+warning
+
+degraded
+
+error
+
+critical
+
+fatal
+
+Determine:
+
+meaning
+
+operator impact
+
+automated response
+
+escalation
+
+# =============================================================================
+
+# 205. FAULT-DETECTION ARCHITECTURE
+
+# =============================================================================
+
+Recover mechanisms for detecting:
+
+process death
+
+thread death
+
+worker stalls
+
+queue stalls
+
+service unavailability
+
+provider failure
+
+model failure
+
+storage failure
+
+network failure
+
+resource exhaustion
+
+security compromise
+
+# =============================================================================
+
+# 206. HEALTH-CHECK AUTHORITY
+
+# =============================================================================
+
+Locate canonical health-check authority.
+
+Search for:
+
+HealthManager
+
+HealthService
+
+HealthRegistry
+
+HealthMonitor
+
+HealthProbe
+
+Determine:
+
+owner
+
+registration
+
+execution
+
+aggregation
+
+reporting
+
+lifecycle
+
+# =============================================================================
+
+# 207. HEALTH MODEL
+
+# =============================================================================
+
+Recover health states.
+
+Possible states:
+
+unknown
+
+initializing
+
+healthy
+
+degraded
+
+unhealthy
+
+failed
+
+recovering
+
+quarantined
+
+stopped
+
+Determine:
+
+transition authority
+
+aggregation rules
+
+visibility
+
+# =============================================================================
+
+# 208. LIVENESS
+
+# =============================================================================
+
+Determine whether liveness proves that a component:
+
+is running
+
+is responsive
+
+is making progress
+
+has not deadlocked
+
+has not stalled
+
+Differentiate process existence from useful progress.
+
+# =============================================================================
+
+# 209. READINESS
+
+# =============================================================================
+
+Determine whether readiness proves that a component can safely accept work.
+
+Possible readiness dependencies:
+
+configuration
+
+credentials
+
+providers
+
+models
+
+storage
+
+queues
+
+workers
+
+security policy
+
+resource availability
+
+# =============================================================================
+
+# 210. STARTUP PROBES
+
+# =============================================================================
+
+Determine startup-probe behavior for slow or staged initialization.
+
+Recover:
+
+timeout
+
+failure threshold
+
+retry behavior
+
+health interaction
+
+shutdown behavior
+
+# =============================================================================
+
+# 211. HEARTBEATS
+
+# =============================================================================
+
+Recover heartbeat architecture.
+
+Determine:
+
+producer
+
+consumer
+
+interval
+
+timeout
+
+identity
+
+ordering
+
+authentication
+
+stale-heartbeat handling
+
+# =============================================================================
+
+# 212. WATCHDOGS
+
+# =============================================================================
+
+Locate watchdog mechanisms.
+
+Search for:
+
+Watchdog
+
+Supervisor
+
+ProcessMonitor
+
+StallDetector
+
+DeadlockDetector
+
+Determine:
+
+scope
+
+trigger
+
+response
+
+false-positive controls
+
+# =============================================================================
+
+# 213. PROGRESS DETECTION
+
+# =============================================================================
+
+Determine whether the system can distinguish:
+
+busy
+
+slow
+
+blocked
+
+stalled
+
+deadlocked
+
+idle
+
+waiting on dependency
+
+# =============================================================================
+
+# 214. DEADLOCK DETECTION
+
+# =============================================================================
+
+Recover detection or diagnostic support for:
+
+thread deadlocks
+
+async deadlocks
+
+resource deadlocks
+
+scheduler deadlocks
+
+queue deadlocks
+
+distributed deadlocks
+
+# =============================================================================
+
+# 215. LIVELOCK DETECTION
+
+# =============================================================================
+
+Determine whether repeated activity without progress can be identified.
+
+Possible examples:
+
+retry loops
+
+task rescheduling loops
+
+tool-call loops
+
+state-transition loops
+
+leader-election loops
+
+# =============================================================================
+
+# 216. STALL DETECTION
+
+# =============================================================================
+
+Recover stall thresholds for:
+
+workers
+
+queues
+
+providers
+
+models
+
+tools
+
+storage
+
+network operations
+
+shutdown
+
+# =============================================================================
+
+# 217. TIMEOUT ARCHITECTURE
+
+# =============================================================================
+
+Locate timeout ownership.
+
+Determine whether timeouts exist for:
+
+startup
+
+shutdown
+
+provider calls
+
+model inference
+
+tool execution
+
+plugin calls
+
+storage
+
+network
+
+locks
+
+resource acquisition
+
+recovery
+
+# =============================================================================
+
+# 218. TIMEOUT HIERARCHY
+
+# =============================================================================
+
+Determine precedence among:
+
+operation timeout
+
+task timeout
+
+service timeout
+
+runtime timeout
+
+global deadline
+
+Determine whether nested operations respect remaining deadlines.
+
+# =============================================================================
+
+# 219. DEADLINE PROPAGATION
+
+# =============================================================================
+
+Recover deadline propagation across:
+
+runtime
+
+scheduler
+
+services
+
+providers
+
+models
+
+tools
+
+plugins
+
+storage
+
+network
+
+# =============================================================================
+
+# 220. CANCELLATION ARCHITECTURE
+
+# =============================================================================
+
+Recover cancellation authority.
+
+Determine:
+
+request origin
+
+propagation
+
+acknowledgement
+
+cleanup
+
+rollback
+
+timeout
+
+forced termination
+
+# =============================================================================
+
+# 221. COOPERATIVE CANCELLATION
+
+# =============================================================================
+
+Determine whether long-running operations periodically observe cancellation.
+
+Possible targets:
+
+model generation
+
+tool execution
+
+file processing
+
+network streaming
+
+planning loops
+
+background workers
+
+# =============================================================================
+
+# 222. FORCED CANCELLATION
+
+# =============================================================================
+
+Determine fallback when cooperative cancellation fails.
+
+Possible responses:
+
+task isolation
+
+thread abandonment
+
+process termination
+
+runtime restart
+
+resource revocation
+
+quarantine
+
+# =============================================================================
+
+# 223. RETRY AUTHORITY
+
+# =============================================================================
+
+Locate canonical retry policy.
+
+Search for:
+
+RetryPolicy
+
+RetryManager
+
+BackoffPolicy
+
+ResiliencePolicy
+
+Determine:
+
+owner
+
+scope
+
+configuration
+
+classification
+
+telemetry
+
+# =============================================================================
+
+# 224. RETRY CLASSIFICATION
+
+# =============================================================================
+
+Determine which failures are:
+
+retryable
+
+conditionally retryable
+
+nonretryable
+
+security-sensitive
+
+operator-action-required
+
+# =============================================================================
+
+# 225. BACKOFF
+
+# =============================================================================
+
+Recover backoff behavior.
+
+Possible strategies:
+
+fixed
+
+linear
+
+exponential
+
+decorrelated jitter
+
+provider-defined
+
+Determine:
+
+minimum
+
+maximum
+
+jitter
+
+reset
+
+# =============================================================================
+
+# 226. RETRY BUDGETS
+
+# =============================================================================
+
+Determine limits by:
+
+operation
+
+task
+
+service
+
+runtime
+
+provider
+
+time window
+
+Determine whether retries can amplify overload.
+
+# =============================================================================
+
+# 227. RETRY STORMS
+
+# =============================================================================
+
+Evaluate protections against synchronized retries across:
+
+workers
+
+services
+
+runtimes
+
+nodes
+
+providers
+
+# =============================================================================
+
+# 228. CIRCUIT BREAKERS
+
+# =============================================================================
+
+Locate circuit-breaker architecture.
+
+Search for:
+
+CircuitBreaker
+
+FailureGate
+
+DependencyBreaker
+
+Determine:
+
+owner
+
+scope
+
+states
+
+thresholds
+
+cooldown
+
+probe behavior
+
+# =============================================================================
+
+# 229. CIRCUIT-BREAKER STATES
+
+# =============================================================================
+
+Recover states such as:
+
+closed
+
+open
+
+half-open
+
+disabled
+
+forced-open
+
+Determine:
+
+transition authority
+
+state persistence
+
+observability
+
+# =============================================================================
+
+# 230. BULKHEADS
+
+# =============================================================================
+
+Determine whether resource pools isolate:
+
+providers
+
+models
+
+tools
+
+plugins
+
+tenants
+
+runtimes
+
+task classes
+
+security-critical operations
+
+# =============================================================================
+
+# 231. LOAD SHEDDING
+
+# =============================================================================
+
+Recover load-shedding policy.
+
+Determine:
+
+trigger
+
+priority model
+
+rejection behavior
+
+deferred work
+
+operator visibility
+
+recovery
+
+# =============================================================================
+
+# 232. ADMISSION CONTROL
+
+# =============================================================================
+
+Determine whether work is accepted only when required capacity exists.
+
+Possible inputs:
+
+CPU
+
+RAM
+
+VRAM
+
+queue capacity
+
+provider quota
+
+worker availability
+
+storage capacity
+
+security policy
+
+# =============================================================================
+
+# 233. GRACEFUL DEGRADATION
+
+# =============================================================================
+
+Recover degraded operating modes.
+
+Possible degradation:
+
+reduced model size
+
+shorter context
+
+disabled optional services
+
+reduced telemetry
+
+lower concurrency
+
+read-only persistence
+
+local provider fallback
+
+manual approval
+
+Determine:
+
+authority
+
+entry criteria
+
+exit criteria
+
+safety constraints
+
+# =============================================================================
+
+# 234. DEGRADATION PRIORITIES
+
+# =============================================================================
+
+Determine what Gordon preserves first under pressure:
+
+security
+
+state integrity
+
+task correctness
+
+operator control
+
+availability
+
+throughput
+
+latency
+
+telemetry
+
+optional cognition
+
+# =============================================================================
+
+# 235. FALLBACK ARCHITECTURE
+
+# =============================================================================
+
+Recover fallback paths for:
+
+providers
+
+models
+
+tools
+
+plugins
+
+storage
+
+network
+
+telemetry
+
+configuration
+
+identity
+
+# =============================================================================
+
+# 236. FALLBACK SAFETY
+
+# =============================================================================
+
+Determine whether fallback preserves:
+
+security policy
+
+data integrity
+
+contract compatibility
+
+output quality constraints
+
+resource limits
+
+auditability
+
+# =============================================================================
+
+# 237. FAILOVER AUTHORITY
+
+# =============================================================================
+
+Locate failover ownership.
+
+Search for:
+
+FailoverManager
+
+RedundancyManager
+
+StandbyManager
+
+LeaderManager
+
+Determine:
+
+scope
+
+trigger
+
+target selection
+
+state transfer
+
+rollback
+
+# =============================================================================
+
+# 238. ACTIVE-PASSIVE FAILOVER
+
+# =============================================================================
+
+Where supported determine:
+
+primary identity
+
+standby identity
+
+health detection
+
+promotion
+
+state synchronization
+
+split-brain prevention
+
+# =============================================================================
+
+# 239. ACTIVE-ACTIVE EXECUTION
+
+# =============================================================================
+
+Where supported determine:
+
+request routing
+
+state consistency
+
+duplicate suppression
+
+conflict resolution
+
+capacity balancing
+
+failure isolation
+
+# =============================================================================
+
+# 240. REDUNDANCY MODEL
+
+# =============================================================================
+
+Recover redundancy for:
+
+services
+
+providers
+
+models
+
+storage
+
+network links
+
+nodes
+
+configuration
+
+security authorities
+
+Determine:
+
+intentional redundancy
+
+accidental duplication
+
+authority conflict
+
+# =============================================================================
+
+# 241. LEADER ELECTION
+
+# =============================================================================
+
+Where applicable determine:
+
+election algorithm
+
+identity
+
+term or epoch
+
+quorum
+
+lease
+
+failover
+
+split-brain handling
+
+# =============================================================================
+
+# 242. SPLIT-BRAIN PROTECTION
+
+# =============================================================================
+
+Determine protection against concurrent authorities for:
+
+scheduler
+
+resource allocation
+
+configuration
+
+persistence writes
+
+security policy
+
+cluster membership
+
+# =============================================================================
+
+# 243. QUORUM
+
+# =============================================================================
+
+Where quorum exists determine:
+
+membership
+
+threshold
+
+read quorum
+
+write quorum
+
+failure behavior
+
+reconfiguration
+
+# =============================================================================
+
+# 244. NETWORK PARTITION BEHAVIOR
+
+# =============================================================================
+
+Recover behavior during:
+
+partial partition
+
+full partition
+
+asymmetric reachability
+
+high latency
+
+packet loss
+
+DNS failure
+
+Determine:
+
+availability choice
+
+consistency choice
+
+security behavior
+
+reconciliation
+
+# =============================================================================
+
+# 245. CONSISTENCY DURING FAILURE
+
+# =============================================================================
+
+Determine guarantees for:
+
+runtime state
+
+persistent state
+
+resource ownership
+
+security policy
+
+credentials
+
+task status
+
+event ordering
+
+# =============================================================================
+
+# 246. DUPLICATE EXECUTION CONTROL
+
+# =============================================================================
+
+Determine protection against duplicated:
+
+tasks
+
+tool calls
+
+provider requests
+
+state writes
+
+resource allocations
+
+incident actions
+
+# =============================================================================
+
+# 247. IDEMPOTENCY
+
+# =============================================================================
+
+Recover idempotency guarantees for:
+
+startup
+
+shutdown
+
+retries
+
+state updates
+
+resource release
+
+tool execution
+
+plugin activation
+
+recovery
+
+# =============================================================================
+
+# 248. DEDUPLICATION
+
+# =============================================================================
+
+Determine deduplication keys and scope for:
+
+messages
+
+events
+
+commands
+
+tasks
+
+tool calls
+
+storage operations
+
+alerts
+
+# =============================================================================
+
+# 249. EXACTLY-ONCE CLAIMS
+
+# =============================================================================
+
+Identify any exactly-once execution claims.
+
+Require direct repository evidence for:
+
+transactional boundaries
+
+deduplication
+
+idempotency
+
+failure recovery
+
+Do not accept terminology alone as proof.
+
+# =============================================================================
+
+# 250. AT-LEAST-ONCE EXECUTION
+
+# =============================================================================
+
+Where at-least-once semantics exist determine:
+
+duplicate handling
+
+idempotency
+
+replay bounds
+
+operator visibility
+
+# =============================================================================
+
+# 251. AT-MOST-ONCE EXECUTION
+
+# =============================================================================
+
+Where at-most-once semantics exist determine:
+
+loss behavior
+
+acknowledgement
+
+timeout behavior
+
+recovery
+
+# =============================================================================
+
+# 252. DURABILITY MODEL
+
+# =============================================================================
+
+Recover durability expectations for:
+
+tasks
+
+events
+
+configuration
+
+runtime state
+
+memory
+
+checkpoints
+
+audit records
+
+security incidents
+
+# =============================================================================
+
+# 253. WRITE-AHEAD LOGGING
+
+# =============================================================================
+
+Where present determine:
+
+authority
+
+record format
+
+ordering
+
+flush policy
+
+recovery
+
+truncation
+
+integrity
+
+# =============================================================================
+
+# 254. JOURNALING
+
+# =============================================================================
+
+Recover journaling for:
+
+state mutation
+
+configuration changes
+
+resource ownership
+
+security policy
+
+incident actions
+
+# =============================================================================
+
+# 255. TRANSACTION AUTHORITY
+
+# =============================================================================
+
+Locate transaction ownership.
+
+Determine:
+
+scope
+
+begin
+
+commit
+
+rollback
+
+nested transactions
+
+distributed transactions
+
+failure semantics
+
+# =============================================================================
+
+# 256. ATOMICITY
+
+# =============================================================================
+
+Determine atomicity of:
+
+state writes
+
+configuration updates
+
+checkpoint replacement
+
+credential rotation
+
+policy updates
+
+resource allocation
+
+plugin activation
+
+# =============================================================================
+
+# 257. PARTIAL-WRITE HANDLING
+
+# =============================================================================
+
+Determine behavior after partial writes to:
+
+configuration
+
+state
+
+checkpoints
+
+logs
+
+artifacts
+
+registries
+
+# =============================================================================
+
+# 258. CORRUPTION DETECTION
+
+# =============================================================================
+
+Recover detection for:
+
+storage corruption
+
+checkpoint corruption
+
+configuration corruption
+
+artifact corruption
+
+model corruption
+
+log corruption
+
+# =============================================================================
+
+# 259. CORRUPTION CONTAINMENT
+
+# =============================================================================
+
+Determine response to corrupted data.
+
+Possible responses:
+
+reject
+
+quarantine
+
+restore
+
+rebuild
+
+fallback
+
+operator approval
+
+shutdown
+
+# =============================================================================
+
+# 260. BACKUP AUTHORITY
+
+# =============================================================================
+
+Locate backup ownership.
+
+Search for:
+
+BackupManager
+
+SnapshotManager
+
+ArchiveManager
+
+Determine:
+
+scope
+
+schedule
+
+retention
+
+encryption
+
+verification
+
+# =============================================================================
+
+# 261. BACKUP SCOPE
+
+# =============================================================================
+
+Determine backup coverage for:
+
+configuration
+
+state
+
+memory
+
+checkpoints
+
+credentials
+
+policies
+
+audit logs
+
+artifacts
+
+metadata
+
+# =============================================================================
+
+# 262. BACKUP CONSISTENCY
+
+# =============================================================================
+
+Determine whether backups represent:
+
+application-consistent state
+
+crash-consistent state
+
+file-level copies
+
+incremental snapshots
+
+transactional snapshots
+
+# =============================================================================
+
+# 263. BACKUP SECURITY
+
+# =============================================================================
+
+Determine:
+
+encryption
+
+access control
+
+key separation
+
+immutability
+
+offline copies
+
+deletion protection
+
+# =============================================================================
+
+# 264. BACKUP VERIFICATION
+
+# =============================================================================
+
+Determine whether backups are tested for:
+
+readability
+
+integrity
+
+completeness
+
+decryption
+
+restoration
+
+compatibility
+
+# =============================================================================
+
+# 265. RESTORE AUTHORITY
+
+# =============================================================================
+
+Locate restore ownership.
+
+Determine:
+
+authorization
+
+target selection
+
+version validation
+
+integrity validation
+
+rollback
+
+audit
+
+# =============================================================================
+
+# 266. RESTORE TESTING
+
+# =============================================================================
+
+Determine repository-supported evidence for restoring:
+
+configuration
+
+runtime state
+
+checkpoints
+
+storage
+
+security policies
+
+credentials
+
+audit records
+
+# =============================================================================
+
+# 267. RECOVERY POINT OBJECTIVE
+
+# =============================================================================
+
+Determine whether recovery-point objectives exist.
+
+Record:
+
+scope
+
+target
+
+evidence
+
+measurement
+
+Do not invent durations or data-loss limits.
+
+# =============================================================================
+
+# 268. RECOVERY TIME OBJECTIVE
+
+# =============================================================================
+
+Determine whether recovery-time objectives exist.
+
+Record:
+
+scope
+
+target
+
+evidence
+
+measurement
+
+Do not invent durations.
+
+# =============================================================================
+
+# 269. DISASTER RECOVERY
+
+# =============================================================================
+
+Recover disaster-recovery architecture for:
+
+host loss
+
+node loss
+
+storage loss
+
+credential compromise
+
+repository loss
+
+configuration loss
+
+provider outage
+
+regional outage
+
+# =============================================================================
+
+# 270. COLD START RECOVERY
+
+# =============================================================================
+
+Determine whether Gordon can recover from:
+
+clean installation
+
+empty cache
+
+restored configuration
+
+restored state
+
+unavailable optional services
+
+# =============================================================================
+
+# 271. WARM RESTART
+
+# =============================================================================
+
+Recover warm-restart behavior.
+
+Determine:
+
+state preservation
+
+queue preservation
+
+worker recreation
+
+provider reconnection
+
+resource reacquisition
+
+# =============================================================================
+
+# 272. CRASH RESTART
+
+# =============================================================================
+
+Determine recovery after unclean termination.
+
+Evaluate:
+
+lock cleanup
+
+temporary files
+
+partial writes
+
+stale leases
+
+orphan processes
+
+GPU state
+
+unfinished tasks
+
+# =============================================================================
+
+# 273. ROLL-FORWARD RECOVERY
+
+# =============================================================================
+
+Where supported determine:
+
+journal replay
+
+event replay
+
+migration
+
+checkpoint advancement
+
+partial-state completion
+
+# =============================================================================
+
+# 274. ROLLBACK RECOVERY
+
+# =============================================================================
+
+Where supported determine:
+
+rollback point
+
+compatibility
+
+security implications
+
+lost work
+
+auditability
+
+# =============================================================================
+
+# 275. STATE RECONCILIATION
+
+# =============================================================================
+
+Recover reconciliation after:
+
+partition
+
+duplicate execution
+
+partial recovery
+
+stale cache
+
+conflicting state
+
+failed migration
+
+# =============================================================================
+
+# 276. ORPHAN DETECTION
+
+# =============================================================================
+
+Determine detection of orphaned:
+
+processes
+
+threads
+
+workers
+
+tasks
+
+resource leases
+
+GPU allocations
+
+temporary files
+
+network sockets
+
+# =============================================================================
+
+# 277. ORPHAN CLEANUP
+
+# =============================================================================
+
+Determine:
+
+cleanup authority
+
+safety checks
+
+ownership validation
+
+timeout
+
+audit logging
+
+# =============================================================================
+
+# 278. STALE LEASE RECOVERY
+
+# =============================================================================
+
+Recover recovery of leases for:
+
+resources
+
+locks
+
+leadership
+
+workers
+
+tasks
+
+credentials
+
+Determine:
+
+expiry
+
+epoch
+
+ownership fencing
+
+# =============================================================================
+
+# 279. FENCING
+
+# =============================================================================
+
+Determine whether stale actors are prevented from:
+
+writing state
+
+allocating resources
+
+acting as leader
+
+using revoked credentials
+
+completing obsolete tasks
+
+# =============================================================================
+
+# 280. RECOVERY COORDINATION
+
+# =============================================================================
+
+Locate canonical recovery coordinator.
+
+Search for:
+
+RecoveryCoordinator
+
+RecoveryManager
+
+RestartCoordinator
+
+ContinuityController
+
+Determine:
+
+owner
+
+scope
+
+dependency ordering
+
+conflict resolution
+
+# =============================================================================
+
+# 281. RECOVERY ORDERING
+
+# =============================================================================
+
+Recover required restoration order among:
+
+security policy
+
+identity
+
+configuration
+
+state
+
+storage
+
+scheduler
+
+resource manager
+
+providers
+
+models
+
+tools
+
+plugins
+
+workers
+
+telemetry
+
+# =============================================================================
+
+# 282. RECOVERY GRAPH
+
+# =============================================================================
+
+Generate Mermaid recovery dependency graph.
+
+The graph shall show:
+
+failure detection
+
+containment
+
+authority decision
+
+dependency restoration
+
+state reconciliation
+
+health verification
+
+readiness restoration
+
+normal operation
+
+# =============================================================================
+
+# 283. RECOVERY VALIDATION
+
+# =============================================================================
+
+Determine checks required before restored components become ready.
+
+Possible checks:
+
+configuration validity
+
+credential validity
+
+state integrity
+
+storage integrity
+
+policy synchronization
+
+resource ownership
+
+dependency readiness
+
+# =============================================================================
+
+# 284. RECOVERY LOOPS
+
+# =============================================================================
+
+Determine whether repeated failed recovery is bounded.
+
+Recover:
+
+attempt count
+
+backoff
+
+quarantine
+
+operator escalation
+
+terminal failure state
+
+# =============================================================================
+
+# 285. SECURITY OPERATIONS AUTHORITY
+
+# =============================================================================
+
+Locate security-operations ownership.
+
+Search for:
+
+SecurityOperations
+
+SecOpsManager
+
+SecurityOperationsManager
+
+SecurityControlPlane
+
+Determine:
+
+scope
+
+runtime role
+
+operator interface
+
+automation
+
+# =============================================================================
+
+# 286. SECURITY OPERATIONS MODEL
+
+# =============================================================================
+
+Recover routine operations for:
+
+credential rotation
+
+policy review
+
+access review
+
+vulnerability review
+
+dependency review
+
+incident review
+
+backup review
+
+restore testing
+
+# =============================================================================
+
+# 287. OPERATOR IDENTITY
+
+# =============================================================================
+
+Determine how security operators are:
+
+identified
+
+authenticated
+
+authorized
+
+logged
+
+revoked
+
+# =============================================================================
+
+# 288. ADMINISTRATIVE SESSION SECURITY
+
+# =============================================================================
+
+Recover controls for:
+
+session duration
+
+reauthentication
+
+privilege elevation
+
+idle timeout
+
+command audit
+
+session revocation
+
+# =============================================================================
+
+# 289. BREAK-GLASS ACCESS
+
+# =============================================================================
+
+Where emergency access exists determine:
+
+authority
+
+trigger
+
+scope
+
+duration
+
+credential custody
+
+audit
+
+post-event review
+
+# =============================================================================
+
+# 290. ACCESS REVIEW
+
+# =============================================================================
+
+Determine whether permissions, roles and capabilities are periodically reviewed.
+
+Recover:
+
+scope
+
+frequency
+
+authority
+
+evidence
+
+revocation workflow
+
+# =============================================================================
+
+# 291. CREDENTIAL REVIEW
+
+# =============================================================================
+
+Determine review of:
+
+active credentials
+
+unused credentials
+
+expired credentials
+
+shared credentials
+
+overprivileged credentials
+
+embedded credentials
+
+# =============================================================================
+
+# 292. POLICY REVIEW
+
+# =============================================================================
+
+Determine:
+
+review authority
+
+review trigger
+
+version history
+
+approval
+
+deployment
+
+rollback
+
+# =============================================================================
+
+# 293. SECURITY BASELINE
+
+# =============================================================================
+
+Recover baseline requirements for:
+
+deployment
+
+network
+
+filesystem
+
+credentials
+
+logging
+
+sandboxing
+
+dependencies
+
+runtime configuration
+
+# =============================================================================
+
+# 294. CONFIGURATION DRIFT
+
+# =============================================================================
+
+Determine detection of drift in:
+
+security policy
+
+permissions
+
+credentials
+
+network rules
+
+sandbox settings
+
+resource limits
+
+dependency versions
+
+# =============================================================================
+
+# 295. SECURITY POSTURE REPORTING
+
+# =============================================================================
+
+Determine whether repository can report:
+
+active controls
+
+disabled controls
+
+exceptions
+
+open vulnerabilities
+
+credential status
+
+incident status
+
+audit health
+
+backup health
+
+# =============================================================================
+
+# 296. INCIDENT CLASSIFICATION
+
+# =============================================================================
+
+Recover incident categories.
+
+Possible categories:
+
+credential compromise
+
+unauthorized access
+
+malicious tool execution
+
+plugin compromise
+
+provider compromise
+
+data exposure
+
+data corruption
+
+denial of service
+
+sandbox escape
+
+supply-chain compromise
+
+# =============================================================================
+
+# 297. INCIDENT SEVERITY
+
+# =============================================================================
+
+Recover severity model.
+
+Possible levels:
+
+SEV-1
+
+SEV-2
+
+SEV-3
+
+SEV-4
+
+or equivalent
+
+Determine:
+
+criteria
+
+response authority
+
+communication
+
+recovery expectations
+
+# =============================================================================
+
+# 298. INCIDENT DETECTION
+
+# =============================================================================
+
+Determine detection sources:
+
+audit logs
+
+security alerts
+
+health monitoring
+
+operator reports
+
+provider reports
+
+dependency scans
+
+anomaly detection
+
+test failures
+
+# =============================================================================
+
+# 299. INCIDENT DECLARATION
+
+# =============================================================================
+
+Recover:
+
+declaration authority
+
+required evidence
+
+timestamp
+
+scope
+
+affected assets
+
+initial severity
+
+# =============================================================================
+
+# 300. INCIDENT RESPONSE LIFECYCLE
+
+# =============================================================================
+
+Recover phases:
+
+detection
+
+triage
+
+declaration
+
+containment
+
+eradication
+
+recovery
+
+verification
+
+closure
+
+post-incident review
+
+# =============================================================================
+
+# 301. INCIDENT COMMAND
+
+# =============================================================================
+
+Determine whether incident command is explicit.
+
+Possible roles:
+
+incident commander
+
+security lead
+
+operations lead
+
+communications lead
+
+forensics lead
+
+recovery lead
+
+# =============================================================================
+
+# 302. INCIDENT CONTAINMENT
+
+# =============================================================================
+
+Determine available containment actions:
+
+revoke credentials
+
+disable tools
+
+disable plugins
+
+isolate runtime
+
+block network
+
+freeze state
+
+stop workers
+
+quarantine artifacts
+
+# =============================================================================
+
+# 303. INCIDENT ERADICATION
+
+# =============================================================================
+
+Recover procedures for removing:
+
+malicious code
+
+compromised plugins
+
+compromised tools
+
+stolen credentials
+
+corrupted state
+
+vulnerable dependencies
+
+unauthorized configuration
+
+# =============================================================================
+
+# 304. INCIDENT RECOVERY
+
+# =============================================================================
+
+Determine recovery requirements:
+
+trusted artifacts
+
+rotated credentials
+
+validated policy
+
+clean state
+
+restored services
+
+heightened monitoring
+
+operator approval
+
+# =============================================================================
+
+# 305. INCIDENT CLOSURE
+
+# =============================================================================
+
+Determine closure criteria:
+
+root cause identified
+
+containment verified
+
+recovery verified
+
+residual risk accepted
+
+evidence archived
+
+follow-up actions assigned
+
+# =============================================================================
+
+# 306. POST-INCIDENT REVIEW
+
+# =============================================================================
+
+Determine whether reviews capture:
+
+timeline
+
+root cause
+
+control failures
+
+detection gaps
+
+response gaps
+
+recovery gaps
+
+remediation
+
+test additions
+
+architecture changes
+
+# =============================================================================
+
+# 307. INCIDENT EVIDENCE
+
+# =============================================================================
+
+Determine evidence collection for:
+
+logs
+
+traces
+
+process state
+
+network state
+
+configuration
+
+credentials
+
+artifacts
+
+filesystem metadata
+
+provider interactions
+
+model interactions
+
+# =============================================================================
+
+# 308. EVIDENCE PRESERVATION
+
+# =============================================================================
+
+Determine protections against:
+
+modification
+
+deletion
+
+rotation
+
+time ambiguity
+
+identity ambiguity
+
+chain-of-custody loss
+
+# =============================================================================
+
+# 309. CHAIN OF CUSTODY
+
+# =============================================================================
+
+Where forensic evidence is intended determine:
+
+collector
+
+collection time
+
+source
+
+hash
+
+storage
+
+access history
+
+transfer history
+
+# =============================================================================
+
+# 310. INCIDENT COMMUNICATION
+
+# =============================================================================
+
+Recover:
+
+internal notification
+
+operator notification
+
+user notification
+
+maintainer notification
+
+provider notification
+
+regulatory notification
+
+Do not infer legal obligations without explicit scope and jurisdiction.
+
+# =============================================================================
+
+# 311. SECURITY EXERCISES
+
+# =============================================================================
+
+Determine whether repository supports:
+
+tabletop exercises
+
+incident simulations
+
+recovery drills
+
+credential-compromise drills
+
+sandbox-escape drills
+
+provider-outage drills
+
+# =============================================================================
+
+# 312. INCIDENT AUTOMATION
+
+# =============================================================================
+
+Determine automated actions for:
+
+credential revocation
+
+quarantine
+
+network blocking
+
+runtime shutdown
+
+evidence collection
+
+alerting
+
+recovery initiation
+
+# =============================================================================
+
+# 313. AUTOMATION SAFETY
+
+# =============================================================================
+
+Determine whether incident automation is protected against:
+
+false positives
+
+alert spoofing
+
+recursive shutdown
+
+mass revocation
+
+self-denial-of-service
+
+unauthorized invocation
+
+# =============================================================================
+
+# 314. COMPLIANCE AUTHORITY
+
+# =============================================================================
+
+Locate compliance ownership.
+
+Search for:
+
+ComplianceManager
+
+ComplianceService
+
+GovernanceManager
+
+AuditManager
+
+ControlRegistry
+
+Determine:
+
+scope
+
+frameworks
+
+evidence
+
+exceptions
+
+certification role
+
+# =============================================================================
+
+# 315. CONTROL FRAMEWORK
+
+# =============================================================================
+
+Recover internal control framework.
+
+Possible control domains:
+
+access control
+
+identity
+
+cryptography
+
+logging
+
+incident response
+
+continuity
+
+change management
+
+supply chain
+
+data protection
+
+Determine:
+
+control IDs
+
+owners
+
+evidence
+
+status
+
+# =============================================================================
+
+# 316. EXTERNAL FRAMEWORK CLAIMS
+
+# =============================================================================
+
+Search for references to:
+
+ISO 27001
+
+SOC 2
+
+NIST
+
+CIS
+
+OWASP
+
+GDPR
+
+HIPAA
+
+PCI DSS
+
+Do not claim compliance or certification unless direct evidence supports it.
+
+Classify each reference as:
+
+design inspiration
+
+partial alignment
+
+assessment target
+
+formal certification
+
+unsupported claim
+
+# =============================================================================
+
+# 317. CONTROL OWNERSHIP
+
+# =============================================================================
+
+For each control determine:
+
+owner
+
+implementation
+
+operation
+
+evidence
+
+review authority
+
+exception authority
+
+# =============================================================================
+
+# 318. CONTROL EVIDENCE
+
+# =============================================================================
+
+Recover evidence types:
+
+configuration
+
+source code
+
+tests
+
+logs
+
+reports
+
+approvals
+
+tickets
+
+artifacts
+
+screenshots
+
+runtime measurements
+
+# =============================================================================
+
+# 319. EVIDENCE FRESHNESS
+
+# =============================================================================
+
+Determine:
+
+generation time
+
+repository revision
+
+environment
+
+expiry
+
+review frequency
+
+staleness handling
+
+# =============================================================================
+
+# 320. EVIDENCE INTEGRITY
+
+# =============================================================================
+
+Determine whether compliance evidence is protected through:
+
+hashing
+
+signatures
+
+immutable storage
+
+access control
+
+version control
+
+audit trails
+
+# =============================================================================
+
+# 321. CONTROL TESTING
+
+# =============================================================================
+
+Determine whether controls are tested for:
+
+design effectiveness
+
+implementation correctness
+
+operating effectiveness
+
+failure behavior
+
+bypass resistance
+
+# =============================================================================
+
+# 322. CONTROL EXCEPTIONS
+
+# =============================================================================
+
+Recover:
+
+exception authority
+
+business or technical reason
+
+scope
+
+risk
+
+compensating control
+
+expiry
+
+review
+
+# =============================================================================
+
+# 323. COMPENSATING CONTROLS
+
+# =============================================================================
+
+Determine whether missing primary controls are offset by:
+
+isolation
+
+manual approval
+
+monitoring
+
+restricted deployment
+
+reduced privilege
+
+network restriction
+
+temporary shutdown
+
+# =============================================================================
+
+# 324. POLICY-TO-CONTROL TRACEABILITY
+
+# =============================================================================
+
+Produce mapping:
+
+policy
+
+requirement
+
+control
+
+implementation
+
+test
+
+evidence
+
+exception
+
+status
+
+# =============================================================================
+
+# 325. THREAT-TO-CONTROL TRACEABILITY
+
+# =============================================================================
+
+Produce mapping:
+
+threat
+
+asset
+
+control
+
+implementation
+
+test
+
+monitoring
+
+incident response
+
+residual risk
+
+# =============================================================================
+
+# 326. CONTROL-TO-REPOSITORY TRACEABILITY
+
+# =============================================================================
+
+Produce mapping:
+
+control ID
+
+source paths
+
+configuration paths
+
+test paths
+
+documentation
+
+runtime evidence
+
+owner
+
+status
+
+# =============================================================================
+
+# 327. SECURITY METRICS
+
+# =============================================================================
+
+Recover metrics for:
+
+authentication failures
+
+authorization denials
+
+policy violations
+
+credential age
+
+open vulnerabilities
+
+incident count
+
+time to detection
+
+time to containment
+
+time to recovery
+
+backup success
+
+restore success
+
+# =============================================================================
+
+# 328. METRIC QUALITY
+
+# =============================================================================
+
+Evaluate metrics for:
+
+definition
+
+owner
+
+collection
+
+accuracy
+
+boundedness
+
+retention
+
+privacy
+
+actionability
+
+# =============================================================================
+
+# 329. SECURITY SERVICE-LEVEL INDICATORS
+
+# =============================================================================
+
+Where defined determine indicators such as:
+
+policy availability
+
+audit delivery success
+
+credential rotation success
+
+incident alert latency
+
+backup verification success
+
+Do not fabricate targets.
+
+# =============================================================================
+
+# 330. SECURITY SERVICE-LEVEL OBJECTIVES
+
+# =============================================================================
+
+Where defined determine:
+
+objective
+
+measurement window
+
+threshold
+
+owner
+
+breach response
+
+evidence
+
+# =============================================================================
+
+# 331. RESILIENCE METRICS
+
+# =============================================================================
+
+Recover metrics for:
+
+failure rate
+
+recovery rate
+
+restart count
+
+degraded duration
+
+queue recovery
+
+orphan cleanup
+
+circuit-breaker activity
+
+failover success
+
+# =============================================================================
+
+# 332. SECURITY DASHBOARD
+
+# =============================================================================
+
+Determine whether one consolidated view exists for:
+
+security posture
+
+active incidents
+
+credential health
+
+policy status
+
+control exceptions
+
+vulnerabilities
+
+backup status
+
+resilience status
+
+# =============================================================================
+
+# 333. SECURITY REPORTING
+
+# =============================================================================
+
+Recover reports for:
+
+operators
+
+maintainers
+
+architecture reviewers
+
+release reviewers
+
+auditors
+
+incident responders
+
+# =============================================================================
+
+# 334. SECURITY FINDING LIFECYCLE
+
+# =============================================================================
+
+Determine lifecycle:
+
+discovery
+
+validation
+
+severity assignment
+
+ownership
+
+remediation
+
+verification
+
+closure
+
+reopening
+
+# =============================================================================
+
+# 335. SECURITY FINDING STATUS
+
+# =============================================================================
+
+Possible statuses:
+
+OPEN
+
+ACKNOWLEDGED
+
+IN REMEDIATION
+
+MITIGATED
+
+ACCEPTED
+
+BLOCKED
+
+VERIFIED
+
+CLOSED
+
+Determine repository terminology.
+
+# =============================================================================
+
+# 336. SECURITY RISK ACCEPTANCE
+
+# =============================================================================
+
+Recover:
+
+acceptance authority
+
+required evidence
+
+scope
+
+duration
+
+conditions
+
+review
+
+revocation
+
+# =============================================================================
+
+# 337. SECURITY DEBT
+
+# =============================================================================
+
+Identify debt categories:
+
+missing controls
+
+partial controls
+
+manual controls
+
+stale dependencies
+
+weak isolation
+
+missing threat models
+
+missing recovery tests
+
+missing incident procedures
+
+missing evidence
+
+temporary exceptions
+
+# =============================================================================
+
+# 338. SECURITY TECHNICAL-DEBT REGISTER
+
+# =============================================================================
+
+Produce entries containing:
+
+debt ID
+
+description
+
+origin
+
+affected assets
+
+risk
+
+temporary mitigation
+
+owner
+
+target state
+
+verification
+
+status
+
+# =============================================================================
+
+# 339. SECURITY RISK REGISTER
+
+# =============================================================================
+
+Produce entries containing:
+
+risk ID
+
+threat
+
+asset
+
+likelihood basis
+
+impact basis
+
+existing controls
+
+residual risk
+
+owner
+
+treatment
+
+evidence
+
+status
+
+Use qualitative ratings unless repository evidence supports quantitative
+assessment.
+
+# =============================================================================
+
+# 340. AVAILABILITY RISK REGISTER
+
+# =============================================================================
+
+Produce entries containing:
+
+risk ID
+
+failure scenario
+
+affected service
+
+propagation
+
+detection
+
+containment
+
+recovery
+
+residual risk
+
+owner
+
+status
+
+# =============================================================================
+
+# 341. CONTINUITY GAP REGISTER
+
+# =============================================================================
+
+Identify gaps in:
+
+backup
+
+restore
+
+failover
+
+recovery ordering
+
+credential recovery
+
+state reconciliation
+
+incident command
+
+operator procedures
+
+# =============================================================================
+
+# 342. SECURITY EXCEPTION REGISTER
+
+# =============================================================================
+
+Produce:
+
+exception ID
+
+control
+
+scope
+
+reason
+
+risk
+
+compensating controls
+
+approver
+
+expiry
+
+evidence
+
+status
+
+# =============================================================================
+
+# 343. SECURITY ASSURANCE CASE
+
+# =============================================================================
+
+Construct an evidence-backed assurance case.
+
+For each major security claim provide:
+
+claim
+
+argument
+
+evidence
+
+counterevidence
+
+assumptions
+
+confidence
+
+status
+
+Possible major claims:
+
+privileged actions are authorized
+
+untrusted code is isolated
+
+secrets are protected
+
+state tampering is detected
+
+security incidents are contained
+
+critical services can recover
+
+# =============================================================================
+
+# 344. CLAIM CONFIDENCE
+
+# =============================================================================
+
+Classify assurance confidence as:
+
+HIGH
+
+MODERATE
+
+LOW
+
+INSUFFICIENT
+
+UNKNOWN
+
+Base confidence on:
+
+direct evidence
+
+test evidence
+
+runtime evidence
+
+traceability
+
+evidence freshness
+
+counterevidence
+
+# =============================================================================
+
+# 345. SECURITY CERTIFICATION EVIDENCE
+
+# =============================================================================
+
+Acceptable evidence may include:
+
+source implementation
+
+configuration
+
+tests
+
+CI results
+
+security scans
+
+runtime measurements
+
+audit logs
+
+incident exercises
+
+restore tests
+
+signed artifacts
+
+repository history
+
+Do not treat architecture comments alone as proof of operational effectiveness.
+
+# =============================================================================
+
+# 346. SECURITY CERTIFICATION SCOPE
+
+# =============================================================================
+
+Declare scope explicitly.
+
+Possible scope dimensions:
+
+repository revision
+
+runtime mode
+
+deployment profile
+
+operating system
+
+network model
+
+provider model
+
+plugin model
+
+tool model
+
+multi-runtime mode
+
+distributed mode
+
+# =============================================================================
+
+# 347. SECURITY CERTIFICATION EXCLUSIONS
+
+# =============================================================================
+
+Declare exclusions.
+
+Possible exclusions:
+
+unsupported platforms
+
+experimental plugins
+
+external providers
+
+manual deployments
+
+distributed mode
+
+multi-tenant mode
+
+optional services
+
+future architecture
+
+# =============================================================================
+
+# 348. SECURITY CERTIFICATION ASSUMPTIONS
+
+# =============================================================================
+
+Declare assumptions such as:
+
+host operating system is trusted
+
+hardware is not physically compromised
+
+deployment secrets are provisioned securely
+
+administrator privileges are controlled
+
+external providers satisfy declared transport requirements
+
+Classify each assumption as:
+
+verified
+
+partially verified
+
+unverified
+
+external
+
+# =============================================================================
+
+# 349. SECURITY ACCEPTANCE GATES
+
+# =============================================================================
+
+Evaluate all gates using:
+
+PASS
+
+FAILED
+
+PARTIAL
+
+UNKNOWN
+
+BLOCKED
+
+# =============================================================================
+
+# 350. SECURITY AUTHORITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+canonical security authority identified
+
+ownership explicit
+
+policy precedence explicit
+
+no conflicting repository-wide security authority
+
+# =============================================================================
+
+# 351. TRUST-BOUNDARY GATE
+
+# =============================================================================
+
+PASS requires:
+
+trust boundaries inventoried
+
+untrusted inputs identified
+
+privileged transitions controlled
+
+cross-boundary communication validated
+
+# =============================================================================
+
+# 352. IDENTITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+principals identified
+
+identity lifecycle explicit
+
+revocation supported where required
+
+identity cannot be silently conflated across runtimes
+
+# =============================================================================
+
+# 353. AUTHENTICATION GATE
+
+# =============================================================================
+
+PASS requires:
+
+authentication mechanisms explicit
+
+credential validation explicit
+
+expiry and revocation behavior defined
+
+negative tests or equivalent evidence present
+
+# =============================================================================
+
+# 354. AUTHORIZATION GATE
+
+# =============================================================================
+
+PASS requires:
+
+authorization authority explicit
+
+deny behavior explicit
+
+privileged actions covered
+
+bypass paths absent or formally controlled
+
+# =============================================================================
+
+# 355. LEAST-PRIVILEGE GATE
+
+# =============================================================================
+
+PASS requires:
+
+capabilities scoped
+
+privileges bounded
+
+delegation constrained
+
+temporary elevation auditable
+
+# =============================================================================
+
+# 356. SECRET-MANAGEMENT GATE
+
+# =============================================================================
+
+PASS requires:
+
+no active hardcoded secrets
+
+secret storage explicit
+
+access bounded
+
+rotation and revocation behavior explicit
+
+logs and errors protected
+
+# =============================================================================
+
+# 357. CRYPTOGRAPHY GATE
+
+# =============================================================================
+
+PASS requires:
+
+security-sensitive cryptography centrally governed or consistently implemented
+
+secure randomness used
+
+weak algorithms absent from security-sensitive contexts
+
+key ownership explicit
+
+# =============================================================================
+
+# 358. TRANSPORT-SECURITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+protected communications encrypted
+
+peer identity validated
+
+certificate validation enforced
+
+plaintext exceptions explicit and bounded
+
+# =============================================================================
+
+# 359. INPUT-HARDENING GATE
+
+# =============================================================================
+
+PASS requires:
+
+untrusted input validated
+
+dangerous parsers controlled
+
+command construction safe
+
+path traversal controlled
+
+URL and network targets validated where required
+
+# =============================================================================
+
+# 360. AUTONOMOUS-EXECUTION GATE
+
+# =============================================================================
+
+PASS requires:
+
+model output cannot bypass deterministic controls
+
+tool execution is authorized
+
+plugin execution is controlled
+
+privileged operations are validated and auditable
+
+# =============================================================================
+
+# 361. SANDBOX GATE
+
+# =============================================================================
+
+PASS requires:
+
+sandbox authority explicit
+
+isolation dimensions documented
+
+escape paths tested or otherwise evidenced
+
+sandbox failure is fail-secure
+
+# =============================================================================
+
+# 362. SUPPLY-CHAIN GATE
+
+# =============================================================================
+
+PASS requires:
+
+dependency sources controlled
+
+model, plugin and tool origins explicit
+
+integrity verification exists where risk requires it
+
+release provenance preserved
+
+# =============================================================================
+
+# 363. AUDITABILITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+security-relevant actions recorded
+
+identities preserved
+
+policy decisions visible
+
+evidence integrity protected
+
+# =============================================================================
+
+# 364. AVAILABILITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+critical services inventoried
+
+health model explicit
+
+failure detection present
+
+degraded behavior defined
+
+# =============================================================================
+
+# 365. FAULT-CONTAINMENT GATE
+
+# =============================================================================
+
+PASS requires:
+
+failure domains explicit
+
+critical faults contained
+
+propagation controlled
+
+quarantine or shutdown available where necessary
+
+# =============================================================================
+
+# 366. TIMEOUT-AND-CANCELLATION GATE
+
+# =============================================================================
+
+PASS requires:
+
+critical operations bounded
+
+deadlines propagated
+
+cancellation supported
+
+forced termination strategy explicit
+
+# =============================================================================
+
+# 367. RETRY-AND-BACKOFF GATE
+
+# =============================================================================
+
+PASS requires:
+
+retry authority explicit
+
+nonretryable failures excluded
+
+backoff bounded
+
+retry storms controlled
+
+# =============================================================================
+
+# 368. RECOVERY GATE
+
+# =============================================================================
+
+PASS requires:
+
+recovery authority explicit
+
+recovery ordering known
+
+state integrity verified
+
+recovery loops bounded
+
+readiness revalidated after recovery
+
+# =============================================================================
+
+# 369. BACKUP-AND-RESTORE GATE
+
+# =============================================================================
+
+PASS requires:
+
+critical data scope known
+
+backups protected
+
+restore procedure defined
+
+restore evidence available
+
+# =============================================================================
+
+# 370. INCIDENT-RESPONSE GATE
+
+# =============================================================================
+
+PASS requires:
+
+incident authority explicit
+
+containment actions available
+
+evidence preserved
+
+recovery and closure criteria defined
+
+# =============================================================================
+
+# 371. COMPLIANCE-EVIDENCE GATE
+
+# =============================================================================
+
+PASS requires:
+
+controls mapped
+
+evidence traceable
+
+exceptions explicit
+
+external compliance claims accurately scoped
+
+# =============================================================================
+
+# 372. TESTING GATE
+
+# =============================================================================
+
+PASS requires evidence for:
+
+authentication testing
+
+authorization testing
+
+input hardening
+
+sandbox boundaries
+
+secret leakage
+
+failure containment
+
+recovery
+
+incident response
+
+# =============================================================================
+
+# 373. STATIC-SECURITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+configured static checks execute successfully or equivalent evidence exists
+
+critical findings resolved or explicitly blocking
+
+suppression and exclusions auditable
+
+# =============================================================================
+
+# 374. RELEASE-SECURITY GATE
+
+# =============================================================================
+
+PASS requires:
+
+release artifacts traceable
+
+dependencies assessed
+
+security configuration validated
+
+known critical vulnerabilities absent or release blocked
+
+# =============================================================================
+
+# 375. CERTIFICATION BLOCKERS
+
+# =============================================================================
+
+The following normally block certification:
+
+unrestricted model-driven shell execution
+
+missing authorization around privileged tools
+
+active hardcoded credentials
+
+sandbox escape with host impact
+
+disabled certificate verification on protected channels
+
+unsafe deserialization at untrusted boundaries
+
+cross-runtime secret or state access
+
+missing containment for compromised plugins or tools
+
+security controls fail open
+
+critical state cannot be restored
+
+audit evidence can be silently altered
+
+release artifacts lack trustworthy provenance where required
+
+critical security findings are unresolved
+
+# =============================================================================
+
+# 376. CONDITIONAL-CERTIFICATION CONDITIONS
+
+# =============================================================================
+
+Conditional certification may be considered when:
+
+no critical blocker exists
+
+high-risk gaps have compensating controls
+
+deployment scope is restricted
+
+exceptions are explicit
+
+remediation owners exist
+
+verification criteria are defined
+
+expiration or review date exists
+
+# =============================================================================
+
+# 377. SECURITY MATURITY ASSESSMENT
+
+# =============================================================================
+
+Assess maturity qualitatively across:
+
+governance
+
+identity
+
+authorization
+
+isolation
+
+cryptography
+
+input hardening
+
+supply chain
+
+monitoring
+
+resilience
+
+recovery
+
+incident response
+
+evidence
+
+Possible maturity labels:
+
+ABSENT
+
+AD HOC
+
+PARTIAL
+
+DEFINED
+
+MANAGED
+
+VERIFIED
+
+Do not infer maturity from documentation volume alone.
+
+# =============================================================================
+
+# 378. SECURITY SCORECARD
+
+# =============================================================================
+
+Produce qualitative scorecard for:
+
+authority clarity
+
+trust-boundary clarity
+
+least privilege
+
+secret management
+
+cryptography
+
+transport security
+
+sandboxing
+
+autonomous-execution safety
+
+supply-chain integrity
+
+auditability
+
+availability
+
+fault containment
+
+recovery
+
+incident readiness
+
+evidence quality
+
+# =============================================================================
+
+# 379. SECURITY FINDING LEDGER
+
+# =============================================================================
+
+Each finding shall contain:
+
+finding ID
+
+title
+
+severity
+
+confidence
+
+category
+
+affected paths
+
+affected assets
+
+threat actor
+
+trust boundary
+
+evidence
+
+counterevidence
+
+impact
+
+likelihood basis
+
+existing controls
+
+recommended remediation
+
+verification method
+
+dependencies
+
+owner if discoverable
+
+status
+
+# =============================================================================
+
+# 380. SECURITY FINDING SEVERITY
+
+# =============================================================================
+
+Classify as:
+
+CRITICAL
+
+HIGH
+
+MEDIUM
+
+LOW
+
+INFORMATIONAL
+
+Severity shall consider:
+
+exploitability
+
+required access
+
+affected privilege
+
+data impact
+
+integrity impact
+
+availability impact
+
+scope
+
+detectability
+
+recovery difficulty
+
+# =============================================================================
+
+# 381. SECURITY FINDING CONFIDENCE
+
+# =============================================================================
+
+Classify confidence as:
+
+CONFIRMED
+
+HIGH
+
+MODERATE
+
+LOW
+
+UNKNOWN
+
+Differentiate observed defects from architectural risks inferred from missing
+evidence.
+
+# =============================================================================
+
+# 382. SECURITY RISK TREATMENT
+
+# =============================================================================
+
+Classify recommended treatment as:
+
+AVOID
+
+MITIGATE
+
+TRANSFER
+
+ACCEPT
+
+INVESTIGATE
+
+BLOCK RELEASE
+
+# =============================================================================
+
+# 383. REMEDIATION PRIORITY
+
+# =============================================================================
+
+Prioritize using:
+
+P0 — immediate security or release blocker
+
+P1 — required before production exposure
+
+P2 — required for robust production readiness
+
+P3 — planned hardening
+
+P4 — optional or research
+
+# =============================================================================
+
+# 384. SECURITY REMEDIATION PRINCIPLES
+
+# =============================================================================
+
+Recommendations shall:
+
+preserve canonical ownership
+
+avoid duplicate authorities
+
+prefer centralized policy with local enforcement
+
+preserve deterministic security decisions
+
+minimize privilege
+
+minimize attack surface
+
+fail securely
+
+remain testable
+
+remain observable
+
+support revocation
+
+support recovery
+
+# =============================================================================
+
+# 385. IMMEDIATE REMEDIATION
+
+# =============================================================================
+
+Prioritize immediate remediation for:
+
+credential exposure
+
+authorization bypass
+
+sandbox escape
+
+unrestricted command execution
+
+unsafe deserialization
+
+TLS validation bypass
+
+cross-runtime access
+
+security controls that fail open
+
+critical restore failures
+
+# =============================================================================
+
+# 386. SHORT-TERM REMEDIATION
+
+# =============================================================================
+
+Possible short-term work:
+
+centralize policy
+
+complete trust-boundary inventory
+
+add capability checks
+
+add secret redaction
+
+bound resource use
+
+complete timeout coverage
+
+add incident containment
+
+validate backups
+
+# =============================================================================
+
+# 387. MEDIUM-TERM REMEDIATION
+
+# =============================================================================
+
+Possible medium-term work:
+
+signed plugins
+
+signed models
+
+artifact provenance
+
+distributed revocation
+
+formal recovery coordinator
+
+security posture dashboard
+
+automated incident exercises
+
+control-evidence automation
+
+# =============================================================================
+
+# 388. LONG-TERM REMEDIATION
+
+# =============================================================================
+
+Possible long-term work:
+
+hardware-backed key storage
+
+formal capability architecture
+
+zero-trust inter-runtime communication
+
+tamper-evident audit logs
+
+multi-node continuity
+
+formal verification of critical controls
+
+# =============================================================================
+
+# 389. RESEARCH RECOMMENDATIONS
+
+# =============================================================================
+
+Possible research areas:
+
+model-aware prompt-injection containment
+
+capability-safe autonomous tool use
+
+formal policy verification
+
+secure latent-state isolation
+
+model supply-chain attestation
+
+distributed agent identity
+
+proof-carrying tool execution
+
+# =============================================================================
+
+# 390. SECURITY DOCUMENTATION RECOMMENDATIONS
+
+# =============================================================================
+
+Identify missing or stale documentation for:
+
+threat model
+
+trust boundaries
+
+deployment security
+
+secret provisioning
+
+sandbox limitations
+
+incident response
+
+backup and restore
+
+security exceptions
+
+operator procedures
+
+# =============================================================================
+
+# 391. SECURITY TEST RECOMMENDATIONS
+
+# =============================================================================
+
+Recommend tests for:
+
+privilege boundaries
+
+negative authorization
+
+credential rotation
+
+revocation
+
+sandbox escape
+
+prompt injection
+
+tool hijacking
+
+provider impersonation
+
+state corruption
+
+backup restoration
+
+incident containment
+
+# =============================================================================
+
+# 392. SECURITY OPERATIONS RECOMMENDATIONS
+
+# =============================================================================
+
+Recommend operational controls for:
+
+access review
+
+credential inventory
+
+policy review
+
+dependency scanning
+
+backup verification
+
+restore drills
+
+incident exercises
+
+exception expiry
+
+security posture reporting
+
+# =============================================================================
+
+# 393. IMPLEMENTATION READINESS
+
+# =============================================================================
+
+Assess readiness for:
+
+local trusted development
+
+single-user deployment
+
+multi-user deployment
+
+network-exposed deployment
+
+plugin ecosystem
+
+autonomous tool execution
+
+multi-runtime execution
+
+distributed execution
+
+production certification
+
+# =============================================================================
+
+# 394. SECURITY DEPLOYMENT PROFILES
+
+# =============================================================================
+
+Where useful classify readiness separately for:
+
+PROFILE-A
+
+Local, single-user, trusted workstation
+
+PROFILE-B
+
+Local network, authenticated operators
+
+PROFILE-C
+
+Internet-exposed service
+
+PROFILE-D
+
+Multi-user or multi-tenant service
+
+PROFILE-E
+
+Distributed cluster
+
+PROFILE-F
+
+Autonomous privileged execution
+
+Do not apply a single certification outcome to materially different deployment
+profiles without explicit justification.
+
+# =============================================================================
+
+# 395. SECURITY CERTIFICATION DECISION
+
+# =============================================================================
+
+Allowed decisions:
+
+CERTIFIED
+
+CONDITIONALLY CERTIFIED
+
+NOT CERTIFIED
+
+UNABLE TO CERTIFY
+
+The decision shall state:
+
+scope
+
+deployment profile
+
+repository revision
+
+evidence basis
+
+passed gates
+
+failed gates
+
+partial gates
+
+unknown gates
+
+blockers
+
+conditions
+
+residual risks
+
+confidence
+
+# =============================================================================
+
+# 396. CERTIFIED
+
+# =============================================================================
+
+Use only when:
+
+all mandatory gates pass
+
+no unresolved critical or blocking high-severity finding remains
+
+evidence is sufficient
+
+scope is explicit
+
+residual risks are accepted by the appropriate authority
+
+# =============================================================================
+
+# 397. CONDITIONALLY CERTIFIED
+
+# =============================================================================
+
+Use only when:
+
+no critical blocker remains
+
+failed or partial gates are bounded
+
+compensating controls exist
+
+deployment restrictions are explicit
+
+remediation conditions are testable
+
+review or expiration is specified
+
+# =============================================================================
+
+# 398. NOT CERTIFIED
+
+# =============================================================================
+
+Use when:
+
+mandatory gates fail
+
+critical blockers exist
+
+security controls are structurally absent
+
+recovery is unsafe
+
+autonomous privileged execution is insufficiently constrained
+
+# =============================================================================
+
+# 399. UNABLE TO CERTIFY
+
+# =============================================================================
+
+Use when:
+
+repository evidence is insufficient
+
+critical runtime behavior cannot be verified
+
+required files are unavailable
+
+test evidence is missing or unusable
+
+scope cannot be determined
+
+Do not convert insufficient evidence into a passing or failing implementation
+claim.
+
+# =============================================================================
+
+# 400. EXECUTIVE SECURITY SUMMARY
+
+# =============================================================================
+
+Produce an executive summary covering:
+
+security posture
+
+strongest controls
+
+largest risks
+
+critical blockers
+
+resilience posture
+
+recovery readiness
+
+incident readiness
+
+deployment limitations
+
+certification decision
+
+# =============================================================================
+
+# 401. ARCHITECTURAL SECURITY SUMMARY
+
+# =============================================================================
+
+Summarize:
+
+canonical authorities
+
+trust boundaries
+
+privileged flows
+
+security state
+
+isolation boundaries
+
+recovery ownership
+
+incident ownership
+
+evidence quality
+
+# =============================================================================
+
+# 402. OPERATIONAL SECURITY SUMMARY
+
+# =============================================================================
+
+Summarize:
+
+credential operations
+
+policy operations
+
+monitoring
+
+alerts
+
+incidents
+
+backup verification
+
+restore testing
+
+operator procedures
+
+# =============================================================================
+
+# 403. SECURITY REMEDIATION SUMMARY
+
+# =============================================================================
+
+Summarize remediation by:
+
+priority
+
+dependency order
+
+affected subsystem
+
+verification method
+
+release impact
+
+# =============================================================================
+
+# 404. SECURITY TRACEABILITY MATRIX
+
+# =============================================================================
+
+Produce:
+
+security requirement
+
+threat
+
+asset
+
+trust boundary
+
+control
+
+implementation
+
+test
+
+runtime evidence
+
+finding
+
+acceptance gate
+
+status
+
+# =============================================================================
+
+# 405. SECURITY REQUIREMENT MATRIX
+
+# =============================================================================
+
+Produce:
+
+requirement ID
+
+requirement
+
+source
+
+scope
+
+owner
+
+implementation evidence
+
+verification evidence
+
+status
+
+# =============================================================================
+
+# 406. SECURITY CONTROL MATRIX
+
+# =============================================================================
+
+Produce:
+
+control ID
+
+control objective
+
+authority
+
+implementation
+
+configuration
+
+test
+
+operation evidence
+
+exception
+
+status
+
+# =============================================================================
+
+# 407. AVAILABILITY MATRIX
+
+# =============================================================================
+
+Produce:
+
+service
+
+criticality
+
+dependencies
+
+health check
+
+failure domain
+
+degraded mode
+
+recovery
+
+RTO evidence
+
+RPO evidence
+
+status
+
+# =============================================================================
+
+# 408. INCIDENT-READINESS MATRIX
+
+# =============================================================================
+
+Produce:
+
+incident type
+
+detection
+
+classification
+
+containment
+
+eradication
+
+recovery
+
+evidence
+
+owner
+
+status
+
+# =============================================================================
+
+# 409. CERTIFICATION-GATE MATRIX
+
+# =============================================================================
+
+Produce:
+
+gate ID
+
+gate
+
+required evidence
+
+observed evidence
+
+missing evidence
+
+status
+
+blocking impact
+
+finding IDs
+
+# =============================================================================
+
+# 410. REMEDIATION DEPENDENCY GRAPH
+
+# =============================================================================
+
+Generate Mermaid graph showing:
+
+root security defects
+
+authority gaps
+
+trust-boundary gaps
+
+control gaps
+
+test gaps
+
+operational gaps
+
+remediation units
+
+verification gates
+
+certification dependencies
+
+# =============================================================================
+
+# 411. SECURITY ARCHITECTURE DIAGRAM
+
+# =============================================================================
+
+Generate final Mermaid architecture diagram showing:
+
+external actors
+
+entry points
+
+trust boundaries
+
+identity authority
+
+authorization authority
+
+security policy
+
+sandbox
+
+runtime
+
+tools
+
+plugins
+
+providers
+
+models
+
+storage
+
+audit
+
+incident response
+
+recovery
+
+# =============================================================================
+
+# 412. INCIDENT RESPONSE DIAGRAM
+
+# =============================================================================
+
+Generate Mermaid diagram:
+
+Detection
+
+↓
+
+Validation
+
+↓
+
+Declaration
+
+↓
+
+Containment
+
+↓
+
+Evidence Preservation
+
+↓
+
+Eradication
+
+↓
+
+Recovery
+
+↓
+
+Security Verification
+
+↓
+
+Closure
+
+↓
+
+Post-Incident Review
+
+# =============================================================================
+
+# 413. CONTINUITY DIAGRAM
+
+# =============================================================================
+
+Generate Mermaid diagram:
+
+Failure
+
+↓
+
+Detection
+
+↓
+
+Classification
+
+↓
+
+Containment
+
+↓
+
+Degraded Operation or Shutdown
+
+↓
+
+Recovery Coordination
+
+↓
+
+State Reconciliation
+
+↓
+
+Readiness Verification
+
+↓
+
+Normal Operation
+
+# =============================================================================
+
+# 414. SECURITY CERTIFICATION REPORT SCHEMA
+
+# =============================================================================
+
+The final report shall include:
+
+metadata
+
+scope
+
+exclusions
+
+assumptions
+
+methodology
+
+repository evidence
+
+architecture
+
+threat model
+
+control assessment
+
+resilience assessment
+
+incident readiness
+
+findings
+
+risk register
+
+debt register
+
+acceptance gates
+
+remediation
+
+certification decision
+
+# =============================================================================
+
+# 415. SECURITY JSON CERTIFICATION SCHEMA
+
+# =============================================================================
+
+Produce a machine-readable representation containing:
+
+phase
+
+repository
+
+revision
+
+timestamp
+
+scope
+
+profiles
+
+assumptions
+
+exclusions
+
+authorities
+
+trust_boundaries
+
+assets
+
+threats
+
+controls
+
+tests
+
+evidence
+
+findings
+
+risks
+
+debt
+
+gates
+
+recommendations
+
+decision
+
+confidence
+
+Do not invent schema values unsupported by evidence.
+
+# =============================================================================
+
+# 416. SECURITY REPORT METADATA
+
+# =============================================================================
+
+Include:
+
+audit phase
+
+audit version
+
+repository path
+
+repository revision
+
+branch
+
+dirty state
+
+auditor identity
+
+audit time
+
+environment
+
+operating system
+
+runtime versions
+
+available hardware
+
+commands executed
+
+command limitations
+
+# =============================================================================
+
+# 417. EVIDENCE CITATION
+
+# =============================================================================
+
+Every major conclusion shall cite:
+
+file path
+
+symbol or configuration key
+
+relevant line range where available
+
+test path
+
+command output where available
+
+runtime artifact where available
+
+# =============================================================================
+
+# 418. EVIDENCE STATUS
+
+# =============================================================================
+
+Classify evidence as:
+
+VERIFIED
+
+PARTIALLY VERIFIED
+
+UNVERIFIED
+
+CONTRADICTED
+
+STALE
+
+NOT APPLICABLE
+
+# =============================================================================
+
+# 419. SECURITY CLAIM STATUS
+
+# =============================================================================
+
+Classify claims as:
+
+SUPPORTED
+
+PARTIALLY SUPPORTED
+
+UNSUPPORTED
+
+CONTRADICTED
+
+UNKNOWN
+
+# =============================================================================
+
+# 420. AUDIT COMMAND SAFETY
+
+# =============================================================================
+
+Audit commands shall:
+
+avoid mutating production state
+
+avoid transmitting secrets
+
+avoid external destructive actions
+
+avoid installing unapproved dependencies
+
+avoid modifying configuration
+
+avoid starting privileged network services
+
+# =============================================================================
+
+# 421. REPOSITORY VALIDATION COMMANDS
+
+# =============================================================================
+
+Use repository-supported commands where available, such as:
+
+pytest security tests
+
+integration tests
+
+recovery tests
+
+static security scans
+
+dependency scans
+
+type checking
+
+linting
+
+package verification
+
+configuration validation
+
+backup verification scripts
+
+restore simulation scripts
+
+Do not invent successful results.
+
+# =============================================================================
+
+# 422. COMMAND FAILURE HANDLING
+
+# =============================================================================
+
+When a command cannot execute record:
+
+command
+
+reason
+
+environment limitation
+
+missing dependency
+
+affected evidence
+
+resulting uncertainty
+
+Do not interpret tool failure as implementation failure without evidence.
+
+# =============================================================================
+
+# 423. SECURITY AUDIT CONSTRAINTS
+
+# =============================================================================
+
+Never:
+
+modify implementation
+
+rotate real credentials
+
+revoke production credentials
+
+execute destructive tools
+
+disable security controls
+
+contact external services without authorization
+
+upload repository content
+
+fabricate scan results
+
+fabricate test results
+
+fabricate compliance status
+
+# =============================================================================
+
+# 424. PHASE COMPLETENESS VALIDATION
+
+# =============================================================================
+
+Before completion verify that all requested reports, matrices and diagrams are:
+
+present
+
+internally consistent
+
+traceable
+
+evidence-backed
+
+scope-aware
+
+free of fabricated conclusions
+
+# =============================================================================
+
+# 425. PHASE EXIT CONDITIONS
+
+# =============================================================================
+
+This phase exits only when:
+
+security authorities are mapped
+
+trust boundaries are mapped
+
+privileged execution paths are mapped
+
+critical assets and threats are mapped
+
+controls are assessed
+
+resilience and recovery are assessed
+
+incident readiness is assessed
+
+findings are recorded
+
+risks are recorded
+
+debt is recorded
+
+acceptance gates are evaluated
+
+certification decision is issued
+
+repository remains unmodified
+
+# =============================================================================
+
+# 426. FINAL PHASE DIRECTIVE
+
+# =============================================================================
+
+Conduct this phase as an adversarial but evidence-disciplined architecture audit.
+
+Assume:
+
+external content may be malicious
+
+model output may be incorrect or manipulated
+
+plugins and tools may be compromised
+
+providers may fail or misbehave
+
+credentials may expire or be revoked
+
+resources may become exhausted
+
+processes may crash
+
+storage may become corrupted
+
+networks may partition
+
+operators may make mistakes
+
+Do not assume compromise where evidence does not support it.
+
+Do not assume safety where evidence is absent.
+
+Distinguish precisely between:
+
+implemented control
+
+configured control
+
+tested control
+
+operational control
+
+documented intention
+
+unsupported claim
+
+# =============================================================================
+
+# END OF PART III
+
+#
+
+# NEXT PHASE
+
+#
+
+# PHASE 3.7.22
+
+#
+
+# DATA GOVERNANCE, PRIVACY,
+
+# PROVENANCE & INFORMATION LIFECYCLE
+
+#
+
+# =============================================================================

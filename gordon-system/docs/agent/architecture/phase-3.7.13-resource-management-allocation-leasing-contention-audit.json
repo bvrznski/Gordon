@@ -1,0 +1,364 @@
+{
+  "repository": {
+    "root": "/home/bvrznski/Gordon",
+    "branch": "main",
+    "commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "resource_path": "gordon-system/src/agent/components/core/resources/",
+    "documentation_path": "gordon-system/docs/agent/architecture/"
+  },
+  "scope": {
+    "phase": "3.7.13",
+    "name": "Resource Management, Allocation, Leasing & Contention",
+    "type": "Architecture Acceptance Audit"
+  },
+  "resource_architecture": {
+    "canonical_authorities": [
+      {
+        "name": "ResourceManager",
+        "classification": "CANONICAL",
+        "symbol": "ResourceManager",
+        "path": "gordon-system/src/agent/components/core/resources/manager.py",
+        "scope": "runtime-wide",
+        "owner": "resource subsystem",
+        "construction": "Single instance per runtime via __init__ with config",
+        "dependencies": ["LeaseManager", "CapacityModel", "ContentionResolver"],
+        "public_api": [
+          "register_resource(descriptor)",
+          "deregister_resource(resource_id)",
+          "refresh_inventory(descriptors)",
+          "get_capacity_snapshot()",
+          "request_reservation(request)",
+          "release_reservation(reservation_id)",
+          "expire_reservation(reservation_id)",
+          "request_allocation(request)",
+          "release_allocation(allocation_id)",
+          "create_lease(allocation, owner_id, duration)",
+          "renew_lease(lease)",
+          "revoke_lease(lease, reason)"
+        ],
+        "evidence": "Single ResourceManager class with runtime_id validation",
+        "confidence": 1.0
+      }
+    ]
+  },
+  "authorities": [
+    {
+      "name": "ResourceManager",
+      "classification": "CANONICAL",
+      "symbol": "ResourceManager",
+      "path": "gordon-system/src/agent/components/core/resources/manager.py",
+      "scope": "runtime-wide resource management",
+      "owner": "resource subsystem",
+      "construction": "Single instance per runtime via ResourceManager(config)",
+      "dependencies": [
+        {"name": "ResourceInventory", "purpose": "Resource storage"},
+        {"name": "CapacityModel", "purpose": "Capacity calculations"},
+        {"name": "LeaseManager", "purpose": "Lease authority (delegated)"},
+        {"name": "ContentionResolver", "purpose": "Contention resolution"},
+        {"name": "FairnessAssessor", "purpose": "Fairness assessment"},
+        {"name": "QuotaEnforcer", "purpose": "Quota enforcement"}
+      ],
+      "public_api": [
+        "register_resource(descriptor)",
+        "deregister_resource(resource_id)",
+        "request_reservation(request)",
+        "release_reservation(reservation_id)",
+        "expire_reservation(reservation_id)",
+        "request_allocation(request)",
+        "release_allocation(allocation_id)",
+        "create_lease(allocation, owner_id, duration)"
+      ],
+      "evidence": "Implementation in manager.py with runtime_id validation",
+      "confidence": 1.0
+    },
+    {
+      "name": "LeaseManager",
+      "classification": "DELEGATE",
+      "symbol": "LeaseManager",
+      "path": "gordon-system/src/agent/components/core/resources/leases.py",
+      "scope": "lease operations (delegated)",
+      "owner": "ResourceManager",
+      "construction": "Instantiated by ResourceManager with runtime_id",
+      "dependencies": [],
+      "public_api": [
+        "create_lease(allocation, owner_id, duration)",
+        "activate_lease(lease)",
+        "renew_lease(lease)",
+        "revoke_lease(lease, reason)",
+        "release_lease(lease)"
+      ],
+      "evidence": "Delegated authority via ResourceManager.lease_manager",
+      "confidence": 1.0
+    }
+  ],
+  "resource_domains": [
+    {
+      "domain": "cpu_cores",
+      "resource_types": ["logical_core"],
+      "authority": "ResourceManager",
+      "identity_model": {"type": "logical_id", "format": "core_N"},
+      "capacity_unit": "cores",
+      "inventory_source": "OS / proc/cpuinfo",
+      "allocation_model": "fixed core count allocation",
+      "lease_model": "per-task lease",
+      "release_model": "explicit release on completion",
+      "diagnostics": ["CPU utilization", "core assignment"],
+      "evidence": "ResourceManager handles cpu domain allocations"
+    },
+    {
+      "domain": "gpu_devices",
+      "resource_types": ["gpu_device"],
+      "authority": "ResourceManager",
+      "identity_model": {"type": "device_uuid", "format": "{uuid}:gen{N}"},
+      "capacity_unit": "devices",
+      "inventory_source": "CUDA / NVML",
+      "allocation_model": "device-level allocation",
+      "lease_model": "per-model lease",
+      "release_model": "explicit release or lease expiration",
+      "diagnostics": ["GPU utilization", "VRAM usage"],
+      "evidence": "ResourceManager handles gpu domain allocations"
+    },
+    {
+      "domain": "vram_mb",
+      "resource_types": ["vram_region"],
+      "authority": "ResourceManager",
+      "identity_model": {"type": "memory_region", "format": "{gpu}:{region}"},
+      "capacity_unit": "MB",
+      "inventory_source": "CUDA / NVML memory info",
+      "allocation_model": "region-based allocation",
+      "lease_model": "per-context lease",
+      "release_model": "explicit release or lease expiration",
+      "diagnostics": ["VRAM usage", "fragmentation"],
+      "evidence": "ResourceManager handles vram_mb domain allocations"
+    },
+    {
+      "domain": "host_memory_mb",
+      "resource_types": ["memory_region"],
+      "authority": "ResourceManager",
+      "identity_model": {"type": "memory_region", "format": "{pid}:{region}"},
+      "capacity_unit": "MB",
+      "inventory_source": "OS memory info",
+      "allocation_model": "region-based allocation",
+      "lease_model": "per-process lease",
+      "release_model": "explicit release or process termination",
+      "diagnostics": ["Memory pressure", "usage per domain"],
+      "evidence": "ResourceManager handles host_memory_mb domain allocations"
+    }
+  ],
+  "resource_taxonomy": [
+    {
+      "type": "EXCLUSIVE",
+      "meaning": "Single owner only",
+      "examples": ["GPU device", "network_port"]
+    },
+    {
+      "type": "SHARED",
+      "meaning": "Multiple owners can use simultaneously",
+      "examples": ["CPU time", "network_bandwidth"]
+    },
+    {
+      "type": "PARTITIONABLE",
+      "meaning": "Can be split into smaller units",
+      "examples": ["VRAM", "host_memory_mb"]
+    },
+    {
+      "type": "FUNGIBLE",
+      "meaning": "Interchangeable with other of same type",
+      "examples": ["CPU cores", "threads"]
+    },
+    {
+      "type": "NON-FUNGIBLE",
+      "meaning": "Unique identity required",
+      "examples": ["Physical GPU", "PCI device"]
+    }
+  ],
+  "resource_identity": {
+    "types": [
+      {"name": "ResourceId", "format": "{domain}:{uuid}:gen{N}", "persistence": "across discovery"},
+      {"name": "AllocationId", "format": "alloc_{hex[:16]}", "persistence": "allocation lifetime"},
+      {"name": "LeaseId", "format": "lease_{hex[:16]}", "persistence": "lease lifetime"}
+    ],
+    "properties": {
+      "uniqueness": "UUID-based generation",
+      "runtime_scope": "All IDs scoped to runtime_id",
+      "persistence": "Resource IDs persist across discovery refreshes"
+    },
+    "fencing": {
+      "mechanism": "Generation epoch in ResourceId and leases",
+      "purpose": "Prevent stale owners from reclaiming resources"
+    }
+  },
+  "discovery": {
+    "adapter_type": "ResourceDiscoveryAdapter (protocol)",
+    "refresh_policy": "Full replace on refresh_inventory()",
+    "validation": "Runtime ID validation on all operations",
+    "sources": ["OS / proc", "CUDA / NVML"],
+    "staleness_detection": "Generation-based tracking in ResourceId"
+  },
+  "inventory": {
+    "owner": "ResourceManager",
+    "construction": "ResourceInventory instantiated with runtime_id",
+    "refresh_policy": "Full replace on refresh_inventory(new_descriptors)",
+    "static_resources": false,
+    "dynamic_resources": true,
+    "discovered_resources": true,
+    "configured_resources": false,
+    "external_resources": false
+  },
+  "registration": {
+    "who_may_register": "ResourceManager only (via register_resource())",
+    "validation": ["runtime_id must match", "no duplicate resource_ids"],
+    "duplicate_registration": "ValueError raised",
+    "replacement": "Generation-based - higher generation replaces lower"
+  },
+  "capacity": {
+    "total_capacity": {"source": "sum of all ResourceDescriptor.total_capacity"},
+    "reserved_capacity": {"tracked_by": "CapacityModel._reserved"},
+    "allocated_capacity": {"tracked_by": "CapacityModel._allocated"},
+    "used_capacity": {"tracked_by": "CapacityModel._used"},
+    "free_capacity": {"calculated_as": "total - reserved - allocated + reclaimable_overlap"},
+    "reclaimable_capacity": {"source": "Allocated but not yet used"},
+    "unavailable_capacity": {"for_failed_resources": true},
+    "consistency": "Enforced via CapacityLedger with all operations logged"
+  },
+  "reservations": {
+    "lifecycle": ["REQUESTED", "CREATED (holding capacity)", "ACTIVE", "EXPIRED/RELEASED/CONSUMED"],
+    "bounded_lifetime": true,
+    "expiration_semantics": {"default_timeout": 300.0, "configurable": "ResourceManagerConfig"},
+    "request_model": {
+      "runtime_id": "required",
+      "owner_id": "required",
+      "domain": "required",
+      "requested_quantity": "required",
+      "minimum_quantity": "optional",
+      "deadline_utc": "optional"
+    }
+  },
+  "allocations": {
+    "lifecycle_states": [
+      "REQUESTED", "VALIDATED", "QUEUED", "RESERVED",
+      "ALLOCATED", "LEASED", "BOUND", "ACTIVE/IN_USE",
+      "RELEASING", "RELEASED", "RECONCILED"
+    ],
+    "decision_types": ["ALLOCATE", "ALLOCATE_PARTIAL", "DEFER", "QUEUE", "REJECT_*"],
+    "request_model": {
+      "runtime_id": "required",
+      "owner_id": "required",
+      "domain": "required",
+      "quantity": "required",
+      "minimum_quantity": "optional",
+      "deadline_utc": "optional",
+      "priority": "int"
+    },
+    "decision_factors": ["capacity", "quota", "fairness", "priority", "affinity"]
+  },
+  "placement": {
+    "affinity_resources": "Preferred resources for allocation",
+    "anti_affinity_resources": "Resources to avoid",
+    "numa_placement": false,
+    "device_placement": true
+  },
+  "binding": {
+    "binding_id": "generated on bind",
+    "activation": "Requires valid lease and allocation",
+    "validation": ["lease must be active", "allocation must exist"],
+    "release": "Automatic on lease expiration or explicit release"
+  },
+  "ownership": {
+    "exclusive_ownership": true,
+    "shared_ownership": false,
+    "transfer_protocol": {"mode": "epoch-based fencing", "source_target_epochs": true},
+    "transfer_semantics": "Atomic transfer with new epoch generation",
+    "reassignment_policy": "Requires explicit ownership transfer record"
+  },
+  "ownership_transfer": {
+    "authority": "ResourceManager coordinates transfer",
+    "preconditions": ["Source owner acknowledges", "Target has valid request"],
+    "atomicity": "Single allocation record update with epoch increment",
+    "acknowledgement": "Source and target both involved",
+    "failure_behavior": "Transfer fails, no state change"
+  },
+  "shared_resources": {
+    "cpu_cores": {"partitionable": true, "quota_required": true},
+    "vram_mb": {"partitionable": true, "quota_required": false},
+    "host_memory_mb": {"partitionable": true, "quota_required": true}
+  },
+  "leases": {
+    "lifetime_semantics": {"expires_at_utc": "required", "renewal_deadline_utc": "optional"},
+    "fencing": {
+      "mechanism": "FencingToken with generation counter",
+      "validation": "Token must match current lease fencing_token"
+    },
+    "lifecycle_states": ["CREATED", "ACTIVE", "RENEWING", "RENEWED", "EXPIRING", "EXPIRED", "REVOKING", "REVOKED"],
+    "renewal_semantics": {
+      "renew_at_ratio": 0.7,
+      "max_lifetime_seconds": 86400.0,
+      "revalidation_required": true
+    }
+  },
+  "contention": {
+    "resolution_authority": "ContentionResolver per runtime",
+    "ordering_policy": ["priority", "creation_time"],
+    "decision_types": ["GRANT", "PARTIAL_GRANT", "QUEUE", "DEFER", "REJECT"],
+    "queue_capacity": false,
+    "timeout_behavior": "Entry may be removed if timeout exceeded"
+  },
+  "fairness": {
+    "policy_scope": "per-owner within domain",
+    "weights_configurable": true,
+    "starvation_prevention": {"enabled": true, "threshold_seconds": 300.0},
+    "burst_allowance": 1.5
+  },
+  "quotas": {
+    "scope_types": ["RUNTIME", "OWNER", "COMPONENT", "SERVICE"],
+    "enforcement_points": ["request_allocation()", "check_quota()"],
+    "hard_vs_soft": {"hard": true, "soft_burst_allowance": true},
+    "override_authority": false
+  },
+  "preemption": {
+    "eligibility_matrix": [
+      {"type": "batch_task", "eligible": true, "policy": "low_priority"},
+      {"type": "interactive_task", "eligible": "maybe", "policy": "slabased"},
+      {"type": "critical_service", "eligible": false, "policy": "cannot_preempt"}
+    ],
+    "execution_sequence": ["notify_owner", "grace_period", "revoke_lease", "release_allocation"],
+    "preemption_authority": "ResourceManager coordinates via Preemptor"
+  },
+  "overcommit": {
+    "supported": true,
+    "max_ratio": 1.2,
+    "enforcement": "Checked in check_capacity()",
+    "pressure_threshold": 0.95
+  },
+  "pressure": {
+    "levels": [
+      {"name": "NORMAL", "threshold": "<60%", "action": "no_action"},
+      {"name": "ELEVATED", "threshold": "60-80%", "action": "monitor_closely"},
+      {"name": "HIGH", "threshold": "80-95%", "action": "reduce_concurrency"},
+      {"name": "CRITICAL", "threshold": "95-100%", "action": "consider_preemption"},
+      {"name": "EXHAUSTED", "threshold": ">=100%", "action": "reject_new_work"}
+    ]
+  },
+  "exhaustion": {
+    "oom_handling": false,
+    "resource_types": ["host_memory_mb", "vram_mb"],
+    "containment_strategy": "Reject new work",
+    "degradation_enabled": true
+  },
+  "reclamation": {
+    "modes": [
+      {"mode": "VOLUNTARY", "trigger": "owner_release"},
+      {"mode": "IDLE", "trigger": "unused_threshold"},
+      {"mode": "PRESSURE_DRIVEN", "trigger": "high_pressure"},
+      {"mode": "SHUTDOWN", "trigger": "runtime_stopping"}
+    ],
+    "verification_required": true,
+    "grace_period": false
+  },
+  "leak_detection": {
+    "enabled": false,
+    "threshold_seconds": 3600.0,
+    "detection_method": false,
+    "reporting": "diagnostic snapshot includes leaks_detected field"
+  }
+}

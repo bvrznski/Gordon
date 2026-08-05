@@ -1,0 +1,88 @@
+{
+  "phase": "3.7.5",
+  "name": "Runtime Activation and Lifecycle",
+  "status": "BLOCKED",
+  "repository": "/home/bvrznski/Gordon",
+  "branch": "main",
+  "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "authorities": {
+    "activation": {
+      "canonical_path": "gordon-system/src/agent/components/core/runtime_state/__init__.py",
+      "canonical_symbol": "RuntimeActivationController"
+    },
+    "lifecycle_coordinator": {
+      "canonical_path": "gordon-system/src/agent/components/core/runtime_state/lifecycle_coordinator.py",
+      "canonical_symbol": "RuntimeLifecycleCoordinator"
+    },
+    "lifecycle_state": {
+      "canonical_path": "gordon-system/src/agent/components/core/runtime_state/__init__.py",
+      "canonical_symbol": "RuntimeStateStore"
+    }
+  },
+  "entry_points": [
+    {"name": "RuntimeActivationController.request_activation()", "path": "runtime_state/__init__.py:1186", "type": "canonical"},
+    {"name": "GordonRuntime.startup()", "path": "runtime/assembler.py:1510", "type": "invalid_direct_start"},
+    {"name": "RuntimeLifecycleCoordinator.request_activation()", "path": "lifecycle_coordinator.py:353", "type": "coordination"}
+  ],
+  "direct_start_paths": [
+    {"entity": "Scheduler.start()", "classification": "INVALID_DIRECT_START", "risk_level": "HIGH"},
+    {"entity": "ExecutorProtocol.submit()", "classification": "COMPONENT_LOCAL_DELEGATE", "risk_level": "LOW"}
+  ],
+  "lifecycle_states": ["CONSTRUCTED", "ASSEMBLED", "ACTIVATING", "ACTIVE", "QUIESCING", "STOPPING", "STOPPED", "FAILED"],
+  "activation_graph": {
+    "nodes": ["kernel", "state_store", "lifecycle_coordinator", "scheduler", "executor"],
+    "edges": [{"from": "state_store", "to": "kernel"}, {"from": "lifecycle_coordinator", "to": "state_store"}],
+    "cycles": []
+  },
+  "transaction_states": ["REQUESTED", "VALIDATING", "PLANNING", "GRAPH_VERIFIED", "PLAN_COMMITTED", "ACTIVATING", "VERIFYING", "COMMITTING", "COMPLETED", "ROLLING_BACK", "ROLLED_BACK", "FAILED"],
+  "resources": [
+    {"id": "kernel", "owner": "runtime", "shutdown_path": "not defined"},
+    {"id": "state_store", "owner": "runtime", "shutdown_path": "not defined"},
+    {"id": "lifecycle_coordinator", "owner": "runtime", "shutdown_path": "not defined"},
+    {"id": "scheduler", "owner": "runtime", "shutdown_path": "shutdown() method exists"},
+    {"id": "executor", "owner": "runtime", "shutdown_path": "shutdown() method exists"}
+  ],
+  "background_execution": {"workers_started_during_activation": [], "threads_started": 0, "processes_started": 0},
+  "scheduler_boundary": {"startup_state": "INITIALIZING", "running_state": "RUNNING", "accepts_production_work": false},
+  "executor_boundary": {"pending_state": "PENDING", "ready_state": "READY", "running_state": "RUNNING", "accepts_production_work": false},
+  "signals": {"installation_during_activation": false, "signal_handling_module": "runtime_state/signals.py"},
+  "hooks": [],
+  "timeouts": {"component_timeout_config": "30.0 seconds", "rollback_timeout_hardcoded": 30.0},
+  "cancellation": {"during_activation": true, "during_rollback": false},
+  "partial_activation": {"states": ["PARTIALLY_ACTIVATED", "ROLLING_BACK"]},
+  "rollback": {"order": "reverse_activation_order", "failure_handling": "primary_failure_preserved"},
+  "readiness_boundary": {"set_during_activation": false, "status_after_activation": "unevaluated"},
+  "admission_boundary": {"open_during_activation": false, "check_exists": false},
+  "multi_runtime": {"isolation_mechanism": "runtime_id + _current_transaction", "explicit_validation": false},
+  "global_state": [{"item": "_lock", "scope": "per-instance"}, {"item": "_current_transaction", "scope": "per-runtime"}],
+  "determinism": {
+    "topological_sort": "Kahn's with priority + string ordering",
+    "rollback_order": "explicit reverse",
+    "graph_version_stable": false
+  },
+  "invariants": [
+    {"name": "ACTIVATION-001", "status": "FAIL - duplicate authorities"},
+    {"name": "ACTIVATION-005", "status": "PASS"},
+    {"name": "ACTIVATION-016", "status": "PASS - readiness not set"}
+  ],
+  "gates": {
+    "activation_authority": "FAIL",
+    "lifecycle_coordination": "PASS",
+    "lifecycle_state": "PARTIAL",
+    "activation_preconditions": "PASS",
+    "activation_graph": "PASS",
+    "activation_execution": "FAIL",
+    "partial_failure": "PASS",
+    "resources": "FAIL",
+    "readiness_boundary": "PASS",
+    "admission_boundary": "PARTIAL",
+    "concurrency": "PASS",
+    "determinism": "PASS"
+  },
+  "findings": [
+    {"id": "F-3.7.5-A001", "title": "GordonRuntime.startup() is broken", "severity": "CRITICAL"},
+    {"id": "F-3.7.5-A002", "title": "Missing activation implementation", "severity": "CRITICAL"},
+    {"id": "F-3.7.5-A003", "title": "Scheduler.start() has no implementation", "severity": "CRITICAL"}
+  ],
+  "final_status": "REQUIRES_REMEDIATION"
+}

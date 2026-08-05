@@ -1,0 +1,131 @@
+{
+  "report": {
+    "version": "1.0",
+    "phase": "3.7.13-R",
+    "name": "Resource Management, Allocation, Leasing & Contention Remediation",
+    "date_utc": "2026-08-04T09:45:00Z",
+    "status": "COMPLETED",
+    "remediation_required": false,
+    "decision": "NO REMEDIATION REQUIRED - Audit passed all gates"
+  },
+  "audit_summary": {
+    "total_gates": 50,
+    "passed": 48,
+    "info": 2,
+    "failed": 0,
+    "certified": true
+  },
+  "gate_results": [
+    {"gate_id": "3.7.13-01", "title": "Exactly one canonical runtime Resource authority exists", "result": "PASS"},
+    {"gate_id": "3.7.13-02", "title": "Exactly one authoritative allocator per domain", "result": "PASS"},
+    {"gate_id": "3.7.13-03", "title": "Exactly one lease manager per domain", "result": "PASS"},
+    {"gate_id": "3.7.13-04", "title": "Every managed resource has stable identity", "result": "PASS"},
+    {"gate_id": "3.7.13-05", "title": "Every resource has explicit ownership or availability", "result": "PASS"},
+    {"gate_id": "3.7.13-06", "title": "Inventory has one authoritative owner", "result": "PASS"},
+    {"gate_id": "3.7.13-07", "title": "Inventory mutations are atomic/versioned", "result": "PASS"},
+    {"gate_id": "3.7.13-08", "title": "Capacity units and semantics explicit", "result": "PASS"},
+    {"gate_id": "3.7.13-09", "title": "Capacity cannot be silently fabricated", "result": "PASS"},
+    {"gate_id": "3.7.13-10", "title": "Admission uses authoritative capacity", "result": "PASS"},
+    {"gate_id": "3.7.13-11", "title": "Exclusive resources have single owner", "result": "PASS"},
+    {"gate_id": "3.7.13-12", "title": "Every allocation has valid resource", "result": "PASS"},
+    {"gate_id": "3.7.13-13", "title": "Every allocation has valid owner", "result": "PASS"},
+    {"gate_id": "3.7.13-14", "title": "Double allocation prevented/detected", "result": "PASS"},
+    {"gate_id": "3.7.13-15", "title": "Allocation failure restores capacity", "result": "PASS"},
+    {"gate_id": "3.7.13-16", "title": "Required leases have lifetime semantics", "result": "PASS"},
+    {"gate_id": "3.7.13-17", "title": "Expired/revoked leases cannot authorize", "result": "PASS"},
+    {"gate_id": "3.7.13-18", "title": "Lease renewal revalidates authority", "result": "PASS"},
+    {"gate_id": "3.7.13-19", "title": "Stale owners are fenced", "result": "PASS"},
+    {"gate_id": "3.7.13-20", "title": "Resource release is idempotent", "result": "PASS"},
+    {"gate_id": "3.7.13-21", "title": "Capacity not restored before cleanup", "result": "PASS"},
+    {"gate_id": "3.7.13-22", "title": "Reclamation is verified", "result": "PASS"},
+    {"gate_id": "3.7.13-23", "title": "Failed reclamation causes quarantine", "result": "PASS"},
+    {"gate_id": "3.7.13-24", "title": "Contention has single authority per domain", "result": "PASS"},
+    {"gate_id": "3.7.13-25", "title": "Fairness policies explicit", "result": "PASS"},
+    {"gate_id": "3.7.13-26", "title": "Starvation prevention exists", "result": "PASS"},
+    {"gate_id": "3.7.13-27", "title": "Hard quotas cannot be bypassed", "result": "PASS"},
+    {"gate_id": "3.7.13-28", "title": "Quota overrides auditable", "result": "PASS"},
+    {"gate_id": "3.7.13-29", "title": "Preemption is deterministic", "result": "PASS"},
+    {"gate_id": "3.7.13-30", "title": "New ownership after fencing/cleanup", "result": "PASS"},
+    {"gate_id": "3.7.13-31", "title": "Overcommit explicit and bounded", "result": "PASS"},
+    {"gate_id": "3.7.13-32", "title": "Resource pressure observable", "result": "PASS"},
+    {"gate_id": "3.7.13-33", "title": "Exhaustion produces containment", "result": "PASS"},
+    {"gate_id": "3.7.13-34", "title": "OOM paths defined", "result": "PASS"},
+    {"gate_id": "3.7.13-35", "title": "Leaks detectable or bounded", "result": "PASS"},
+    {"gate_id": "3.7.13-36", "title": "Failures preserve ownership truth", "result": "PASS"},
+    {"gate_id": "3.7.13-37", "title": "Accounting corruption detectable", "result": "PASS"},
+    {"gate_id": "3.7.13-38", "title": "Split-brain detected and fenced", "result": "PASS"},
+    {"gate_id": "3.7.13-39", "title": "Runtime identity preserved through lifecycle", "result": "PASS"},
+    {"gate_id": "3.7.13-40", "title": "Runtimes cannot claim each other's resources", "result": "PASS"},
+    {"gate_id": "3.7.13-41", "title": "Shared resources have partitioning/quota", "result": "PASS"},
+    {"gate_id": "3.7.13-42", "title": "Shutdown stops new admission deterministically", "result": "PASS"},
+    {"gate_id": "3.7.13-43", "title": "Shutdown releases resources", "result": "PASS"},
+    {"gate_id": "3.7.13-44", "title": "Recovery rejects stale claims", "result": "PASS"},
+    {"gate_id": "3.7.13-45", "title": "Recovery reconstructs from evidence", "result": "PASS"},
+    {"gate_id": "3.7.13-46", "title": "Critical operations observable", "result": "PASS"},
+    {"gate_id": "3.7.13-47", "title": "Critical paths have verification coverage", "result": "PASS"},
+    {"gate_id": "3.7.13-48", "title": "Claims supported by repository evidence", "result": "PASS"},
+    {"gate_id": "3.7.13-49", "title": "Markdown and JSON reports agree", "result": "PASS"},
+    {"gate_id": "3.7.13-50", "title": "Production implementation unchanged", "result": "PASS"}
+  ],
+  "canonical_authorities": {
+    "ResourceManager": {
+      "path": "gordon-system/src/agent/components/core/resources/manager.py",
+      "classification": "CANONICAL",
+      "scope": "runtime-wide",
+      "status": "VERIFIED"
+    },
+    "LeaseManager": {
+      "path": "gordon-system/src/agent/components/core/resources/leases.py",
+      "classification": "DELEGATE",
+      "scope": "lease operations",
+      "owner": "ResourceManager",
+      "status": "VERIFIED"
+    }
+  },
+  "delegate_authorities": [
+    {"name": "ContentionResolver", "path": "contention.py", "status": "VERIFIED"},
+    {"name": "FairnessAssessor", "path": "fairness.py", "status": "VERIFIED"},
+    {"name": "QuotaEnforcer", "path": "quotas.py", "status": "VERIFIED"},
+    {"name": "Preemptor", "path": "preemption.py", "status": "VERIFIED"},
+    {"name": "PressureManager", "path": "pressure.py", "status": "VERIFIED"},
+    {"name": "ResourceReclaimer", "path": "reclamation.py", "status": "VERIFIED"}
+  ],
+  "invariants_enforced": {
+    "exactly_one_resource_manager_per_runtime": true,
+    "every_allocation_has_owner": true,
+    "every_lease_has_expiration": true,
+    "capacity_accounting_never_negative": true,
+    "no_direct_bypass_of_canonical_authority": true,
+    "reservations_allocations_leases_distinct": true,
+    "release_reconciled_with_capacity": true,
+    "expired_leases_cannot_authorize": true,
+    "stale_fencing_tokens_rejected": true,
+    "runtime_isolation_enforced": true
+  },
+  "race_condition_protection": {
+    "all_state_mutations_protected_by_rlock": true,
+    "thread_safe_inventory_operations": true,
+    "thread_safe_capacity_tracking": true,
+    "thread_safe_lease_storage": true
+  },
+  "remediation_items": [],
+  "remaining_observations": [
+    {
+      "item": "Cross-runtime resource sharing",
+      "status": "FUTURE_WORK",
+      "notes": "Not implemented - requires infrastructure protocol"
+    },
+    {
+      "item": "Network-based allocation",
+      "status": "FUTURE_WORK",
+      "notes": "Delegated to network infrastructure"
+    }
+  ],
+  "validation_results": {
+    "python_syntax_check": "PASSED",
+    "type_annotations_verified": true,
+    "architecture_validation": "PASSED",
+    "race_condition_analysis": "VERIFIED"
+  },
+  "production_ready": true
+}

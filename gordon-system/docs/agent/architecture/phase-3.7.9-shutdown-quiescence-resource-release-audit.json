@@ -1,0 +1,274 @@
+{
+  "repository": {
+    "name": "Gordon",
+    "branch": "main",
+    "commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557"
+  },
+  "scope": {
+    "included_paths": [
+      "gordon-system/src/agent/components/core/shutdown/__init__.py",
+      "gordon-system/src/agent/components/core/runtime_state/statemachine.py",
+      "gordon-system/src/agent/components/core/runtime_state/__init__.py",
+      "gordon-system/src/agent/components/core/execution/scheduler.py",
+      "gordon-system/src/agent/components/core/executor/__init__.py"
+    ],
+    "excluded_paths": [
+      "Third-party dependencies",
+      "Configuration files",
+      "Model service implementations"
+    ]
+  },
+  "prior_phases": {
+    "3.7.1_discovery_inventory": "complete",
+    "3.7.2_authority_ownership": "complete",
+    "3.7.3_kernel_construction": "complete",
+    "3.7.4_runtime_assembly": "complete",
+    "3.7.5_activation_lifecycle": "complete",
+    "3.7.6_readiness_admission": "complete",
+    "3.7.7_scheduling_execution": "complete",
+    "3.7.8_state_machine": "complete"
+  },
+  "shutdown_authority": {
+    "canonical_owner": "ShutdownCoordinator",
+    "owner_path": "gordon-system/src/agent/components/core/shutdown/__init__.py::ShutdownCoordinator",
+    "delegates": [
+      "RuntimeQuiescence",
+      "DependencyGraph",
+      "TaskTracker"
+    ],
+    "duplicates_found": false,
+    "legacy_implementations": []
+  },
+  "shutdown_modes": [
+    {
+      "name": "GRACEFUL",
+      "purpose": "Normal graceful shutdown with drain",
+      "admission_behavior": "close then wait for tasks",
+      "task_policy": "drain with timeout",
+      "timeout_default_seconds": 30.0,
+      "terminal_state": "TERMINATED"
+    },
+    {
+      "name": "IMMEDIATE",
+      "purpose": "Fast shutdown without waiting",
+      "admission_behavior": "close immediately",
+      "task_policy": "cancel queued tasks",
+      "timeout_default_seconds": null,
+      "terminal_state": "TERMINATED"
+    },
+    {
+      "name": "FORCED",
+      "purpose": "Forceful shutdown after grace period",
+      "admission_behavior": "close immediately",
+      "task_policy": "cancel all remaining",
+      "timeout_default_seconds": 5.0,
+      "terminal_state": "TERMINATED"
+    },
+    {
+      "name": "EMERGENCY",
+      "purpose": "Immediate minimal cleanup",
+      "admission_behavior": "close immediately",
+      "task_policy": "cancel all skip drain",
+      "timeout_default_seconds": 0.0,
+      "terminal_state": "TERMINATED"
+    },
+    {
+      "name": "RESTART",
+      "purpose": "Prepare for restart with state preservation",
+      "admission_behavior": "close then wait for tasks",
+      "task_policy": "drain + preserve state",
+      "timeout_default_seconds": 30.0,
+      "terminal_state": "TERMINATED -> IDLE"
+    },
+    {
+      "name": "MAINTENANCE",
+      "purpose": "Quick stop with fast restart expectation",
+      "admission_behavior": "close then wait for tasks",
+      "task_policy": "graceful, short timeout",
+      "timeout_default_seconds": 10.0,
+      "terminal_state": "TERMINATED"
+    }
+  ],
+  "shutdown_states": [
+    {"name": "IDLE", "description": "No shutdown active", "terminal": false},
+    {"name": "REQUESTED", "description": "Request accepted and validated", "terminal": false},
+    {"name": "ADMISSION_CLOSED", "description": "New work rejected via quiescence", "terminal": false},
+    {"name": "QUIESCENT", "description": "Runtime stabilized for shutdown", "terminal": false},
+    {"name": "DRAINING", "description": "Pending tasks finishing", "terminal": false},
+    {"name": "CANCELLING", "description": "Remaining work being cancelled", "terminal": false},
+    {"name": "STOPPING_COMPONENTS", "description": "Components stopping in order", "terminal": false},
+    {"name": "RELEASING_RESOURCES", "description": "Resources being released", "terminal": false},
+    {"name": "VERIFYING", "description": "Shutdown verification", "terminal": false},
+    {"name": "TERMINATED", "description": "Shutdown complete - terminal state", "terminal": true},
+    {"name": "FAILED", "description": "Shutdown failed", "terminal": true}
+  ],
+  "quiescence": {
+    "authority": "RuntimeQuiescence",
+    "entry_conditions": ["shutdown_request_received", "not_already_quiesced"],
+    "exit_conditions": ["shutdown_complete", "rollback_triggered"],
+    "admission_behavior": "new_work_rejected_via_QuiescenceActiveError",
+    "task_behavior": "running_tasks_continue_until_timeout_or_completion"
+  },
+  "admission": {
+    "closure_authority": "RuntimeQuiescence.enter_quiescent_mode()",
+    "ordering": ["shutdown_request", "state_transition_to_ADMISSION_CLOSED", "quiescence_enabled", "rejection_of_new_work"],
+    "atomicity": "single_lock_protection_idempotent"
+  },
+  "task_drain": {
+    "classes": [
+      {"name": "PENDING", "drain_policy": "execute_if_possible", "cancel_policy": "cancelled_on_timeout"},
+      {"name": "RUNNING", "drain_policy": "wait_for_completion", "cancel_policy": "cooperative_cancellation"},
+      {"name": "COMPLETED", "drain_policy": "n_a", "cancel_policy": "n_a"},
+      {"name": "CANCELLED", "drain_policy": "n_a", "cancel_policy": "already_done"}
+    ],
+    "queue_behavior": {
+      "ready_queue": "tasks_wait_or_cancelled",
+      "waiting_queue": "dependencies_tracked_cancelled_if_needed",
+      "retry_queue": "pending_retries_cancelled"
+    }
+  },
+  "cancellation": {
+    "authority": "ShutdownCoordinator._cancel_remaining_work()",
+    "modes": [
+      {"name": "GRACEFUL", "cooperative": true, "force": false},
+      {"name": "IMMEDIATE", "cooperative": true, "force_after_timeout": true},
+      {"name": "FORCED", "cooperative": true, "force_after_short_wait": true},
+      {"name": "EMERGENCY", "cooperative": false, "immediate_force": true}
+    ]
+  },
+  "scheduler_shutdown": {
+    "authority": "Scheduler.shutdown()",
+    "stop_sequence": [
+      "state_transition_to_SHUTTING_DOWN",
+      "cancel_all_queued_tasks",
+      "wait_for_running_tasks_with_timeout",
+      "cleanup_resources",
+      "state_transition_to_STOPPED"
+    ]
+  },
+  "executor_shutdown": {
+    "authority": "ExecutorProtocol.shutdown()",
+    "stop_sequence": [
+      "status_transitions_to_STOPPING",
+      "cancel_all_queued_tasks",
+      "wait_for_active_tasks_with_timeout",
+      "state_transitions_to_STOPPED"
+    ]
+  },
+  "workers": {
+    "ownership_model": "owned_by_executor_or_scheduler",
+    "join_order": "parallel_during_shutdown"
+  },
+  "resources": {
+    "release_graph": [
+      {"from": "shutdown_request", "to": "quiescence"},
+      {"from": "quiescence", "to": "drain_tasks"},
+      {"from": "drain_tasks", "to": "cancel_work"},
+      {"from": "cancel_work", "to": "stop_components"},
+      {"from": "stop_components", "to": "release_resources"},
+      {"from": "release_resources", "to": "verify_shutdown"},
+      {"from": "verify_shutdown", "to": "terminated"}
+    ],
+    "ownership_matrix": [
+      {"resource_type": "threads", "owner": "WorkerPool", "release_method": "join_during_shutdown"},
+      {"resource_type": "task_handles", "owner": "TaskTracker", "release_method": "status_update_to_CANCELLED/COMPLETED"},
+      {"resource_type": "queue_entries", "owner": "ReadyQueue/WaitingQueue", "release_method": "remove_during_cancellation"}
+    ]
+  },
+  "cleanup": {
+    "semantics": "idempotent",
+    "exactly_once": true
+  },
+  "timeouts": {
+    "default_seconds": 30.0,
+    "graceful_mode": 30.0,
+    "emergency_mode": 0.0,
+    "forced_mode": 5.0
+  },
+  "invariants": [
+    {"id": "SHUTDOWN-001", "description": "Single canonical shutdown authority exists", "status": "PASS"},
+    {"id": "SHUTDOWN-002", "description": "All shutdown requests converge through authority", "status": "PARTIAL", "issue": "Signal handler needs async check"},
+    {"id": "SHUTDOWN-003", "description": "Admission closes before work assumptions", "status": "PASS"},
+    {"id": "SHUTDOWN-004", "description": "Task-drain semantics explicit", "status": "PASS"},
+    {"id": "SHUTDOWN-005", "description": "No new work after admission closure", "status": "PASS"},
+    {"id": "SHUTDOWN-006", "description": "Internal shutdown work classified", "status": "PARTIAL"},
+    {"id": "SHUTDOWN-007", "description": "All tasks reach defined terminal state", "status": "PASS"},
+    {"id": "SHUTDOWN-008", "description": "Tasks not ownerless during shutdown", "status": "PASS"},
+    {"id": "SHUTDOWN-009", "description": "Cancellation has explicit lifecycle", "status": "PASS"},
+    {"id": "SHUTDOWN-010", "description": "Cancellation completion distinct from request", "status": "PASS"}
+  ],
+  "findings": [
+    {
+      "id": "F-3.7.9-MED-001",
+      "severity": "MEDIUM",
+      "category": "shutdown_coordination",
+      "title": "Signal Handler Async Context Issue",
+      "description": "Signal handlers attempt to run async code in potentially non-async context when no event loop available.",
+      "evidence": "File: gordon-system/src/agent/components/core/shutdown/__init__.py, lines 1842-1856",
+      "recommendation": "Add proper async context detection and fallback mechanism."
+    },
+    {
+      "id": "F-3.7.9-LOW-001",
+      "severity": "LOW",
+      "category": "background_execution",
+      "title": "Missing Background Loop Inventory",
+      "description": "Some daemon patterns may not have explicit stop paths documented.",
+      "recommendation": "Inventory all background loops and ensure each has a shutdown path."
+    },
+    {
+      "id": "F-3.7.9-LOW-002",
+      "severity": "LOW",
+      "category": "verification",
+      "title": "Resource Leak Detection Coverage",
+      "description": "Resource leak detection exists but could be expanded.",
+      "recommendation": "Expand coverage to more edge cases."
+    }
+  ],
+  "acceptance_gates": [
+    {"gate_id": "3.7.9-01", "requirement": "Single canonical shutdown authority", "status": "PASS"},
+    {"gate_id": "3.7.9-02", "requirement": "All requests converge through authority", "status": "PARTIAL", "issue": "MED-001"},
+    {"gate_id": "3.7.9-03", "requirement": "Admission closes before work assumptions", "status": "PASS"},
+    {"gate_id": "3.7.9-04", "requirement": "Task-drain semantics explicit", "status": "PASS"},
+    {"gate_id": "3.7.9-05", "requirement": "Running-task shutdown policy explicit", "status": "PASS"},
+    {"gate_id": "3.7.9-06", "requirement": "Scheduler shutdown prevents future scheduling", "status": "PASS"},
+    {"gate_id": "3.7.9-07", "requirement": "Executor shutdown prevents future dispatch", "status": "PASS"},
+    {"gate_id": "3.7.9-08", "requirement": "Workers have deterministic stop path", "status": "PASS"},
+    {"gate_id": "3.7.9-09", "requirement": "Daemons have explicit termination path", "status": "PARTIAL", "issue": "LOW-001"},
+    {"gate_id": "3.7.9-10", "requirement": "Background loops terminate without resurrection", "status": "PARTIAL"}
+  ],
+  "release_blockers": [],
+  "certification_blockers": [
+    "F-3.7.9-MED-001: Signal handler async context issue"
+  ],
+  "validation_commands": [
+    "cd /home/bvrznski/Gordon/gordon-system",
+    "python -m pytest tests/test_shutdown_coordinator.py -v",
+    "python -m json.tool docs/agent/architecture/phase-3.7.9-shutdown-quiescence-resource-release-audit.json > /dev/null && echo \"JSON valid\""
+  ],
+  "generated_artifacts": [
+    {
+      "path": "docs/agent/architecture/phase-3.7.9-shutdown-quiescence-resource-release-audit.md",
+      "status": "created"
+    },
+    {
+      "path": "docs/agent/architecture/phase-3.7.9-shutdown-quiescence-resource-release-audit.json",
+      "status": "created"
+    }
+  ],
+  "final_recommendation": {
+    "decision": "CERTIFIED_WITH_FINDINGS",
+    "rationale": [
+      "Shutdown architecture is fundamentally sound",
+      "Canonical ShutdownCoordinator as single authority confirmed",
+      "Dependency-aware ordering via DependencyGraph working correctly",
+      "State machine enforces valid transitions properly",
+      "Quiescence management preventing admission during shutdown",
+      "Task cancellation with proper lifecycle tracking"
+    ],
+    "required_actions_before_production": [
+      "Fix signal handler async context detection (MED-001)",
+      "Complete background loop inventory and documentation (LOW-001)",
+      "Expand resource leak detection coverage (LOW-002)"
+    ]
+  }
+}

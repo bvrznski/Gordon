@@ -1,0 +1,714 @@
+{
+  "phase": "3.7.20-R",
+  "repository": "Gordon",
+  "revision_before": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "revision_after": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+  "branch": "main",
+  "dirty_state_before": false,
+  "dirty_state_after": false,
+  "source_audit": "phase-3.7.20-i-security-audit-findings.md",
+  "deployment_profiles": [
+    {
+      "name": "PROFILE-A",
+      "description": "Local, single-user, trusted workstation",
+      "status": "CERTIFIED",
+      "restrictions": []
+    },
+    {
+      "name": "PROFILE-B",
+      "description": "Local network, authenticated operators",
+      "status": "CERTIFIED",
+      "restrictions": []
+    },
+    {
+      "name": "PROFILE-C",
+      "description": "Internet-exposed service",
+      "status": "CONDITIONALLY_CERTIFIED",
+      "restrictions": ["Requires KMS integration for production deployment"]
+    },
+    {
+      "name": "PROFILE-D",
+      "description": "Multi-user or multi-tenant service",
+      "status": "CONDITIONALLY_CERTIFIED",
+      "restrictions": ["Requires KMS integration for production deployment"]
+    },
+    {
+      "name": "PROFILE-E",
+      "description": "Autonomous privileged execution",
+      "status": "NOT_CERTIFIED",
+      "restrictions": ["Requires additional hardening before autonomous operation"]
+    },
+    {
+      "name": "PROFILE-F",
+      "description": "Distributed or multi-node execution",
+      "status": "NOT_CERTIFIED",
+      "restrictions": ["Requires KMS + distributed state management"]
+    }
+  ],
+  "remediations": [
+    {
+      "id": "SEC-012-R",
+      "source_finding_ids": ["SEC-012"],
+      "title": "Centralized Cryptography Governance - KMS Integration",
+      "priority": 3,
+      "severity": "MEDIUM",
+      "confidence": "HIGH",
+      "risk_treatment": "ACCEPT",
+      "affected_subsystems": ["SecretManager", "EncryptedSecretAdapter"],
+      "affected_paths": [
+        "gordon-system/src/agent/components/core/security/managers.py"
+      ],
+      "affected_assets": ["Encryption keys"],
+      "threat_actors": ["External attackers with persistence access"],
+      "trust_boundaries": ["Runtime boundary"],
+      "root_cause": "No external KMS integration for encryption key management",
+      "existing_controls": [
+        "Fernet symmetric encryption for secrets at rest",
+        "Secrets never stored plaintext",
+        "Access audit logging"
+      ],
+      "control_gap": "Automatic rotation and centralized key management not implemented",
+      "target_security_property": "Key lifecycle management",
+      "canonical_owner": "SecurityAuthority",
+      "dependencies": [],
+      "implementation_plan": "Integrate AWS KMS or HashiCorp Vault for key management",
+      "migration_plan": "Gradual rollout with fallback to in-memory keys",
+      "compatibility_impact": "No breaking changes; KMS is opt-in for production",
+      "configuration_impact": "Add KMS configuration to runtime config",
+      "test_plan": ["KMS integration tests", "Key rotation tests"],
+      "negative_test_plan": ["Test fallback when KMS unavailable"],
+      "runtime_verification_plan": [],
+      "rollback_plan": "Revert to in-memory key generation",
+      "documentation_plan": ["Update security architecture doc", "Add deployment guide"],
+      "acceptance_conditions": [
+        "KMS integration functional",
+        "Key rotation working",
+        "Audit logging complete"
+      ],
+      "status": "DEFERRED",
+      "deferred_to_phase": "3.7.21"
+    },
+    {
+      "id": "SEC-014-R",
+      "source_finding_ids": ["SEC-014"],
+      "title": "Automatic Key Rotation Mechanism",
+      "priority": 3,
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "risk_treatment": "ACCEPT",
+      "affected_subsystems": ["SecretManager", "EncryptedSecretAdapter"],
+      "affected_paths": [
+        "gordon-system/src/agent/components/core/security/managers.py"
+      ],
+      "affected_assets": ["Encryption keys"],
+      "threat_actors": [],
+      "trust_boundaries": [],
+      "root_cause": "No automatic key rotation mechanism",
+      "existing_controls": [
+        "Manual key rotation via restart",
+        "Fernet encryption with configurable keys"
+      ],
+      "control_gap": "Automatic periodic key rotation not implemented",
+      "target_security_property": "Key lifecycle management",
+      "canonical_owner": "SecurityAuthority",
+      "dependencies": ["SEC-012-R"],
+      "implementation_plan": "Implement scheduled key rotation with versioning",
+      "migration_plan": "Add key versioning to storage format",
+      "compatibility_impact": "Requires new encryption key with version identifier",
+      "configuration_impact": "Add rotation schedule configuration",
+      "test_plan": ["Key rotation tests", "Version compatibility tests"],
+      "negative_test_plan": ["Test with expired keys"],
+      "runtime_verification_plan": [],
+      "rollback_plan": "Revert to previous key version",
+      "documentation_plan": ["Update rotation procedures"],
+      "acceptance_conditions": [
+        "Automatic rotation working",
+        "Old keys properly archived"
+      ],
+      "status": "DEFERRED",
+      "deferred_to_phase": "3.7.21"
+    },
+    {
+      "id": "SEC-026-R",
+      "source_finding_ids": ["SEC-026"],
+      "title": "Attack Surface Inventory Documentation",
+      "priority": 4,
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "risk_treatment": "ACCEPT",
+      "affected_subsystems": ["Documentation"],
+      "affected_paths": [],
+      "affected_assets": ["Documentation artifacts"],
+      "threat_actors": [],
+      "trust_boundaries": [],
+      "root_cause": "No single location for attack surface inventory",
+      "existing_controls": [
+        "Entry points documented across architecture docs",
+        "Trust boundaries defined"
+      ],
+      "control_gap": "Formal inventory not consolidated in one document",
+      "target_security_property": "Attack surface visibility",
+      "canonical_owner": "SecurityAuthority",
+      "dependencies": [],
+      "implementation_plan": "Create consolidated attack surface inventory",
+      "migration_plan": "None needed; documentation only",
+      "compatibility_impact": "No impact",
+      "configuration_impact": "None",
+      "test_plan": ["Review by security team"],
+      "negative_test_plan": [],
+      "runtime_verification_plan": [],
+      "rollback_plan": "N/A",
+      "documentation_plan": ["Add to security-architecture.md"],
+      "acceptance_conditions": [
+        "Inventory document created",
+        "Entry points all listed"
+      ],
+      "status": "DOCUMENTED",
+      "deferred_to_phase": "3.7.21"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SEC-001",
+      "title": "Security Responsibilities Ownership",
+      "status": "CLOSED",
+      "category": "Canonical Authorities",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Single canonical SecurityManager per runtime"
+    },
+    {
+      "id": "SEC-002",
+      "title": "Trust Boundaries Explicit",
+      "status": "CLOSED",
+      "category": "Trust Model",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "7 trust domains defined in policies.py"
+    },
+    {
+      "id": "SEC-003",
+      "title": "Authentication Responsibilities Explicit",
+      "status": "CLOSED",
+      "category": "Authentication",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "AuthenticationManager with multiple provider support"
+    },
+    {
+      "id": "SEC-004",
+      "title": "Authorization Responsibilities Explicit",
+      "status": "CLOSED",
+      "category": "Authorization",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Policy-based authorization with deny-by-default"
+    },
+    {
+      "id": "SEC-005",
+      "title": "Least Privilege Preserved",
+      "status": "CLOSED",
+      "category": "Capabilities",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Capability grants with time limits and revocation"
+    },
+    {
+      "id": "SEC-006",
+      "title": "Secret Lifecycle Management",
+      "status": "CLOSED",
+      "category": "Secrets",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Encrypted storage with audit logging"
+    },
+    {
+      "id": "SEC-007",
+      "title": "Sandbox Ownership Explicit",
+      "status": "CLOSED",
+      "category": "Sandbox",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "SandboxMode enum with STRICT/PERMISSIVE/MONITOR modes"
+    },
+    {
+      "id": "SEC-008",
+      "title": "Security Events Auditable",
+      "status": "CLOSED",
+      "category": "Audit",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Chain-linked immutable audit records"
+    },
+    {
+      "id": "SEC-009",
+      "title": "Policy Enforcement Explicit",
+      "status": "CLOSED",
+      "category": "Policies",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Precedence-ordered policy evaluation"
+    },
+    {
+      "id": "SEC-010",
+      "title": "Security Assumptions Repository-Supported",
+      "status": "CLOSED",
+      "category": "Documentation",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Trust, identity, and authorization models documented"
+    },
+    {
+      "id": "SEC-011",
+      "title": "Cryptographically Secure Randomness",
+      "status": "CLOSED",
+      "category": "Cryptography",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "secrets module used for key generation"
+    },
+    {
+      "id": "SEC-012",
+      "title": "Centralized Cryptography Governance",
+      "status": "DEFERRED",
+      "category": "Cryptography",
+      "severity": "MEDIUM",
+      "priority": 3,
+      "confidence": "HIGH",
+      "remediation_ids": ["SEC-012-R"],
+      "evidence": "KMS integration not implemented"
+    },
+    {
+      "id": "SEC-013",
+      "title": "Key Ownership Explicit",
+      "status": "CLOSED",
+      "category": "Cryptography",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Encryption key ownership in EncryptedSecretAdapter"
+    },
+    {
+      "id": "SEC-014",
+      "title": "Key Rotation and Revocation",
+      "status": "DEFERRED",
+      "category": "Cryptography",
+      "severity": "LOW",
+      "priority": 3,
+      "confidence": "HIGH",
+      "remediation_ids": ["SEC-014-R"],
+      "evidence": "Key rotation not automatic"
+    },
+    {
+      "id": "SEC-015",
+      "title": "Transport Encryption",
+      "status": "CLOSED",
+      "category": "Cryptography",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Fernet AES-128-CBC encryption"
+    },
+    {
+      "id": "SEC-016",
+      "title": "Certificate Validation Enforced",
+      "status": "CLOSED",
+      "category": "Authentication",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "CertificateAuthenticationProvider validates expiry"
+    },
+    {
+      "id": "SEC-017",
+      "title": "Untrusted Input Validation",
+      "status": "CLOSED",
+      "category": "Trust Model",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Identity independent from trust evaluation"
+    },
+    {
+      "id": "SEC-018",
+      "title": "Shell Execution Safe",
+      "status": "CLOSED",
+      "category": "Sandbox",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "No os.system or string-built commands"
+    },
+    {
+      "id": "SEC-019",
+      "title": "Filesystem Access Constrained",
+      "status": "CLOSED",
+      "category": "Sandbox",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "FS permissions with authorization"
+    },
+    {
+      "id": "SEC-020",
+      "title": "Unsafe Deserialization Absent",
+      "status": "CLOSED",
+      "category": "Sandbox",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "No pickle or unsafe YAML loading"
+    },
+    {
+      "id": "SEC-021",
+      "title": "Model Output Cannot Bypass Controls",
+      "status": "CLOSED",
+      "category": "Authorization",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Authorization independent from capability"
+    },
+    {
+      "id": "SEC-022",
+      "title": "Tool/Plugin Output Untrusted",
+      "status": "CLOSED",
+      "category": "Trust Model",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Authorization required for all privileged actions"
+    },
+    {
+      "id": "SEC-023",
+      "title": "Network Egress Policy-Controlled",
+      "status": "CLOSED",
+      "category": "Sandbox",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "NET_OUTBOUND permission required"
+    },
+    {
+      "id": "SEC-024",
+      "title": "Resource Abuse Bounded",
+      "status": "CLOSED",
+      "category": "Resilience",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Max concurrent tasks, parallel limits configured"
+    },
+    {
+      "id": "SEC-025",
+      "title": "Loops and Retries Bounded",
+      "status": "CLOSED",
+      "category": "Resilience",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Retry budgets and timeouts implemented"
+    },
+    {
+      "id": "SEC-026",
+      "title": "Attack Surfaces Inventoried",
+      "status": "DEFERRED",
+      "category": "Documentation",
+      "severity": "LOW",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": ["SEC-026-R"],
+      "evidence": "Entry points documented across docs"
+    },
+    {
+      "id": "SEC-027",
+      "title": "Supply Chain Trust Explicit",
+      "status": "CLOSED",
+      "category": "Plugin/Tool Management",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Manifest hash in PluginIdentity"
+    },
+    {
+      "id": "SEC-028",
+      "title": "Fail-Secure Behavior",
+      "status": "CLOSED",
+      "category": "Authorization",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Deny by default when no policy matches"
+    },
+    {
+      "id": "SEC-029",
+      "title": "Compromise Containment Boundaries Explicit",
+      "status": "CLOSED",
+      "category": "Resilience",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Failure domains defined with isolation"
+    },
+    {
+      "id": "SEC-030",
+      "title": "Security Evidence Preserved",
+      "status": "CLOSED",
+      "category": "Audit",
+      "severity": "NONE",
+      "priority": 4,
+      "confidence": "HIGH",
+      "remediation_ids": [],
+      "evidence": "Immutable chain-linked audit records"
+    }
+  ],
+  "controls": [
+    {
+      "id": "SEC-001",
+      "control_objective": "Canonical security authority per runtime",
+      "canonical_authority": "SecurityManager",
+      "implementation": "Single SecurityManager instance per runtime",
+      "configuration": "Constructed at runtime initialization",
+      "test": "Verify only one instance exists",
+      "operational_evidence": [],
+      "exception": null,
+      "status": "VERIFIED"
+    },
+    {
+      "id": "SEC-002",
+      "control_objective": "Trust boundaries explicit with domains",
+      "canonical_authority": "TrustManager",
+      "implementation": "7 trust domains in policies.py",
+      "configuration": "Domain trust levels configurable",
+      "test": "Verify domain isolation",
+      "operational_evidence": [],
+      "exception": null,
+      "status": "VERIFIED"
+    },
+    {
+      "id": "SEC-003",
+      "control_objective": "Authentication independent from authorization",
+      "canonical_authority": "AuthenticationManager",
+      "implementation": "Auth result doesn't imply authz",
+      "configuration": "Separate evaluation pipelines",
+      "test": "Verify authz required after authentication",
+      "operational_evidence": [],
+      "exception": null,
+      "status": "VERIFIED"
+    },
+    {
+      "id": "SEC-004",
+      "control_objective": "Policy-based authorization with deny-by-default",
+      "canonical_authority": "AuthorizationManager",
+      "implementation": "Policies evaluated, missing = DENY",
+      "configuration": "Precedence ordering",
+      "test": "Verify missing policy results in denial",
+      "operational_evidence": [],
+      "exception": null,
+      "status": "VERIFIED"
+    },
+    {
+      "id": "SEC-012",
+      "control_objective": "KMS integration for encryption key management",
+      "canonical_authority": "SecurityManager",
+      "implementation": "Pending KMS integration",
+      "configuration": "Pending KMS configuration",
+      "test": [],
+      "operational_evidence": [],
+      "exception": {
+        "id": "SEC-012-EX",
+        "scope": "Encryption key management",
+        "reason": "Production deployment requirement only",
+        "risk": "Key loss on restart requires rotation",
+        "compensating_controls": [
+          "Fernet encryption at rest",
+          "Audit logging enabled"
+        ],
+        "owner": "SecurityAuthority",
+        "created_at": "2026-08-04T00:00:00Z",
+        "expires_at": null,
+        "review_date": "2026-11-04",
+        "deployment_restrictions": ["Not for internet-exposed services"],
+        "revocation_conditions": ["When KMS integration is ready"],
+        "status": "ACTIVE"
+      },
+      "status": "DEFERRED"
+    }
+  ],
+  "tests": [
+    {
+      "id": "test_security_authorities",
+      "file": "gordon-system/tests/test_security_authorities.py",
+      "total_tests": 36,
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "evidence": [
+    {
+      "type": "static_verification",
+      "description": "Hardcoded credentials check",
+      "result": "PASS",
+      "location": "gordon-system/src/agent/components/core/security/"
+    },
+    {
+      "type": "static_verification",
+      "description": "World-writable paths check",
+      "result": "PASS"
+    },
+    {
+      "type": "static_verification",
+      "description": "Missing authorization check",
+      "result": "PASS"
+    },
+    {
+      "type": "static_verification",
+      "description": "Sandbox enforcement check",
+      "result": "PASS"
+    },
+    {
+      "type": "static_verification",
+      "description": "Unsafe subprocess execution check",
+      "result": "PASS"
+    },
+    {
+      "type": "static_verification",
+      "description": "Disabled TLS verification check",
+      "result": "PASS"
+    },
+    {
+      "type": "static_verification",
+      "description": "Duplicate security authorities check",
+      "result": "PASS"
+    },
+    {
+      "type": "unit_test",
+      "description": "Security authority tests",
+      "result": "PASS",
+      "tests_passed": 36
+    }
+  ],
+  "risks": [
+    {
+      "id": "SEC-012-RISK",
+      "finding_id": "SEC-012",
+      "risk_category": "Key Management",
+      "likelihood": "LOW",
+      "impact": "MEDIUM",
+      "exposure": "Runtime restart requires key rotation",
+      "mitigation_status": "ACCEPTED",
+      "owner": "SecurityAuthority",
+      "created_at": "2026-08-04T00:00:00Z"
+    }
+  ],
+  "debt": [
+    {
+      "id": "SEC-012-DEBT",
+      "finding_id": "SEC-012",
+      "debt_type": "Implementation Gap",
+      "amount": "3.7.21",
+      "reason": "KMS integration not implemented",
+      "impact": "Production deployment requires manual key management"
+    }
+  ],
+  "exceptions": [
+    {
+      "id": "SEC-012-EX",
+      "finding_ids": ["SEC-012"],
+      "scope": "Encryption key management in EncryptedSecretAdapter",
+      "reason": "KMS integration not implemented; production requirement only",
+      "risk": "Key loss on restart requires manual rotation",
+      "compensating_controls": [
+        "Fernet AES-128-CBC encryption for secrets at rest",
+        "Access audit logging for all secret operations"
+      ],
+      "owner": "SecurityAuthority",
+      "approver": null,
+      "created_at": "2026-08-04T00:00:00Z",
+      "expires_at": null,
+      "review_date": "2026-11-04",
+      "deployment_restrictions": [
+        "Not for internet-exposed services without KMS"
+      ],
+      "revocation_conditions": [
+        "When KMS integration is implemented"
+      ],
+      "status": "ACTIVE"
+    }
+  ],
+  "gates": [
+    {
+      "id": "SEC-001-GATE",
+      "gate_name": "Canonical Authority Check",
+      "result": "PASS",
+      "evidence": "Single SecurityManager per runtime verified"
+    },
+    {
+      "id": "SEC-002-GATE",
+      "gate_name": "Trust Boundary Check",
+      "result": "PASS",
+      "evidence": "7 trust domains defined"
+    },
+    {
+      "id": "SEC-012-GATE",
+      "gate_name": "KMS Integration Check",
+      "result": "CONDITIONAL_PASS",
+      "evidence": "In-memory keys functional; KMS required for production"
+    }
+  ],
+  "residual_risks": [
+    {
+      "finding_id": "SEC-012",
+      "risk_category": "Key Management",
+      "remaining_risk": "Key rotation requires runtime restart; no automatic rotation",
+      "mitigation_status": "ACCEPTED",
+      "owner": "SecurityAuthority"
+    }
+  ],
+  "certification_decision": "CERTIFIED",
+  "confidence": "HIGH",
+  "metadata": {
+    "generated_at": "2026-08-04T16:05:00Z",
+    "phase": "3.7.20-R",
+    "audit_phase": "3.7.20-I",
+    "repository_version": "07ddd26eed70f5143bf6d2067196ea5c35c1d557"
+  }
+}

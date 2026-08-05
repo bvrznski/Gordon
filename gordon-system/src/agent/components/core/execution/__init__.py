@@ -782,6 +782,15 @@ from .scheduler import (
     SchedulerState,
     ReadyQueue,
     WaitingQueue,
+    RetryQueue,
+    PriorityInheritanceInfo,
+    RunningTaskInfo,
+    TaskHandle,
+    
+    # Queue capacity exceptions (Phase 3.7.18-R)
+    ReadyQueueFull,
+    WaitingQueueFull,
+    RetryQueueFull,
 )
 
 __all__ = [
@@ -818,6 +827,11 @@ __all__ = [
     "DependencyError",
     "SchedulerError",
     
+    # Queue capacity exceptions (Phase 3.7.18-R)
+    "ReadyQueueFull",
+    "WaitingQueueFull",
+    "RetryQueueFull",
+    
     # Cleanup
     "CleanupCoordinator",
     
@@ -831,4 +845,8 @@ __all__ = [
     "SchedulerState",
     "ReadyQueue",
     "WaitingQueue",
+    "RetryQueue",
+    "PriorityInheritanceInfo",
+    "RunningTaskInfo",
+    "TaskHandle",
 ]

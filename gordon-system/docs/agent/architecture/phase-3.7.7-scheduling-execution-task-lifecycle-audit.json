@@ -1,0 +1,388 @@
+{
+  "phase": {
+    "number": "3.7.7",
+    "name": "Scheduling Execution Task Lifecycle"
+  },
+  "repository_info": {
+    "repository": "Gordon Autonomous Cognitive Agent System",
+    "branch": "main",
+    "starting_commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557"
+  },
+  "status": {
+    "overall": "PASS",
+    "release_blockers": [],
+    "certification_blockers": [
+      "Admission not validated in Scheduler.submit()",
+      "Retry logic not fully integrated"
+    ]
+  },
+  "scheduler": {
+    "authority": "single_canonical",
+    "owner": "execution subsystem",
+    "location": "src/agent/components/core/execution/scheduler.py",
+    "classes": ["Scheduler", "ReadyQueue", "WaitingQueue", "RetryQueue"],
+    "lifecycle_states": ["INITIALIZING", "RUNNING", "SHUTTING_DOWN", "STOPPED"],
+    "public_api": [
+      "submit(spec, admission_receipt_id=None, runtime_id=None)",
+      "run_one()",
+      "run_all(max_iterations=None)",
+      "cancel_task(task_id, reason=None)",
+      "cancel_all(reason=None)"
+    ],
+    "decision_authority": {
+      "priority_ordering": true,
+      "fifo_within_priority": true,
+      "dependency_resolution": true
+    },
+    "external_callers": ["Runtime bootstrap", "Operator commands"],
+    "config": {
+      "max_concurrent_tasks": 10,
+      "starvation_threshold_seconds": 30.0
+    }
+  },
+  "executor": {
+    "authority": "single_canonical",
+    "owner": "execution subsystem",
+    "location": "src/agent/components/core/execution/dispatcher.py",
+    "classes": ["ExecutionDispatcher", "ExecutorProtocol"],
+    "execution_api": [
+      "dispatch(decision, task_state=None)",
+      "cancel_dispatch(dispatch_id)"
+    ],
+    "boundaries": {
+      "scheduling_ownership": "Scheduler",
+      "execution_ownership": "ExecutorProtocol.execute()",
+      "exception_ownership": "Executor catches and transforms"
+    },
+    "worker_pool": {
+      "max_workers": 8,
+      "owner": "executor subsystem"
+    }
+  },
+  "task_lifecycle": {
+    "authority": "single_canonical",
+    "owner": "tasks subsystem",
+    "location": "src/agent/components/core/tasks/__init__.py",
+    "classes": ["TaskId", "TaskResult", "TaskSpec"],
+    "execution_states": [
+      "CREATED", "QUEUED", "WAITING", "READY", "RUNNING",
+      "COMPLETED", "FAILED", "TIMED_OUT", "CANCELLING", "CANCELLED"
+    ],
+    "lifecycle_states": [
+      "INITIALIZING", "READY", "STARTING", "RUNNING", "STOPPING", "STOPPED", "FAILED"
+    ],
+    "terminal_states": ["COMPLETED", "FAILED", "CANCELLED", "TIMED_OUT"],
+    "transition_rules_defined": true,
+    "immutable_terminal_states": true
+  },
+  "queues": [
+    {
+      "name": "ReadyQueue",
+      "owner": "Scheduler",
+      "type": "priority_fifo",
+      "capacity": "unbounded",
+      "ordering": "priority (lower=higher) + FIFO timestamp",
+      "mutation_api": ["push(spec)", "pop()", "peek()", "remove_task(task_id)"],
+      "starvation_tracking": true,
+      "boost_enabled": false
+    },
+    {
+      "name": "WaitingQueue",
+      "owner": "Scheduler",
+      "type": "dependency_tracking",
+      "capacity": "unbounded",
+      "ordering": "insertion_order (by dependency completion)",
+      "mutation_api": ["add(spec)", "remove(task_id)", "dependency_completed(completed_task_id, completed_priority)"],
+      "priority_inheritance": true
+    },
+    {
+      "name": "RetryQueue",
+      "owner": "Scheduler",
+      "type": "delayed_execution",
+      "capacity": "unbounded",
+      "ordering": "next_retry_time + priority",
+      "mutation_api": ["add(spec, delay)", "get_ready_tasks()"]
+    }
+  ],
+  "workers": [
+    {
+      "name": "WorkerPool workers",
+      "owner": "executor subsystem",
+      "location": "src/agent/components/core/executor/__init__.py",
+      "max_workers": 8,
+      "lifecycle_states": ["CREATED", "STARTING", "IDLE", "ASSIGNED", "EXECUTING", "CANCELLING", "STOPPING", "STOPPED"],
+      "bounded_concurrency": true
+    }
+  ],
+  "dispatch": {
+    "authority": "single_canonical",
+    "owner": "execution subsystem",
+    "classes": ["ExecutionDispatcher", "DispatchResult", "DispatchDecision"],
+    "dispatch_statuses": [
+      "PENDING", "VALIDATING", "PREPARING", "EXECUTING",
+      "COMPLETED", "FAILED", "CANCELLED"
+    ],
+    "dispatch_decisions": [
+      "ACCEPT", "ACCEPT_WITH_MODIFICATIONS",
+      "REJECT_RETRYABLE", "REJECT_TEMPORARY",
+      "REJECT_FINAL", "REJECT_STALE", "REJECT_TASK_TERMINAL",
+      "REJECT_EXECUTOR_UNAVAILABLE", "REJECT_RESOURCE_INVALID"
+    ],
+    "validation": true,
+    "executor_selection_verification": true
+  },
+  "priority": {
+    "levels": [
+      {"name": "CRITICAL", "value": 0},
+      {"name": "HIGH", "value": 1},
+      {"name": "NORMAL", "value": 2},
+      {"name": "LOW", "value": 3}
+    ],
+    "owner": "Scheduler (ReadyQueue)",
+    "representation": "enum with numeric values",
+    "source": "TaskSpec.priority field",
+    "mutation_allowed": false,
+    "aging": false,
+    "inversion_handling": true
+  },
+  "fairness": {
+    "framework_exists": true,
+    "location": "src/agent/components/core/resources/fairness.py",
+    "classes": ["FairnessAssessor", "FairnessKey", "FairnessPolicy"],
+    "policy_defined": true,
+    "enforcement_level": "configurable_threshold_only",
+    "starvation_threshold_seconds": 30.0,
+    "fairness_types": [
+      {"type": "priority_based", "enabled": true},
+      {"type": "weighted_fair", "enabled": false},
+      {"type": "round_robin", "enabled": false}
+    ]
+  },
+  "timeouts": [
+    {
+      "name": "execution_timeout",
+      "owner": "Scheduler",
+      "source": "TaskSpec.timeouts.execution",
+      "handler": "asyncio.wait_for() wrapper",
+      "implemented": true
+    },
+    {
+      "name": "queue_timeout",
+      "owner": "Scheduler (config)",
+      "source": "TaskSpec.timeouts.queue",
+      "handler": "not implemented",
+      "implemented": false
+    },
+    {
+      "name": "dependency_wait_timeout",
+      "owner": "Scheduler (config)",
+      "source": "TaskSpec.timeouts.dependency_wait",
+      "handler": "not implemented",
+      "implemented": false
+    }
+  ],
+  "retries": [
+    {
+      "policy_owner": "RetryPolicy in TaskSpec",
+      "default_max_attempts": 1,
+      "backoff_strategies": ["none", "fixed", "linear", "exponential"],
+      "retry_queue": "RetryQueue (owned by Scheduler)",
+      "retry_ordering": "FIFO within same priority",
+      "automatic_retry": true,
+      "integration_status": "partially_implemented"
+    }
+  ],
+  "cancellation": {
+    "authority": "CancellationSource",
+    "owner": "execution subsystem",
+    "location": "src/agent/components/core/execution/__init__.py",
+    "type": "cooperative",
+    "mechanism": "token.check() in task",
+    "propagation": "parent_to_child (children inherit parent state)",
+    "queue_tasks_cancelled_by_removal": true,
+    "running_tasks_cancelled_via_source": true
+  },
+  "failures": [
+    {
+      "kind": "TRANSIENT",
+      "category": "temporary condition",
+      "retryable": true,
+      "classification": "transient"
+    },
+    {
+      "kind": "TIMEOUT",
+      "category": "execution time exceeded",
+      "retryable": true,
+      "classification": "timeout"
+    },
+    {
+      "kind": "RESOURCE",
+      "category": "resource exhausted",
+      "retryable": "conditional",
+      "classification": "recoverable"
+    },
+    {
+      "kind": "NON_RECOVERABLE",
+      "category": "permanent failure",
+      "retryable": false,
+      "classification": "non_recoverable"
+    },
+    {
+      "kind": "CONFIGURATION",
+      "category": "invalid config (needs human fix)",
+      "retryable": false,
+      "classification": "non_recoverable"
+    },
+    {
+      "kind": "PROGRAMMING",
+      "category": "code error",
+      "retryable": false,
+      "classification": "non_recoverable"
+    }
+  ],
+  "deadlocks": [
+    {
+      "scenario": "Worker pool exhausted",
+      "risk_level": "medium",
+      "mitigation": "max_workers limit enforced",
+      "detected": true
+    },
+    {
+      "scenario": "Queue deadlock (no consumers)",
+      "risk_level": "low",
+      "mitigation": "run_one() consumes if tasks available",
+      "detected": true
+    }
+  ],
+  "livelocks": [
+    {
+      "scenario": "Retry storms on transient failure",
+      "risk_level": "medium",
+      "mitigation": "backoff_available_not_configured",
+      "detection": false
+    },
+    {
+      "scenario": "Priority inversion causing starvation",
+      "risk_level": "low",
+      "mitigation": "priority_fifo_ordering",
+      "detection": false
+    }
+  ],
+  "starvation": [
+    {
+      "threshold_configured": true,
+      "value_seconds": 30.0,
+      "active_enforcement": false,
+      "promotion_mechanism": "not implemented",
+      "risk_level": "medium"
+    }
+  ],
+  "invariants": {
+    "scheduler": [
+      {"id": "SCHEDULER-001", "description": "Single scheduler authority", "status": "PASS"},
+      {"id": "SCHEDULER-002", "description": "Deterministic scheduling", "status": "PASS"},
+      {"id": "SCHEDULER-003", "description": "Priority evaluation has one owner", "status": "PASS"},
+      {"id": "SCHEDULER-004", "description": "Fairness policy explicit", "status": "PARTIAL"},
+      {"id": "SCHEDULER-005", "description": "Queue ownership explicit", "status": "PASS"},
+      {"id": "SCHEDULER-006", "description": "Dispatch follows scheduling", "status": "PASS"},
+      {"id": "SCHEDULER-007", "description": "Workers don't bypass scheduler", "status": "PASS"},
+      {"id": "SCHEDULER-008", "description": "Dependencies respected", "status": "PASS"},
+      {"id": "SCHEDULER-009", "description": "Backpressure explicit", "status": "PARTIAL"},
+      {"id": "SCHEDULER-010", "description": "Starvation prevention documented", "status": "PARTIAL"}
+    ],
+    "task_lifecycle": [
+      {"id": "TASK-001", "description": "Single lifecycle authority", "status": "PASS"},
+      {"id": "TASK-002", "description": "Task identity never changes", "status": "PASS"},
+      {"id": "TASK-003", "description": "Task ownership explicit", "status": "PASS"},
+      {"id": "TASK-004", "description": "Transitions deterministic", "status": "PASS"},
+      {"id": "TASK-005", "description": "Terminal states immutable", "status": "PASS"},
+      {"id": "TASK-006", "description": "Completion occurs once", "status": "PASS"},
+      {"id": "TASK-007", "description": "Cancellation deterministic", "status": "PASS"},
+      {"id": "TASK-008", "description": "Retries preserve identity", "status": "PASS"},
+      {"id": "TASK-009", "description": "Cleanup executes once", "status": "PASS"},
+      {"id": "TASK-010", "description": "Diagnostics remain attached", "status": "PASS"}
+    ],
+    "execution": [
+      {"id": "EXECUTION-001", "description": "Single execution authority", "status": "PASS"},
+      {"id": "EXECUTION-002", "description": "Scheduling precedes execution", "status": "PASS"},
+      {"id": "EXECUTION-003", "description": "Dispatch precedes execution", "status": "PASS"},
+      {"id": "EXECUTION-004", "description": "Execution cannot bypass admission", "status": "PARTIAL"},
+      {"id": "EXECUTION-005", "description": "Execution cannot bypass scheduler", "status": "PASS"},
+      {"id": "EXECUTION-006", "description": "Resource ownership explicit", "status": "PASS"},
+      {"id": "EXECUTION-007", "description": "Exceptions preserve diagnostics", "status": "PASS"},
+      {"id": "EXECUTION-008", "description": "Cleanup always occurs", "status": "PASS"},
+      {"id": "EXECUTION-009", "description": "Retries are policy-driven", "status": "PARTIAL"},
+      {"id": "EXECUTION-010", "description": "Completion terminates execution", "status": "PASS"}
+    ],
+    "concurrency": [
+      {"id": "CONCURRENCY-001", "description": "Worker ownership explicit", "status": "PASS"},
+      {"id": "CONCURRENCY-002", "description": "No hidden worker pools", "status": "PASS"},
+      {"id": "CONCURRENCY-003", "description": "Shared state synchronized", "status": "PASS"},
+      {"id": "CONCURRENCY-004", "description": "Lock ownership explicit", "status": "PASS"},
+      {"id": "CONCURRENCY-005", "description": "No circular wait intentional", "status": "UNKNOWN"},
+      {"id": "CONCURRENCY-006", "description": "Resource contention observable", "status": "PASS"},
+      {"id": "CONCURRENCY-007", "description": "Parallel execution preserves correctness", "status": "PARTIAL"},
+      {"id": "CONCURRENCY-008", "description": "Thread lifecycle deterministic", "status": "PASS"}
+    ]
+  },
+  "tests": [
+    {
+      "name": "test_execution_phase_3_4.py",
+      "path": "gordon-system/tests/",
+      "coverage": ["TaskId", "Priority", "CancellationSource", "CleanupCoordinator", "ReadyQueue", "WaitingQueue", "TaskEventRecord"],
+      "status": "PASS"
+    }
+  ],
+  "findings": {
+    "critical": [],
+    "high": [
+      {
+        "id": "HIGH-001",
+        "title": "Priority inversion risk for dependencies",
+        "description": "Low-priority tasks can block high-priority dependent tasks without priority inheritance",
+        "recommendation": "Implement priority inheritance in WaitingQueue or deadlock detection"
+      },
+      {
+        "id": "HIGH-002",
+        "title": "Starvation not actively enforced",
+        "description": "30-second threshold exists but no active promotion mechanism",
+        "recommendation": "Implement starvation-based priority boost in run_one()"
+      },
+      {
+        "id": "HIGH-003",
+        "title": "Automatic retry not fully implemented",
+        "description": "RetryPolicy configured but Scheduler does not automatically retry failed tasks",
+        "recommendation": "Add retry loop in run_one() for tasks with max_attempts > 1"
+      }
+    ],
+    "medium": [
+      {
+        "id": "MEDIUM-001",
+        "title": "Admission integration incomplete",
+        "description": "Scheduler.submit() does not validate admission receipt before accepting task",
+        "recommendation": "Require AdmissionReceipt and validate in Scheduler.submit()"
+      },
+      {
+        "id": "MEDIUM-002",
+        "title": "Queue timeout not used",
+        "description": "ExecutionTimeouts.queue is configured but never checked",
+        "recommendation": "Check queue wait time and promote if threshold exceeded"
+      },
+      {
+        "id": "MEDIUM-003",
+        "title": "Priority inheritance incomplete",
+        "description": "Only WaitingQueue.dependency_completed() implements priority inheritance",
+        "recommendation": "Extend to all queue operations where dependencies are involved"
+      }
+    ],
+    "low": []
+  },
+  "validation": {
+    "git_status": {
+      "branch": "main",
+      "commit": "07ddd26eed70f5143bf6d2067196ea5c35c1d557"
+    },
+    "json_validation": true,
+    "production_code_unchanged": false
+  }
+}

@@ -1,0 +1,744 @@
+{
+  "repository_path": "/home/bvrznski/Gordon/gordon-system",
+  "discovered_at": 1785773760.6334188,
+  "version": "1.0.0",
+  "packages": [
+    {
+      "name": "agent",
+      "path": "src/agent",
+      "category": "unknown"
+    },
+    {
+      "name": "architecture",
+      "path": "src/agent/architecture",
+      "category": "infrastructure"
+    },
+    {
+      "name": "topology",
+      "path": "src/agent/architecture/topology",
+      "category": "infrastructure"
+    },
+    {
+      "name": "discovery",
+      "path": "src/agent/architecture/discovery",
+      "category": "infrastructure"
+    },
+    {
+      "name": "capability_map",
+      "path": "src/agent/architecture/capability_map",
+      "category": "infrastructure"
+    },
+    {
+      "name": "ownership",
+      "path": "src/agent/architecture/ownership",
+      "category": "infrastructure"
+    },
+    {
+      "name": "dependency_graph",
+      "path": "src/agent/architecture/dependency_graph",
+      "category": "infrastructure"
+    },
+    {
+      "name": "components",
+      "path": "src/agent/components",
+      "category": "unknown"
+    },
+    {
+      "name": "core",
+      "path": "src/agent/components/core",
+      "category": "unknown"
+    },
+    {
+      "name": "provenance",
+      "path": "src/agent/components/core/provenance",
+      "category": "unknown"
+    },
+    {
+      "name": "authority",
+      "path": "src/agent/components/core/authority",
+      "category": "unknown"
+    },
+    {
+      "name": "security",
+      "path": "src/agent/components/core/security",
+      "category": "unknown"
+    },
+    {
+      "name": "tasks",
+      "path": "src/agent/components/core/tasks",
+      "category": "unknown"
+    },
+    {
+      "name": "execution",
+      "path": "src/agent/components/core/execution",
+      "category": "execution"
+    },
+    {
+      "name": "observability",
+      "path": "src/agent/components/core/observability",
+      "category": "observability"
+    },
+    {
+      "name": "retry",
+      "path": "src/agent/components/core/retry",
+      "category": "unknown"
+    },
+    {
+      "name": "lineage",
+      "path": "src/agent/components/core/lineage",
+      "category": "unknown"
+    },
+    {
+      "name": "admission",
+      "path": "src/agent/components/core/admission",
+      "category": "unknown"
+    },
+    {
+      "name": "lifecycle",
+      "path": "src/agent/components/core/lifecycle",
+      "category": "kernel"
+    },
+    {
+      "name": "temporal",
+      "path": "src/agent/components/core/temporal",
+      "category": "unknown"
+    },
+    {
+      "name": "obligations",
+      "path": "src/agent/components/core/obligations",
+      "category": "unknown"
+    },
+    {
+      "name": "feature_flags",
+      "path": "src/agent/components/core/feature_flags",
+      "category": "unknown"
+    },
+    {
+      "name": "readiness",
+      "path": "src/agent/components/core/readiness",
+      "category": "unknown"
+    },
+    {
+      "name": "types",
+      "path": "src/agent/components/core/types",
+      "category": "infrastructure"
+    },
+    {
+      "name": "testing",
+      "path": "src/agent/components/core/testing",
+      "category": "testing"
+    },
+    {
+      "name": "evidence",
+      "path": "src/agent/components/core/testing/evidence",
+      "category": "testing"
+    },
+    {
+      "name": "fault_injection",
+      "path": "src/agent/components/core/testing/fault_injection",
+      "category": "testing"
+    },
+    {
+      "name": "environments",
+      "path": "src/agent/components/core/testing/environments",
+      "category": "testing"
+    },
+    {
+      "name": "validation",
+      "path": "src/agent/components/core/testing/validation",
+      "category": "testing"
+    },
+    {
+      "name": "data",
+      "path": "src/agent/components/core/testing/data",
+      "category": "testing"
+    },
+    {
+      "name": "certification",
+      "path": "src/agent/components/core/testing/certification",
+      "category": "testing"
+    },
+    {
+      "name": "quality",
+      "path": "src/agent/components/core/testing/quality",
+      "category": "testing"
+    },
+    {
+      "name": "verification",
+      "path": "src/agent/components/core/testing/verification",
+      "category": "testing"
+    },
+    {
+      "name": "fixtures",
+      "path": "src/agent/components/core/testing/fixtures",
+      "category": "testing"
+    },
+    {
+      "name": "doubles",
+      "path": "src/agent/components/core/testing/doubles",
+      "category": "testing"
+    },
+    {
+      "name": "engine",
+      "path": "src/agent/components/core/engine",
+      "category": "execution"
+    },
+    {
+      "name": "persistence",
+      "path": "src/agent/components/core/persistence",
+      "category": "unknown"
+    },
+    {
+      "name": "dependency",
+      "path": "src/agent/components/core/dependency",
+      "category": "infrastructure"
+    },
+    {
+      "name": "shutdown",
+      "path": "src/agent/components/core/shutdown",
+      "category": "unknown"
+    },
+    {
+      "name": "state",
+      "path": "src/agent/components/core/state",
+      "category": "runtime"
+    },
+    {
+      "name": "failure",
+      "path": "src/agent/components/core/failure",
+      "category": "unknown"
+    },
+    {
+      "name": "synchronization",
+      "path": "src/agent/components/core/synchronization",
+      "category": "runtime"
+    },
+    {
+      "name": "communication",
+      "path": "src/agent/components/core/communication",
+      "category": "unknown"
+    },
+    {
+      "name": "causality",
+      "path": "src/agent/components/core/causality",
+      "category": "unknown"
+    },
+    {
+      "name": "runtime",
+      "path": "src/agent/components/core/runtime",
+      "category": "runtime"
+    },
+    {
+      "name": "configuration",
+      "path": "src/agent/components/core/configuration",
+      "category": "runtime"
+    },
+    {
+      "name": "integrity",
+      "path": "src/agent/components/core/integrity",
+      "category": "recovery"
+    },
+    {
+      "name": "exceptions",
+      "path": "src/agent/components/core/exceptions",
+      "category": "infrastructure"
+    },
+    {
+      "name": "registry",
+      "path": "src/agent/components/core/registry",
+      "category": "runtime"
+    },
+    {
+      "name": "rollback",
+      "path": "src/agent/components/core/rollback",
+      "category": "unknown"
+    },
+    {
+      "name": "resources",
+      "path": "src/agent/components/core/resources",
+      "category": "unknown"
+    },
+    {
+      "name": "restart",
+      "path": "src/agent/components/core/restart",
+      "category": "unknown"
+    },
+    {
+      "name": "runtime_monitoring",
+      "path": "src/agent/components/core/runtime_monitoring",
+      "category": "runtime"
+    },
+    {
+      "name": "capabilities",
+      "path": "src/agent/components/core/capabilities",
+      "category": "unknown"
+    },
+    {
+      "name": "policies",
+      "path": "src/agent/components/core/policies",
+      "category": "unknown"
+    },
+    {
+      "name": "manager",
+      "path": "src/agent/components/core/manager",
+      "category": "execution"
+    },
+    {
+      "name": "performance",
+      "path": "src/agent/components/core/performance",
+      "category": "unknown"
+    },
+    {
+      "name": "operational",
+      "path": "src/agent/components/core/operational",
+      "category": "unknown"
+    },
+    {
+      "name": "executor",
+      "path": "src/agent/components/core/executor",
+      "category": "execution"
+    },
+    {
+      "name": "reconfiguration",
+      "path": "src/agent/components/core/reconfiguration",
+      "category": "runtime"
+    },
+    {
+      "name": "federation",
+      "path": "src/agent/components/core/federation",
+      "category": "unknown"
+    },
+    {
+      "name": "data_governance",
+      "path": "src/agent/components/core/data_governance",
+      "category": "unknown"
+    },
+    {
+      "name": "workers",
+      "path": "src/agent/components/core/workers",
+      "category": "unknown"
+    },
+    {
+      "name": "bootstrap",
+      "path": "src/agent/components/core/bootstrap",
+      "category": "runtime"
+    },
+    {
+      "name": "continuity",
+      "path": "src/agent/components/core/continuity",
+      "category": "unknown"
+    },
+    {
+      "name": "kernel",
+      "path": "src/agent/components/core/kernel",
+      "category": "kernel"
+    },
+    {
+      "name": "runtime_state",
+      "path": "src/agent/components/core/runtime_state",
+      "category": "runtime"
+    },
+    {
+      "name": "context",
+      "path": "src/agent/components/core/context",
+      "category": "runtime"
+    },
+    {
+      "name": "scheduling",
+      "path": "src/agent/components/core/scheduling",
+      "category": "runtime"
+    },
+    {
+      "name": "recovery_v2",
+      "path": "src/agent/components/core/recovery_v2",
+      "category": "recovery"
+    },
+    {
+      "name": "contracts",
+      "path": "src/agent/components/core/contracts",
+      "category": "infrastructure"
+    },
+    {
+      "name": "capabilities",
+      "path": "src/agent/capabilities",
+      "category": "unknown"
+    },
+    {
+      "name": "agency",
+      "path": "src/agent/capabilities/agency",
+      "category": "unknown"
+    },
+    {
+      "name": "personality",
+      "path": "src/agent/capabilities/personality",
+      "category": "unknown"
+    },
+    {
+      "name": "knowledge",
+      "path": "src/agent/capabilities/knowledge",
+      "category": "unknown"
+    },
+    {
+      "name": "action",
+      "path": "src/agent/capabilities/action",
+      "category": "unknown"
+    },
+    {
+      "name": "learning",
+      "path": "src/agent/capabilities/learning",
+      "category": "unknown"
+    },
+    {
+      "name": "evolution",
+      "path": "src/agent/capabilities/evolution",
+      "category": "unknown"
+    },
+    {
+      "name": "creativity",
+      "path": "src/agent/capabilities/creativity",
+      "category": "unknown"
+    },
+    {
+      "name": "cognition",
+      "path": "src/agent/capabilities/cognition",
+      "category": "unknown"
+    },
+    {
+      "name": "motivation",
+      "path": "src/agent/capabilities/motivation",
+      "category": "unknown"
+    },
+    {
+      "name": "systems",
+      "path": "src/agent/systems",
+      "category": "unknown"
+    },
+    {
+      "name": "perception",
+      "path": "src/agent/systems/perception",
+      "category": "unknown"
+    },
+    {
+      "name": "memory",
+      "path": "src/agent/systems/memory",
+      "category": "unknown"
+    }
+  ],
+  "modules_count": 619,
+  "authorities": [
+    {
+      "name": "KernelState",
+      "category": "Kernel",
+      "implementation": "gordon.system.components.core.kernel.KernelState"
+    },
+    {
+      "name": "LifecycleController",
+      "category": "Lifecycle",
+      "implementation": "gordon.system.components.core.lifecycle.LifecycleController"
+    },
+    {
+      "name": "ActivationState",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.ActivationState"
+    },
+    {
+      "name": "ResourceState",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.ResourceState"
+    },
+    {
+      "name": "RegistryPhase",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryPhase"
+    },
+    {
+      "name": "RegistrySnapshot",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistrySnapshot"
+    },
+    {
+      "name": "RegistrySealedError",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistrySealedError"
+    },
+    {
+      "name": "RegistryWriter",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryWriter"
+    },
+    {
+      "name": "RegistryReader",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryReader"
+    },
+    {
+      "name": "Registry",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.Registry"
+    },
+    {
+      "name": "_ContextManager",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state._ContextManager"
+    },
+    {
+      "name": "RuntimeState",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeState"
+    },
+    {
+      "name": "GuardManager",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.GuardManager"
+    },
+    {
+      "name": "RegistryRevision",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryRevision"
+    },
+    {
+      "name": "RuntimeStateStore",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeStateStore"
+    },
+    {
+      "name": "ActivationTransactionState",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.ActivationTransactionState"
+    },
+    {
+      "name": "RuntimeLifecycleCoordinator",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeLifecycleCoordinator"
+    },
+    {
+      "name": "LifecycleCoordinatorSnapshot",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.LifecycleCoordinatorSnapshot"
+    },
+    {
+      "name": "SignalState",
+      "category": "Runtime State",
+      "implementation": "gordon.system.components.core.runtime_state.SignalState"
+    },
+    {
+      "name": "RegistryEntry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RegistryEntry"
+    },
+    {
+      "name": "Registry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.Registry"
+    },
+    {
+      "name": "RegistrySnapshot",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RegistrySnapshot"
+    },
+    {
+      "name": "ComponentRegistry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.ComponentRegistry"
+    },
+    {
+      "name": "ServiceRegistry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.ServiceRegistry"
+    },
+    {
+      "name": "RuntimeRegistryEntry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RuntimeRegistryEntry"
+    },
+    {
+      "name": "RegistryMetadata",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RegistryMetadata"
+    },
+    {
+      "name": "RuntimeRegistry",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RuntimeRegistry"
+    },
+    {
+      "name": "RuntimeRegistrySnapshot",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RuntimeRegistrySnapshot"
+    },
+    {
+      "name": "RegistryObserver",
+      "category": "Registry",
+      "implementation": "gordon.system.components.core.registry.RegistryObserver"
+    },
+    {
+      "name": "ExecutionState",
+      "category": "Execution",
+      "implementation": "gordon.system.components.core.execution.ExecutionState"
+    },
+    {
+      "name": "TaskState",
+      "category": "Execution",
+      "implementation": "gordon.system.components.core.execution.TaskState"
+    },
+    {
+      "name": "CleanupCoordinator",
+      "category": "Execution",
+      "implementation": "gordon.system.components.core.execution.CleanupCoordinator"
+    },
+    {
+      "name": "SchedulerState",
+      "category": "Execution",
+      "implementation": "gordon.system.components.core.execution.SchedulerState"
+    },
+    {
+      "name": "RecurringTaskState",
+      "category": "Scheduler",
+      "implementation": "gordon.system.components.core.scheduling.RecurringTaskState"
+    },
+    {
+      "name": "ExecutionState",
+      "category": "Cancellation",
+      "implementation": "gordon.system.components.core.execution.ExecutionState"
+    },
+    {
+      "name": "TaskState",
+      "category": "Cancellation",
+      "implementation": "gordon.system.components.core.execution.TaskState"
+    },
+    {
+      "name": "CleanupCoordinator",
+      "category": "Cancellation",
+      "implementation": "gordon.system.components.core.execution.CleanupCoordinator"
+    },
+    {
+      "name": "SchedulerState",
+      "category": "Cancellation",
+      "implementation": "gordon.system.components.core.execution.SchedulerState"
+    },
+    {
+      "name": "ShutdownState",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.shutdown.ShutdownState"
+    },
+    {
+      "name": "ShutdownCoordinator",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.shutdown.ShutdownCoordinator"
+    },
+    {
+      "name": "ProcessExitCoordinator",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.shutdown.ProcessExitCoordinator"
+    },
+    {
+      "name": "ActivationState",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.ActivationState"
+    },
+    {
+      "name": "ResourceState",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.ResourceState"
+    },
+    {
+      "name": "RegistryPhase",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryPhase"
+    },
+    {
+      "name": "RegistrySnapshot",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RegistrySnapshot"
+    },
+    {
+      "name": "RegistrySealedError",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RegistrySealedError"
+    },
+    {
+      "name": "RegistryWriter",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryWriter"
+    },
+    {
+      "name": "RegistryReader",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryReader"
+    },
+    {
+      "name": "Registry",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.Registry"
+    },
+    {
+      "name": "_ContextManager",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state._ContextManager"
+    },
+    {
+      "name": "RuntimeState",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeState"
+    },
+    {
+      "name": "GuardManager",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.GuardManager"
+    },
+    {
+      "name": "RegistryRevision",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RegistryRevision"
+    },
+    {
+      "name": "RuntimeStateStore",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeStateStore"
+    },
+    {
+      "name": "ActivationTransactionState",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.ActivationTransactionState"
+    },
+    {
+      "name": "RuntimeLifecycleCoordinator",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.RuntimeLifecycleCoordinator"
+    },
+    {
+      "name": "LifecycleCoordinatorSnapshot",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.LifecycleCoordinatorSnapshot"
+    },
+    {
+      "name": "SignalState",
+      "category": "Shutdown",
+      "implementation": "gordon.system.components.core.runtime_state.SignalState"
+    },
+    {
+      "name": "SchemaRegistryId",
+      "category": "Configuration",
+      "implementation": "gordon.system.components.core.configuration.SchemaRegistryId"
+    },
+    {
+      "name": "SchemaRegistry",
+      "category": "Configuration",
+      "implementation": "gordon.system.components.core.configuration.SchemaRegistry"
+    },
+    {
+      "name": "ConfigurationSourceRegistry",
+      "category": "Configuration",
+      "implementation": "gordon.system.components.core.configuration.ConfigurationSourceRegistry"
+    }
+  ],
+  "metrics": {
+    "packages": 84,
+    "modules": 619,
+    "classes": 3549,
+    "functions": 319,
+    "protocols": 24,
+    "dataclasses": 1894,
+    "enums": 640
+  }
+}

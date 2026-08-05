@@ -576,6 +576,149 @@ class HealthAggregator:
             del self._state[subject]
 
 
+# =============================================================================
+# Health Report (Collection of Projections)
+# =============================================================================
+
+@dataclass(frozen=True)
+class HealthReport:
+    """
+    A collection of health projections for a specific scope.
+    
+    Usage:
+        report = HealthReport(
+            subject="runtime",
+            projections=[p1, p2, ...],
+            timestamp=time.monotonic()
+        )
+        
+        # Check overall status
+        if report.has_critical_issues:
+            # Handle critical issues
+            pass
+        
+        # Get projections by status
+        unhealthy = report.get_by_status(HealthStatus.UNHEALTHY)
+    
+    Args:
+        subject: What these health reports are about (entity_id, scope, etc.)
+        projections: List of HealthProjection instances
+        timestamp_utc: When the report was generated
+        monotonic_time: For ordering reports
+    """
+    
+    subject: str  # What these health reports are about
+    projections: List[HealthProjection]
+    timestamp_utc: float = field(default_factory=time.time)
+    monotonic_time: float = field(default_factory=time.monotonic)
+    
+    @property
+    def count(self) -> int:
+        """Return total number of projections."""
+        return len(self.projections)
+    
+    @property
+    def has_critical_issues(self) -> bool:
+        """Check if any projection is unhealthy or failed."""
+        return any(p.is_unhealthy for p in self.projections)
+    
+    @property
+    def overall_status(self) -> HealthStatus:
+        """
+        Determine overall status from projections.
+        
+        Priority: FAILED > UNHEALTHY > DEGRADED > UNKNOWN > STARTING > HEALTHY
+        """
+        if not self.projections:
+            return HealthStatus.UNKNOWN
+        
+        statuses = [p.overall_status for p in self.projections]
+        
+        # Check for any failures
+        if HealthStatus.FAILED in statuses:
+            return HealthStatus.UNHEALTHY
+        if HealthStatus.UNHEALTHY in statuses:
+            return HealthStatus.UNHEALTHY
+        if HealthStatus.DEGRADED in statuses:
+            return HealthStatus.DEGRADED
+        if HealthStatus.UNKNOWN in statuses:
+            return HealthStatus.UNKNOWN
+        if HealthStatus.STARTING in statuses:
+            return HealthStatus.STARTING
+        
+        # All healthy or stopped (we don't count stopped as healthy)
+        all_healthy = all(s == HealthStatus.HEALTHY for s in statuses)
+        return HealthStatus.HEALTHY if all_healthy else HealthStatus.UNKNOWN
+    
+    def get_by_status(self, status: HealthStatus) -> List[HealthProjection]:
+        """Get all projections with the specified status."""
+        return [p for p in self.projections if p.overall_status == status]
+    
+    def get_unhealthy_projections(self) -> List[HealthProjection]:
+        """Get all unhealthy or failed projections."""
+        return [
+            p for p in self.projections
+            if p.is_unhealthy
+        ]
+    
+    def to_serializable(self) -> Dict[str, Any]:
+        """Convert to a JSON-serializable dictionary."""
+        return {
+            "subject": self.subject,
+            "timestamp_utc": self.timestamp_utc,
+            "monotonic_time": self.monotonic_time,
+            "count": len(self.projections),
+            "has_critical_issues": self.has_critical_issues,
+            "overall_status": self.overall_status.value if hasattr(self.overall_status, 'value') else str(self.overall_status),
+            "projections": [p.to_serializable() for p in self.projections]
+        }
+    
+    @classmethod
+    def create(
+        cls,
+        subject: str,
+        projections: Optional[List[HealthProjection]] = None,
+        timestamp_utc: Optional[float] = None,
+        monotonic_time: Optional[float] = None
+    ) -> "HealthReport":
+        """
+        Create a new health report.
+        
+        Args:
+            subject: What these health reports are about
+            projections: List of HealthProjection instances
+            timestamp_utc: When the report was generated
+            monotonic_time: For ordering reports
+            
+        Returns:
+            A new HealthReport instance
+        """
+        return cls(
+            subject=subject,
+            projections=projections or [],
+            timestamp_utc=timestamp_utc or time.time(),
+            monotonic_time=monotonic_time or time.monotonic()
+        )
+    
+    @classmethod
+    def from_projections(cls, projections: List[HealthProjection]) -> "HealthReport":
+        """
+        Create a health report from a list of projections.
+        
+        The subject is inferred as 'runtime' if not specified in any projection.
+        
+        Args:
+            projections: List of HealthProjection instances
+            
+        Returns:
+            A new HealthReport instance
+        """
+        return cls.create(
+            subject="runtime",
+            projections=projections
+        )
+
+
 __all__ = [
     # Status values
     "HealthStatus",
@@ -593,4 +736,7 @@ __all__ = [
     
     # Aggregation
     "HealthAggregator",
+    
+    # Reports (collections)
+    "HealthReport",
 ]

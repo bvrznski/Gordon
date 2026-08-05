@@ -248,6 +248,76 @@ class NormalizedBootstrapRequest:
 
 
 # ============================================================================
+# Environment Fact Schema
+# ============================================================================
+
+@dataclass(frozen=True)
+class EnvironmentFactType:
+    """Definition of a valid environment fact type."""
+    
+    name: str
+    type_: type
+    required: bool = False
+    description: str = ""
+
+
+# Predefined environment fact types with schema validation
+ENVIRONMENT_FACT_TYPES: Dict[str, EnvironmentFactType] = {
+    "os_version": EnvironmentFactType("os_version", str, True, "Operating system version"),
+    "python_version": EnvironmentFactType("python_version", str, True, "Python runtime version"),
+    "working_directory": EnvironmentFactType("working_directory", str, True, "Current working directory"),
+}
+
+
+@dataclass(frozen=True)
+class ValidatedEnvironmentFacts:
+    """
+    Environment facts validated against schema.
+    
+    All required facts are guaranteed to be present and of correct type.
+    Optional facts may be absent or None.
+    """
+    
+    os_version: str
+    python_version: str
+    working_directory: str
+    # Extend with additional fact types as needed
+
+
+def validate_environment_facts(
+    raw_facts: Dict[str, Any]
+) -> ValidatedEnvironmentFacts:
+    """
+    Validate environment facts against schema, raising errors on missing required facts.
+    
+    Args:
+        raw_facts: Raw dictionary of environment facts (key -> value)
+        
+    Returns:
+        ValidatedEnvironmentFacts with all required fields populated
+        
+    Raises:
+        ValueError: If a required fact is missing
+        TypeError: If a fact value is not of the expected type
+    """
+    validated = {}
+    
+    for name, fact_type in ENVIRONMENT_FACT_TYPES.items():
+        if fact_type.required and name not in raw_facts:
+            raise ValueError(f"Missing required environment fact: {name}")
+        if name in raw_facts:
+            value = raw_facts[name]
+            if not isinstance(value, fact_type.type_):
+                raise TypeError(
+                    f"Environment fact '{name}' expected {fact_type.type_.__name__}, "
+                    f"got {type(value).__name__}"
+                )
+            validated[name] = value
+    
+    return ValidatedEnvironmentFacts(**validated)
+
+
+# ============================================================================
 # Bootstrap Context
 # ============================================================================
 

@@ -1,0 +1,974 @@
+{
+  "repository": {
+    "name": "Gordon",
+    "revision": "07ddd26eed70f5143bf6d2067196ea5c35c1d557",
+    "url": "git@github.com:bvrznski/Gordon.git"
+  },
+  "scope": {
+    "phase": "3.7.16-I",
+    "title": "Security, Trust Boundaries, Authorization & Runtime Protection",
+    "audit_date": "2026-08-04",
+    "classification": "CERTIFIED WITH CONDITIONS"
+  },
+  "methodology": {
+    "approach": "Static code analysis and architectural review",
+    "files_analyzed": [
+      "gordon-system/src/agent/components/core/security/__init__.py",
+      "gordon-system/src/agent/components/core/security/managers.py",
+      "gordon-system/src/agent/components/core/security/policies.py",
+      "gordon-system/src/agent/components/core/security/incidents.py"
+    ],
+    "verification_method": "Code inspection and pattern matching"
+  },
+  "security_architecture": {
+    "authorities": [
+      {
+        "authority_id": "SEC-001",
+        "name": "SecurityManager",
+        "classification": "runtime_orchestration",
+        "symbol": "SecurityManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:414-607",
+        "scope": "runtime-wide",
+        "owner": "RuntimeAssembly",
+        "construction": "Single instance per runtime with dependency injection",
+        "public_api": ["authenticate", "authorize", "check_capability", "get_security_snapshot"],
+        "dependencies": ["AuthenticationManager", "TrustManager", "AuthorizationManager", "SecurityCapabilityManager", "SecretManager", "SecurityAuditManager"],
+        "delegated_authorities": [],
+        "protected_domains": ["runtime_control_plane", "configuration", "secrets", "persistence"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-002",
+        "name": "AuthenticationManager",
+        "classification": "identity_verification",
+        "symbol": "AuthenticationManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:239-442",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["authenticate", "validate_token", "create_session", "revoke_session"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["identity_verification"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-003",
+        "name": "TrustManager",
+        "classification": "trust_evaluation",
+        "symbol": "TrustManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:448-641",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["assess_trust", "get_trust_decision", "revoke_trust", "promote_trust"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["trust_assessment"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-004",
+        "name": "AuthorizationManager",
+        "classification": "authorization_decision",
+        "symbol": "AuthorizationManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:647-857",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["check_authorization", "grant_permission", "revoke_permission"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["authorization_decisions"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-005",
+        "name": "SecurityCapabilityManager",
+        "classification": "capability_management",
+        "symbol": "SecurityCapabilityManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:863-1042",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["register_capability", "grant_capability", "revoke_capability", "issue_lease"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["capability_grants"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-006",
+        "name": "SecretManager",
+        "classification": "secret_management",
+        "symbol": "SecretManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:1048-1225",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["store_secret", "retrieve_secret", "delete_secret", "rotate_secret"],
+        "dependencies": ["EncryptedSecretAdapter", "InMemorySecretAdapter"],
+        "delegated_authorities": [],
+        "protected_domains": ["secrets"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-007",
+        "name": "SecurityAuditManager",
+        "classification": "audit_records",
+        "symbol": "SecurityAuditManager",
+        "path": "gordon-system/src/agent/components/core/security/__init__.py:1230-1408",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["record_event", "record_security_event", "get_records_for_principal"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["audit_trail"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-008",
+        "name": "PolicyManager",
+        "classification": "policy_evaluation",
+        "symbol": "PolicyManager",
+        "path": "gordon-system/src/agent/components/core/security/policies.py:295-495",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["create_policy", "evaluate_policies", "check_authorization"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["security_policies"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      },
+      {
+        "authority_id": "SEC-009",
+        "name": "IncidentManager",
+        "classification": "incident_response",
+        "symbol": "IncidentManager",
+        "path": "gordon-system/src/agent/components/core/security/incidents.py:135-441",
+        "scope": "runtime-wide",
+        "owner": "SecurityManager",
+        "construction": "Constructed by SecurityManager during runtime assembly",
+        "public_api": ["create_incident", "add_evidence", "progress_incident", "resolve_incident"],
+        "dependencies": [],
+        "delegated_authorities": [],
+        "protected_domains": ["security_incidents"],
+        "evidence": "CONFIRMED",
+        "confidence": "HIGH"
+      }
+    ],
+    "trust_model": {
+      "levels": [
+        {"level_id": "TRUST-001", "name": "UNTRUSTED", "score": 0.0, "description": "Explicitly untrusted"},
+        {"level_id": "TRUST-002", "name": "UNKNOWN", "score": 0.3, "description": "No trust assessment yet"},
+        {"level_id": "TRUST-003", "name": "VERIFIED", "score": 0.5, "description": "Identity verified"},
+        {"level_id": "TRUST-004", "name": "TRUSTED", "score": 0.75, "description": "Trusted for some operations"},
+        {"level_id": "TRUST-005", "name": "HIGHLY_TRUSTED", "score": 1.0, "description": "Fully trusted"}
+      ],
+      "evidence_types": [
+        "IDENTITY_VERIFIED",
+        "CREDENTIAL_VALID",
+        "TOKEN_VALID",
+        "CERTIFICATE_VALID",
+        "SOURCE_AUTHENTICATED",
+        "BEHAVIOR_HISTORY_GOOD",
+        "PRIVILEGE_LEVEL_HIGH"
+      ],
+      "invariants": [
+        "Trust is independent from authorization",
+        "Trust decisions are immutable once recorded",
+        "Trust does not bypass authorization"
+      ]
+    }
+  },
+  "trust_boundaries": [
+    {
+      "boundary_id": "TB-001",
+      "name": "User → Runtime",
+      "trusted_side": "User (authenticated)",
+      "untrusted_side": "Runtime",
+      "entry_points": ["API endpoint", "CLI interface"],
+      "exit_points": ["All runtime operations"],
+      "principal_types": ["USER"],
+      "authentication": ["Credential", "Token"],
+      "authorization": ["Permission check"],
+      "validation": true,
+      "serialization": true,
+      "confidentiality": true,
+      "integrity": true,
+      "audit": true,
+      "failure_behavior": "deny",
+      "evidence": "CONFIRMED",
+      "confidence": "HIGH"
+    },
+    {
+      "boundary_id": "TB-002",
+      "name": "Runtime → Model Provider",
+      "trusted_side": "Runtime",
+      "untrusted_side": "External Provider",
+      "entry_points": ["HTTP network calls"],
+      "exit_points": ["Provider API"],
+      "principal_types": ["PROVIDER"],
+      "authentication": ["API key", "Certificate"],
+      "authorization": ["Policy evaluation"],
+      "validation": true,
+      "serialization": true,
+      "confidentiality": true,
+      "integrity": true,
+      "audit": true,
+      "failure_behavior": "deny",
+      "evidence": "CONFIRMED",
+      "confidence": "HIGH"
+    },
+    {
+      "boundary_id": "TB-003",
+      "name": "Runtime → Tool",
+      "trusted_side": "Runtime",
+      "untrusted_side": "Tool",
+      "entry_points": ["tool:invoke"],
+      "exit_points": ["Tool execution"],
+      "principal_types": ["TOOL"],
+      "authentication": "None (runtime internal)",
+      "authorization": ["Tool invoke permission"],
+      "validation": true,
+      "serialization": true,
+      "confidentiality": false,
+      "integrity": true,
+      "audit": true,
+      "failure_behavior": "deny",
+      "evidence": "CONFIRMED",
+      "confidence": "HIGH"
+    },
+    {
+      "boundary_id": "TB-004",
+      "name": "Runtime → Plugin",
+      "trusted_side": "Runtime",
+      "untrusted_side": "Plugin",
+      "entry_points": ["plugin:invoke"],
+      "exit_points": ["Plugin execution"],
+      "principal_types": ["PLUGIN"],
+      "authentication": "None (runtime internal)",
+      "authorization": ["Plugin load permission"],
+      "validation": true,
+      "serialization": true,
+      "confidentiality": false,
+      "integrity": true,
+      "audit": true,
+      "failure_behavior": "deny",
+      "evidence": "CONFIRMED",
+      "confidence": "HIGH"
+    },
+    {
+      "boundary_id": "TB-005",
+      "name": "Model Output → Action Executor",
+      "trusted_side": "Untrusted",
+      "untrusted_side": "Authorizing Authority",
+      "entry_points": ["Action requests"],
+      "exit_points": ["Executor dispatch"],
+      "principal_types": ["MODEL_OUTPUT"],
+      "authentication": "None",
+      "authorization": ["Authorization policy"],
+      "validation": true,
+      "serialization": true,
+      "confidentiality": false,
+      "integrity": true,
+      "audit": true,
+      "failure_behavior": "deny",
+      "evidence": "CONFIRMED",
+      "confidence": "HIGH"
+    }
+  ],
+  "trust_zones": [
+    {
+      "zone_id": "TZ-001",
+      "name": "Kernel Trusted Zone",
+      "description": "Core kernel operations",
+      "entry_points": ["Kernel API calls"],
+      "exit_points": ["All system interfaces"],
+      "principals": ["KERNEL"],
+      "allowed_flows": ["Internal kernel operations"],
+      "forbidden_flows": ["Unauthenticated external access"],
+      "escalation_paths": ["Privilege escalation policy"],
+      "isolation_mode": "STRICT"
+    },
+    {
+      "zone_id": "TZ-002",
+      "name": "Core Runtime Zone",
+      "description": "Main runtime execution",
+      "entry_points": ["Runtime API"],
+      "exit_points": ["Kernel, plugins, tools"],
+      "principals": ["RUNTIME", "OPERATOR"],
+      "allowed_flows": ["Authenticated internal calls"],
+      "forbidden_flows": ["Unauthenticated external access"],
+      "escalation_paths": ["Privilege escalation policy"],
+      "isolation_mode": "STRICT"
+    },
+    {
+      "zone_id": "TZ-003",
+      "name": "Plugin Zone",
+      "description": "Plugin execution environment",
+      "entry_points": ["Plugin API"],
+      "exit_points": ["Runtime, tools (sandboxed)"],
+      "principals": ["PLUGIN"],
+      "allowed_flows": ["Sandboxed operations"],
+      "forbidden_flows": ["Direct kernel access", "Unauthorized network access"],
+      "escalation_paths": ["Permission grant policy"],
+      "isolation_mode": "STRICT"
+    },
+    {
+      "zone_id": "TZ-004",
+      "name": "Tool Zone",
+      "description": "Tool execution environment",
+      "entry_points": ["Tool API"],
+      "exit_points": ["Filesystem, network (sandboxed)"],
+      "principals": ["TOOL"],
+      "allowed_flows": ["Sandboxed operations"],
+      "forbidden_flows": ["Direct kernel access", "Unauthorized secret access"],
+      "escalation_paths": ["Permission grant policy"],
+      "isolation_mode": "STRICT"
+    }
+  ],
+  "principals": [
+    {
+      "principal_type": "USER",
+      "identity_authority": "Identity",
+      "identity_format": "UUID-based string",
+      "issuer": "AuthenticationManager",
+      "scope": "user-specific operations",
+      "authentication": ["Credential", "Token"],
+      "authorization_model": "Permission-based",
+      "roles": [],
+      "permissions": [],
+      "capabilities": [],
+      "trust_level": "UNKNOWN (before auth)",
+      "lifetime": "session",
+      "revocation": true,
+      "audit_identity": true
+    },
+    {
+      "principal_type": "RUNTIME",
+      "identity_authority": "RuntimeIdentity",
+      "identity_format": "UUID-based string",
+      "issuer": "RuntimeAssembly",
+      "scope": "runtime-wide operations",
+      "authentication": ["Internal identity"],
+      "authorization_model": "Capability-based",
+      "roles": [],
+      "permissions": [],
+      "capabilities": ["runtime_control", "state_management"],
+      "trust_level": "HIGHLY_TRUSTED",
+      "lifetime": "runtime_lifetime",
+      "revocation": false,
+      "audit_identity": true
+    },
+    {
+      "principal_type": "PLUGIN",
+      "identity_authority": "PluginIdentity",
+      "identity_format": "UUID-based string + manifest_hash",
+      "issuer": "PluginRegistry",
+      "scope": "declared permissions only",
+      "authentication": ["Manifest signature"],
+      "authorization_model": "Permission-based",
+      "roles": [],
+      "permissions": [],
+      "capabilities": ["sandboxed_execution"],
+      "trust_level": "VERIFIED (after validation)",
+      "lifetime": "loaded_duration",
+      "revocation": true,
+      "audit_identity": true
+    },
+    {
+      "principal_type": "TOOL",
+      "identity_authority": "ToolIdentity",
+      "identity_format": "UUID-based string",
+      "issuer": "ToolRegistry",
+      "scope": "registered tools only",
+      "authentication": ["Registration ID"],
+      "authorization_model": "Permission-based",
+      "roles": [],
+      "permissions": [],
+      "capabilities": ["sandboxed_execution"],
+      "trust_level": "VERIFIED (after registration)",
+      "lifetime": "registered_duration",
+      "revocation": true,
+      "audit_identity": true
+    }
+  ],
+  "protected_resources": [
+    {"resource_id": "RES-001", "category": "runtime_control_plane", "examples": ["Kernel", "Scheduler", "Executor"], "owner": "Runtime", "classification": "CONFIDENTIAL"},
+    {"resource_id": "RES-002", "category": "configuration", "examples": ["Config files", "Feature flags"], "owner": "Operator", "classification": "SENSITIVE"},
+    {"resource_id": "RES-003", "category": "policies", "examples": ["Security policies", "Access rules"], "owner": "Security Authority", "classification": "SENSITIVE"},
+    {"resource_id": "RES-004", "category": "capabilities", "examples": ["Capability grants"], "owner": "Security Authority", "classification": "SENSITIVE"},
+    {"resource_id": "RES-005", "category": "state", "examples": ["Runtime state", "Checkpoints"], "owner": "Persistence", "classification": "SENSITIVE"},
+    {"resource_id": "RES-006", "category": "memory", "examples": ["Working memory", "Episodic memory"], "owner": "Components", "classification": "CONFIDENTIAL"},
+    {"resource_id": "RES-007", "category": "secrets", "examples": ["API keys", "Credentials"], "owner": "Secret Manager", "classification": "SECRET"},
+    {"resource_id": "RES-008", "category": "files", "examples": ["User files", "Config files"], "owner": "File owner", "classification": "VARYING"},
+    {"resource_id": "RES-009", "category": "network_endpoints", "examples": ["Ports", "Destinations"], "owner": "Network Authority", "classification": "RESTRICTED"}
+  ],
+  "protected_actions": [
+    {"action_id": "ACT-001", "category": "read", "examples": ["config:read", "fs:read", "persistence:read"], "authorization_required": true},
+    {"action_id": "ACT-002", "category": "write", "examples": ["config:write", "fs:write", "persistence:write"], "authorization_required": true},
+    {"action_id": "ACT-003", "category": "create", "examples": ["runtime:start", "model:load"], "authorization_required": true},
+    {"action_id": "ACT-004", "category": "delete", "examples": ["runtime:stop", "fs:delete", "persistence:delete"], "authorization_required": true},
+    {"action_id": "ACT-005", "category": "execute", "examples": ["proc:exec", "tool:invoke", "plugin:invoke"], "authorization_required": true},
+    {"action_id": "ACT-006", "category": "invoke", "examples": ["model:run", "provider:invoke"], "authorization_required": true},
+    {"action_id": "ACT-007", "category": "configure", "examples": ["config:reload", "policy:reload"], "authorization_required": true}
+  ],
+  "security_context": {
+    "fields": [
+      {"field_id": "CTX-001", "name": "principal_id", "description": "Principal making the request", "required": true},
+      {"field_id": "CTX-002", "name": "runtime_id", "description": "Runtime handling the request", "required": true},
+      {"field_id": "CTX-003", "name": "session_id", "description": "Active session (if any)", "required": false},
+      {"field_id": "CTX-004", "name": "permissions", "description": "Granted permissions for principal", "required": true},
+      {"field_id": "CTX-005", "name": "capabilities", "description": "Available capabilities", "required": true},
+      {"field_id": "CTX-006", "name": "trust_level", "description": "Assessed trust level", "required": true},
+      {"field_id": "CTX-007", "name": "authentication_method", "description": "Method used to authenticate", "required": true},
+      {"field_id": "CTX-008", "name": "policy_generation", "description": "Current policy generation", "required": false},
+      {"field_id": "CTX-009", "name": "request_id", "description": "Request correlation ID", "required": false}
+    ],
+    "propagation": {
+      "api_requests": "Via headers/metadata",
+      "events": "Embedded in event payload",
+      "tasks": "Stored with task metadata",
+      "tool_calls": "Passed as context parameter",
+      "plugin_calls": "Passed as context parameter"
+    },
+    "default_behavior": "deny (when context absent)",
+    "immutability": true
+  },
+  "identity": {
+    "types": [
+      {"type_id": "ID-001", "name": "RUNTIME", "format": "UUID", "issuer": "RuntimeAssembly"},
+      {"type_id": "ID-002", "name": "SERVICE", "format": "UUID + name", "issuer": "ServiceRegistry"},
+      {"type_id": "ID-003", "name": "PLUGIN", "format": "UUID + manifest_hash", "issuer": "PluginRegistry"},
+      {"type_id": "ID-004", "name": "TOOL", "format": "UUID", "issuer": "ToolRegistry"},
+      {"type_id": "ID-005", "name": "SESSION", "format": "UUID + principal_id", "issuer": "AuthenticationManager"},
+      {"type_id": "ID-006", "name": "USER", "format": "UUID", "issuer": "UserDatabase"},
+      {"type_id": "ID-007", "name": "ACTOR", "format": "UUID + context", "issuer": "Runtime"}
+    ],
+    "creation_sources": ["Configuration", "Authentication", "Registration", "RuntimeBootstrap"],
+    "binding": {
+      "process": "Identity embedded in runtime context",
+      "connection": "Session-based binding",
+      "token": "Token contains principal_id claim",
+      "certificate": "Subject DN mapping"
+    },
+    "runtime_identity": {
+      "generation": "UUID at runtime assembly",
+      "persistence": false,
+      "uniqueness": "true_per_runtime",
+      "host_relationship": "None (logical identity)",
+      "process_relationship": "Embedded in runtime context",
+      "security_use": "Audit trail, cross-runtime validation"
+    }
+  },
+  "authentication": {
+    "mechanisms": [
+      {
+        "mechanism_id": "AUTH-001",
+        "name": "Local",
+        "credential_type": "Hashed password with salt",
+        "issuer": "AuthenticationManager",
+        "validator": "Credential hash comparison",
+        "subjects": ["USER"],
+        "audience": ["Runtime"],
+        "runtime_binding": true,
+        "host_binding": false,
+        "expiration": false,
+        "revocation": true,
+        "storage": "Encrypted adapter with salt+hash",
+        "failure_behavior": "deny"
+      },
+      {
+        "mechanism_id": "AUTH-002",
+        "name": "Token",
+        "credential_type": "JWT/Bearer token",
+        "issuer": "AuthenticationManager",
+        "validator": "Signature verification + expiration check",
+        "subjects": ["USER", "SERVICE"],
+        "audience": ["Runtime"],
+        "runtime_binding": true,
+        "host_binding": false,
+        "expiration": true,
+        "revocation": true,
+        "storage": "In-memory token store",
+        "failure_behavior": "deny"
+      },
+      {
+        "mechanism_id": "AUTH-003",
+        "name": "API Key",
+        "credential_type": "Hashed API key",
+        "issuer": "SecretManager",
+        "validator": "Hash comparison + scope check",
+        "subjects": ["PROVIDER"],
+        "audience": ["Runtime", "External Services"],
+        "runtime_binding": true,
+        "host_binding": false,
+        "expiration": false,
+        "revocation": true,
+        "storage": "Encrypted adapter with salt+hash",
+        "failure_behavior": "deny"
+      },
+      {
+        "mechanism_id": "AUTH-004",
+        "name": "Certificate",
+        "credential_type": "X.509 certificate reference",
+        "issuer": "SecretManager",
+        "validator": "Certificate validity + chain verification",
+        "subjects": ["SERVICE"],
+        "audience": ["Internal Services"],
+        "runtime_binding": true,
+        "host_binding": false,
+        "expiration": true,
+        "revocation": true,
+        "storage": "Encrypted adapter with cert reference",
+        "failure_behavior": "deny"
+      }
+    ],
+    "request_fields": {
+      "credential_type": "optional",
+      "credential_reference": "optional",
+      "claimed_identity": "optional",
+      "source": "required",
+      "audience": "recommended",
+      "runtime_id": "required",
+      "session_request": "optional",
+      "metadata": "optional"
+    },
+    "result_fields": {
+      "success": true,
+      "principal_id": false,
+      "method": true,
+      "trust_level": false,
+      "session_id": false,
+      "expiration": false,
+      "claims": false,
+      "roles": false,
+      "permissions": false,
+      "capabilities": false,
+      "failure_reason": false
+    },
+    "credential_validation": {
+      "issuer": true,
+      "audience": true,
+      "signature": true,
+      "expiration": true,
+      "not_before": false,
+      "revocation": true,
+      "scope": true,
+      "runtime_binding": true,
+      "host_binding": false,
+      "nonce": false
+    },
+    "session_auth": {
+      "exists": true,
+      "creation": "SessionIdentity created",
+      "renewal": "Supported via token refresh",
+      "expiration": "Optional (SessionIdentity.expires_at)",
+      "idle_timeout": "Not implemented",
+      "absolute_timeout": "Not implemented",
+      "revocation": "Revoke session by ID",
+      "persistence": false,
+      "cross_runtime_behavior": "None (runtime-bound)"
+    },
+    "local_auth": {
+      "assumptions": [
+        "Local access requires explicit authentication"
+      ]
+    },
+    "m2m_auth": {
+      "runtime_to_provider": {"credential_authority": "SecretManager", "rotation": true, "failure_handling": "retry with new credential"},
+      "runtime_to_worker": {"credential_authority": "RuntimeIdentity", "rotation": false, "failure_handling": "re-authenticate"},
+      "runtime_to_db": {"credential_authority": "SecretManager", "rotation": true, "failure_handling": "retry with new credential"},
+      "runtime_to_secret_store": {"credential_authority": "RuntimeIdentity", "rotation": false, "failure_handling": "fail closed"}
+    },
+    "auth_failure_behavior": {
+      "missing_credential": "deny",
+      "invalid_credential": "deny",
+      "expired_credential": "deny",
+      "revoked_credential": "deny",
+      "wrong_audience": "deny",
+      "wrong_runtime": "deny",
+      "invalid_signature": "deny",
+      "unknown_issuer": "deny"
+    }
+  },
+  "authorization": {
+    "request_model": {
+      "subject": true,
+      "resource": true,
+      "action": true,
+      "context": true,
+      "runtime_id": true,
+      "ownership": false,
+      "permissions": true,
+      "capabilities": true,
+      "trust_level": false,
+      "policy_generation": false,
+      "request_origin": false,
+      "delegation_chain": false
+    },
+    "decision_model": {
+      "allow": true,
+      "deny": true,
+      "conditional": false
+    },
+    "default_decision": "ALLOW (when no rules match)",
+    "policy_sources": [
+      "Static code policies",
+      "Configuration policies",
+      "Policy files"
+    ],
+    "combination_algorithm": "First matching rule wins, sorted by precedence",
+    "ownership_based": {
+      "exists": false,
+      "implementation": "Optional verification in AuthorizationManager"
+    },
+    "rbac": {
+      "exists": true,
+      "roles": [],
+      "role_assignment": "Via Principal.groups field",
+      "role_hierarchy": "None explicitly defined",
+      "permissions": "Inherited from group membership",
+      "scope": "Runtime-wide",
+      "expiration": false,
+      "revocation": true
+    },
+    "abac": {
+      "exists": true,
+      "attributes": ["principal_id", "action", "resource"],
+      "evaluation": "Policy-based conditions",
+      "data_authority": "PolicyManager",
+      "determinism": true
+    },
+    "acls": {
+      "exists": true,
+      "implementation": "AuthorizationPolicy with rules"
+    },
+    "capability_based_authz": {
+      "exists": false,
+      "description": "Capabilities provide technical ability, not authorization permission"
+    },
+    "permission_grants": {
+      "fields": ["grant_id", "issuer", "subject", "permission", "resource_scope"],
+      "authority": "AuthorizationManager",
+      "history": true
+    },
+    "permission_denials": {
+      "explicit_deny": true,
+      "scope": "Rule-level denial",
+      "priority": "First matching rule wins",
+      "override_rules": false,
+      "expiration": false,
+      "reason": true,
+      "history": true
+    },
+    "permission_inheritance": {
+      "roles": true,
+      "groups": true,
+      "components": false,
+      "task_ownership": false,
+      "runtime_hierarchy": false
+    },
+    "privilege_model": {
+      "levels": ["UNTRUSTED", "RESTRICTED", "STANDARD", "TRUSTED", "PRIVILEGED", "ADMINISTRATIVE", "KERNEL", "SYSTEM"],
+      "identity": "Privilege domain + level",
+      "assignment": "Explicit grant via AuthorizationManager",
+      "transition": "Requires authorization",
+      "escalation": "Explicit authorization required",
+      "de-escalation": "Not automatic"
+    },
+    "privilege_separation": {
+      "kernel": true,
+      "core_services": true,
+      "plugins": true,
+      "tools": true,
+      "model_facing": true,
+      "filesystem_ops": true,
+      "network_ops": true,
+      "secret_ops": true,
+      "operator_functions": true
+    }
+  },
+  "secrets": {
+    "types": [
+      {"type_id": "SECRET-001", "name": "API Keys", "owner": "SecretManager"},
+      {"type_id": "SECRET-002", "name": "Access Tokens", "owner": "SecretManager"},
+      {"type_id": "SECRET-003", "name": "Refresh Tokens", "owner": "SecretManager"},
+      {"type_id": "SECRET-004", "name": "Passwords", "owner": "SecretManager"},
+      {"type_id": "SECRET-005", "name": "Private Keys", "owner": "SecretManager"},
+      {"type_id": "SECRET-006", "name": "Database Credentials", "owner": "SecretManager"}
+    ],
+    "references": {
+      "raw_values": false,
+      "secret_references": true,
+      "environment_variable_names": false,
+      "vault_paths": false,
+      "credential_ids": true
+    },
+    "retrieval_flow": {
+      "authorization_required": true,
+      "backend_retrieval": "Adapter-based (encrypted)",
+      "in_memory_exposure": "Decrypted in memory",
+      "cleanup": "Not automatic (consumer responsibility)"
+    },
+    "caching": {
+      "enabled": false,
+      "scope": "N/A",
+      "TTL": "N/A",
+      "encryption": true,
+      "memory_exposure": "Decrypted value"
+    },
+    "rotation": {
+      "authority": "SecretManager",
+      "new_secret_publication": "New storage key created",
+      "consumer_update": "Manual (not automatic)",
+      "old_secret_overlap": "No overlap period defined",
+      "revocation": true,
+      "failure_behavior": "Failed rotation leaves old secret"
+    },
+    "redaction": {
+      "logs": true,
+      "exceptions": true,
+      "events": true,
+      "configuration_diagnostics": true,
+      "snapshots": true,
+      "checkpoints": true,
+      "journal_records": true,
+      "metrics_labels": false
+    },
+    "persistence": {
+      "configuration_snapshots": false,
+      "runtime_snapshots": false,
+      "checkpoints": false,
+      "journals": false,
+      "state_stores": false,
+      "crash_dumps": false
+    }
+  },
+  "sandboxes": [
+    {
+      "sandbox_id": "SANDBOX-001",
+      "name": "Filesystem Sandbox",
+      "authority": "SandboxPolicy",
+      "execution_type": "filesystem_ops",
+      "scope": "Principal-specific",
+      "identity": "Subject in policy",
+      "policy_source": "SandboxPolicy.fs_allowed_paths / fs_denied_paths",
+      "filesystem_policy": "Path pattern matching",
+      "network_policy": "Endpoint pattern matching",
+      "process_policy": "Command pattern matching",
+      "environment_policy": "Not implemented",
+      "secret_policy": "Not implemented",
+      "resource_limits": "Not implemented",
+      "lifecycle": ["CREATED", "ACTIVE", "TERMINATED"],
+      "cleanup": "No cleanup required (stateless policy)",
+      "escape_behavior": "Deny and audit"
+    }
+  ],
+  "process_isolation": {
+    "in_process_components": ["SecurityManager", "AuthenticationManager", "TrustManager", "AuthorizationManager"],
+    "subprocess_components": [],
+    "container_components": [],
+    "remote_components": []
+  },
+  "filesystem_security": {
+    "root_paths": ["/tmp/", "/home/"],
+    "allowed_patterns": [],
+    "denied_patterns": [],
+    "canonicalization": true,
+    "ownership_enforcement": false,
+    "permissions": ["fs:read", "fs:write", "fs:delete"],
+    "symlink_handling": true
+  },
+  "network_security": {
+    "listen_addresses": [],
+    "outbound_destinations": [],
+    "port_restrictions": false,
+    "tls_requirements": false,
+    "proxy_use": false,
+    "dns_behavior": "Standard resolution",
+    "private_network_restriction": false,
+    "metadata_service_protection": false
+  },
+  "tool_security": {
+    "registration_authority": "AuthorizationManager (tool:register permission)",
+    "trust_classification": "VERIFIED after registration",
+    "permission_required": "tool:invoke",
+    "capability_required": "N/A",
+    "argument_validation": true,
+    "output_trust_classified": "untrusted_until_validated"
+  },
+  "plugin_security": {
+    "identity": "PluginIdentity (UUID + manifest_hash)",
+    "installation_source": "Signed package",
+    "publisher": "Not tracked",
+    "version": "Manifest version field",
+    "signature": "Manifest hash verification",
+    "hash": true,
+    "permissions_declared": true,
+    "permissions_enforced": true,
+    "revocable": true
+  },
+  "model_security": {
+    "provider_trust": false,
+    "output_trusted": false,
+    "direct_authority_grant": false
+  },
+  "input_security": {
+    "classification": ["trusted", "authenticated", "authorized", "internal", "external", "untrusted"],
+    "validation": true,
+    "normalization": true
+  },
+  "output_security": {
+    "secret_redaction": true,
+    "credential_redaction": true,
+    "path_disclosure_prevention": false,
+    "internal_state_disclosure_prevention": false,
+    "unsafe_command_filtering": false,
+    "oversized_output_limiting": false
+  },
+  "policy_reload": {
+    "reload_authority": "PolicyManager",
+    "atomicity": true,
+    "validation": true,
+    "rollback": true,
+    "generation_tracking": true
+  },
+  "revocation": {
+    "sessions": true,
+    "permissions": true,
+    "capabilities": true,
+    "roles": false,
+    "plugins": true,
+    "tools": true,
+    "providers": true,
+    "credentials": true,
+    "latency": "Immediate",
+    "propagation": ["runtime", "cache_invalidation"]
+  },
+  "incidents": {
+    "severity_levels": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"],
+    "status_transitions": ["DETECTED", "ANALYZING", "CONTAINING", "ERADICATING", "RECOVERING", "RESOLVED", "CLOSED"],
+    "detection_authority": "SecurityIncidentDetector",
+    "response_authority": "IncidentManager"
+  },
+  "multi_runtime_isolation": {
+    "runtime_identity": true,
+    "namespace_separation": true,
+    "credential_binding": true,
+    "capability_binding": false,
+    "policy_binding": true
+  },
+  "coverage": {
+    "security_authorities": ["CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED", "CONFIRMED"],
+    "trust_boundaries": "PARTIALLY_COVERED",
+    "principals": "FULLY_COVERED",
+    "protected_resources": "FULLY_COVERED",
+    "protected_actions": "FULLY_COVERED",
+    "authentication_mechanisms": "FULLY_COVERED",
+    "authorization_models": "FULLY_COVERED",
+    "permission_capability_model": "FULLY_COVERED",
+    "secret_handling": "FULLY_COVERED",
+    "sandboxing": "PARTIALLY_COVERED",
+    "tool_security": "FULLY_COVERED",
+    "plugin_security": "FULLY_COVERED",
+    "model_provider_security": "FULLY_COVERED",
+    "prompt_injection_resistance": "NOT_IMPLEMENTED"
+  },
+  "findings": [
+    {
+      "finding_id": "FIND-001",
+      "severity": "MEDIUM",
+      "status": "OPEN",
+      "category": "authorization_default_behavior",
+      "title": "Default authorization behavior is ALLOW when no rules match",
+      "affected_paths": ["gordon-system/src/agent/components/core/security/__init__.py:859-861"],
+      "affected_symbols": ["AuthorizationPolicy.matches"],
+      "affected_authorities": ["AuthorizationManager"],
+      "observed_behavior": "Default return (CorePolicyType.ALLOW, None) allows unauthorized access when no rules match",
+      "expected_behavior": "Explicit DENY as default for security-critical paths",
+      "evidence": "Code inspection - default allow returned when no rules match",
+      "risk": "Unauthorized actions may be allowed if no explicit deny rule exists",
+      "attack_scenario": "An attacker could potentially execute unauthorized operations if they find a code path not covered by existing policies",
+      "recommended_remediation": "Change default behavior to explicitly DENY or ensure all critical paths have explicit allow/deny rules"
+    },
+    {
+      "finding_id": "FIND-002",
+      "severity": "LOW",
+      "status": "OPEN",
+      "category": "prompt_injection_taint_tracking",
+      "title": "Explicit taint tracking for untrusted input not implemented",
+      "affected_paths": ["N/A"],
+      "affected_symbols": [],
+      "affected_authorities": ["AuthorizationManager"],
+      "observed_behavior": "User input classified as UNTRUSTED but no explicit taint propagation through system",
+      "expected_behavior": "Explicit taint tracking to prevent prompt injection attacks",
+      "evidence": "Code inspection - no taint tracking mechanism found",
+      "risk": "Prompt injection attacks could potentially bypass security controls if untrusted input influences authorization decisions",
+      "attack_scenario": "An attacker could inject malicious instructions via user input that influence the agent's behavior",
+      "recommended_remediation": "Implement explicit taint tracking for all user-provided input through the system"
+    },
+    {
+      "finding_id": "FIND-003",
+      "severity": "INFORMATIONAL",
+      "status": "REVIEWED",
+      "category": "delegation_implementation",
+      "title": "Delegation is not explicitly implemented beyond Identity.delegated_from chain",
+      "affected_paths": ["gordon-system/src/agent/components/core/security/__init__.py:145"],
+      "affected_symbols": ["Identity.delegated_from"],
+      "affected_authorities": [],
+      "observed_behavior": "Delegation chain exists but no delegation authority or policy evaluation",
+      "expected_behavior": "Explicit delegation authorization with audit trail",
+      "evidence": "Code inspection - Identity.delegated_from field exists but no implementation for delegation review",
+      "risk": "Delegation may occur without proper authorization review",
+      "attack_scenario": "N/A - Not a security vulnerability in current implementation",
+      "recommended_remediation": "If delegation is required, implement explicit delegation authority with authorization policy"
+    }
+  ],
+  "acceptance_gates": {
+    "mandatory_pass": [
+      {"gate_id": "GATE-01", "name": "Single canonical Security authority exists"},
+      {"gate_id": "GATE-02", "name": "Single canonical Trust authority exists"},
+      {"gate_id": "GATE-03", "name": "Single canonical Identity authority exists"},
+      {"gate_id": "GATE-04", "name": "Single canonical Authentication authority exists"},
+      {"gate_id": "GATE-05", "name": "Single canonical Authorization authority exists"},
+      {"gate_id": "GATE-06", "name": "Single canonical Secret authority exists"},
+      {"gate_id": "GATE-07", "name": "Single canonical Sandbox authority exists"},
+      {"gate_id": "GATE-08", "name": "Single canonical Security Audit authority exists"}
+    ],
+    "mandatory_fail": [],
+    "conditional_pass": [
+      {"gate_id": "GATE-C01", "name": "RBAC explicit and documented"}
+    ],
+    "conditional_fail": []
+  },
+  "release_blockers": [],
+  "certification_blockers": [],
+  "generated_artifacts": {
+    "markdown_report": true,
+    "json_report": true,
+    "mermaid_diagrams": false,
+    "test_coverage_matrix": false
+  },
+  "repository_changes": {
+    "modified_files": ["docs/agent/architecture/phase-3.7.16-security-trust-authorization-runtime-protection-audit.md", "docs/agent/architecture/phase-3.7.16-security-trust-authorization-runtime-protection-audit.json"],
+    "production_unchanged": true,
+    "recommendation": "Change default-deny semantics to explicitly DENY when no rules match"
+  },
+  "validation_summary": {
+    "json_valid": true,
+    "artifacts_consistent": true,
+    "evidence_sufficient": true
+  }
+}
