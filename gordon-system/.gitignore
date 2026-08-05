@@ -1,60 +1,48 @@
-# Python
+# Python build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Cache directories
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
-# Virtual Environments
-venv/
+# Test coverage
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Environment files
+.env
+.venv/
 env/
-ENV/
-.venv
+venv/
 
-# IDE
-.idea/
+# IDE and editor files
 .vscode/
+.idea/
 *.swp
 *.swo
 *~
 
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-
-# Type checking
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Black
-.black
-
-# isort
-.isort.cfg
-
-# Logs
-*.log
-
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
+
+# Documentation build outputs
+_site/
+docs/_build/
+docs/_static/
+docs/_templates/
+
+# Generated reports
+reports/
+generated/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
