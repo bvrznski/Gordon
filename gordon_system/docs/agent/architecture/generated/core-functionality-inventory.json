@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "generator_version": "3.13.11",
+  "classification_algorithm_version": "1.0.0",
+  "repository_revision": "4fdd2e49",
+  "generated_at": "2026-08-07T05:15:00",
+  "classes": [],
+  "primary_functionality_groups": {
+    "ForCore": [
+      "FunctionalityMeta",
+      "FunctionalityMetadata",
+      "CoreFunctionalityRegistry",
+      "IntegrityVerifier",
+      "InterfaceVerification",
+      "DependencyVerification"
+    ],
+    "ForExecution": [],
+    "ForEntrypoint": [],
+    "ForArchitecture": [],
+    "ForNetworks": [],
+    "ForCapabilities": [],
+    "ForSystems": []
+  },
+  "secondary_roles": [
+    {
+      "role": "LifecycleParticipant",
+      "description": "Runtime role interface"
+    },
+    {
+      "role": "NetworkIntegrationParticipant",
+      "description": "Network integration interface"
+    },
+    {
+      "role": "ExecutionIntegrationParticipant",
+      "description": "Execution integration interface"
+    },
+    {
+      "role": "CapabilityIntegrationParticipant",
+      "description": "Capability integration interface"
+    },
+    {
+      "role": "SystemIntegrationParticipant",
+      "description": "System integration interface"
+    },
+    {
+      "role": "DiagnosticSource",
+      "description": "Observability role interface"
+    }
+  ],
+  "exemptions": [
+    {
+      "kind": "GENERIC_BASE",
+      "classes": [
+        "CoreFunctionality"
+      ]
+    },
+    {
+      "kind": "MARKER_DEFINITION",
+      "classes": [
+        "ForCore",
+        "ForExecution",
+        "ForEntrypoint",
+        "ForArchitecture",
+        "ForNetworks",
+        "ForCapabilities",
+        "ForSystems"
+      ]
+    },
+    {
+      "kind": "ENUM",
+      "classes": [
+        "ClassificationStatus",
+        "ClassificationSource",
+        "ClassificationRequirement",
+        "RegistryState"
+      ]
+    },
+    {
+      "kind": "EXCEPTION",
+      "classes": [
+        "FunctionalityError",
+        "FunctionalityResolutionError",
+        "MissingFunctionalityError",
+        "ConflictingFunctionalityError",
+        "FunctionalityOverrideError",
+        "InvalidFunctionalityMarkerError",
+        "FunctionalityExemptionError",
+        "FunctionalityRegistrationError",
+        "DuplicateFunctionalityRegistrationError",
+        "FunctionalityRegistrySealedError"
+      ]
+    }
+  ],
+  "legacy_classes": [
+    {
+      "name": "FunctionalityMeta",
+      "current_status": "no_marker",
+      "proposed_functionality": "ForCore",
+      "reason": "Metaclass infrastructure"
+    },
+    {
+      "name": "FunctionalityMetadata",
+      "current_status": "no_marker",
+      "proposed_functionality": "ForCore",
+      "reason": "Immutable metadata record"
+    },
+    {
+      "name": "CoreFunctionalityRegistry",
+      "current_status": "no_marker",
+      "proposed_functionality": "ForCore",
+      "reason": "Canonical registry system"
+    }
+  ],
+  "invalid_classes": [],
+  "ambiguous_classes": [],
+  "move_candidates": [],
+  "split_candidates": [],
+  "statistics": {
+    "total_core_classes": 84,
+    "classified_classes": 21,
+    "directly_classified_classes": 6,
+    "inherited_classified_classes": 15,
+    "exempt_classes": 39,
+    "neutral_classes": 24,
+    "legacy_classes": 3,
+    "ambiguous_classes": 0,
+    "invalid_classes": 0,
+    "marker_counts": {
+      "ForCore": 6,
+      "ForExecution": 0,
+      "ForEntrypoint": 12,
+      "ForArchitecture": 0,
+      "ForNetworks": 3,
+      "ForCapabilities": 2,
+      "ForSystems": 3
+    },
+    "registry_count": 1,
+    "reflection_apis": 4,
+    "public_contracts": 7,
+    "responsibility_profiles": 7,
+    "secondary_roles": 6
+  }
+}

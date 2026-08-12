@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="aea4be5c-13e0-4195-bb5e-097ea73ce386" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/gordon-system/docs/Architecture.md" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/docs/Architecture.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/AGENTS.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/architecture/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/__meta__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/architecture/__meta__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/__tree__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/architecture/__tree__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/authority/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/capability_map/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/capability_map/__meta__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/capability_map/__tree__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/dependency_graph/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/dependency_graph/__meta__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/dependency_graph/__tree__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/__meta__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/__tree__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/authority_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/dependency_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/import_graph.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/inventory.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/metrics_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/module_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/package_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/report_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/discovery/topology_manager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/duplicate_detection/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/ownership/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/architecture/ownership/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/snapshot/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/architecture/topology/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/architecture/topology/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/capabilities/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/capabilities/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/communication/commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/communication/commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/configuration/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/configuration/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/execution/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/execution/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/execution/dispatcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/execution/dispatcher.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/execution/scheduler.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/execution/scheduler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/failure/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/failure/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/failure/compensation.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/failure/compensation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/lifecycle/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/lifecycle/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/resources/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/resources/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/resources/monitoring.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/resources/monitoring.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/runtime/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/runtime/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/runtime/compute_scheduler.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/runtime/resource_allocator.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/security/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/security/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/state/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/gordon-system/src/agent/components/core/state/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/synchronization/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/components/core/temporal/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/__meta__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/__tree__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/memory/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/memory/__meta__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/memory/__tree__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/perception/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/perception/__meta__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gordon-system/src/agent/systems/perception/__tree__.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/home/bvrznski/Gordon" value="3HcW55OXRQYWD7WKIaCfA6OOrcN" />
+    </persistenceIdMap>
+  </component>
+  <component name="DBNavigator.Project.Workspace.Settings">
+    <assistant-settings>
+      <credential-settings>
+        <credentials />
+      </credential-settings>
+      <profile-settings>
+        <profiles />
+      </profile-settings>
+      <mcp-server-settings>
+        <workspace-integration value="false" />
+        <mcp-servers />
+        <mcp-tool-approvals />
+      </mcp-server-settings>
+    </assistant-settings>
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="1562" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3HcW4mdsXNvdIPYXxm3EPMkfe5P" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/bvrznski/Gordon",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-6fa658e1df1a-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.8665.369" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aea4be5c-13e0-4195-bb5e-097ea73ce386" name="Changes" comment="" />
+      <created>1786167650427</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1786167650427</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

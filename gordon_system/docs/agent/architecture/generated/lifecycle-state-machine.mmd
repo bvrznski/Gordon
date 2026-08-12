@@ -1,0 +1,47 @@
+# Lifecycle State Machine
+
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    
+    CREATED --> INITIALIZING: initialize()
+    CREATED --> FAILED: error
+    
+    INITIALIZING --> READY: ready()
+    INITIALIZING --> FAILED: error
+    
+    READY --> STARTING: start()
+    READY --> STOPPED: shutdown()
+    READY --> FAILED: error
+    
+    STARTING --> RUNNING: start()
+    STARTING --> STOPPING: stop()
+    STARTING --> FAILED: error
+    
+    RUNNING --> STOPPING: stop()
+    RUNNING --> FAILED: error
+    
+    STOPPING --> STOPPED: complete()
+    STOPPING --> FAILED: error
+    
+    STOPPED --> STARTING: restart()
+    STOPPED --> FAILED: error
+    
+    state FailedState <<fork>>
+    FAILED --> FailedState
+    
+    note right of CREATED
+        Initial state after entity creation
+    end note
+    
+    note right of RUNNING
+        Active execution state
+    end note
+    
+    note right of STOPPED
+        Clean shutdown complete
+    end note
+    
+    note right of FAILED
+        Terminal state - requires external recovery
+    end note
