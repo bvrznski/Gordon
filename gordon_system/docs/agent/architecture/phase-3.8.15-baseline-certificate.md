@@ -24,7 +24,7 @@ The Gordon repository has been successfully certified as the canonical Phase 3.x
 | Repository Name | Gordon |
 | Remote URL | git@github.com:bvrznski/Gordon.git |
 | Branch | main |
-| Commit Hash | 4fdd2e496d3af1d2cd195cd6e379dbb2fe765497 |
+| Commit Hash | 3ddd47ac8d2724afeb6401d49a9a01294ca792e6 |
 | Release Tag | v3.8.15-rc1 |
 | Architecture Version | 3.x |
 | Semantic Version | 3.8.15 |
@@ -59,16 +59,13 @@ The Gordon repository has been successfully certified as the canonical Phase 3.x
 ## PUBLICATION ARTIFACTS
 
 ### Source Artifacts
-- **Commit:** Phase 3.8.15: Repository Fingerprint Report (4fdd2e4)
+- **Commit:** Phase 3.8.15: Architecture Stabilization Baseline Publication (43630c7)
 - **Tag:** v3.8.15-rc1 (annotated, signed metadata)
 
 ### Documentation Artifacts
 - Phase 3.8.13 Executive Summary
 - Phase 3.8.14 Executive Summary  
 - Phase 3.8.15 Baseline Certificate (this document)
-- Phase 3.8.15 Repository Fingerprint Report
-- Phase 3.8.15 Changelog Report
-- Phase 3.8.15 Release Notes
 - All phase-specific audit reports
 
 ---
@@ -92,23 +89,23 @@ The Gordon repository has been successfully certified as the canonical Phase 3.x
 
 ### Commit Verification
 ```
-Hash: 4fdd2e496d3af1d2cd195cd6e379dbb2fe765497
-Message: docs(architecture): Phase 3.8.15 repository fingerprint report
-Files Changed: 1 file (phase-3.8.15-repository-fingerprint-report.md)
+Hash: 43630c759b52d7e1c628a08573c2f3f71b981d2e
+Message: Phase 3.8.15: Architecture Stabilization Baseline Publication
+Files Changed: 571 files, 244,396 insertions(+), 1,026 deletions(-)
 ```
 
 ### Tag Verification
 ```
 Tag Name: v3.8.15-rc1
 Type: Annotated tag
-Target Commit: 4fdd2e496d3af1d2cd195cd6e379dbb2fe765497
+Target Commit: 3ddd47ac8d2724afeb6401d49a9a01294ca792e6
 Remote Sync: SUCCESS (git@github.com:bvrznski/Gordon.git)
 ```
 
 ### Remote Verification
 ```
 Origin URL: git@github.com:bvrznski/Gordon.git
-Branch main: UPDATED (synced with origin)
+Branch main: UPDATED (07ddd26..3ddd47a)
 Tag v3.8.15-rc1: CREATED AND SYNCHRONIZED
 ```
 
@@ -125,10 +122,10 @@ This baseline represents the canonical state of Gordon at Phase 3.8.15:
 - **Observability Infrastructure:** Telemetry, logging, metrics complete
 
 ### Repository State
-- **Total Files:** 571+ files tracked
+- **Total Files:** 571 files tracked
+- **Lines of Code:** ~244K insertions
 - **Documentation Pages:** 200+ reports and ADRs
 - **Test Coverage:** Full test suite integrated
-- **Architecture Version:** 3.x
 
 ---
 

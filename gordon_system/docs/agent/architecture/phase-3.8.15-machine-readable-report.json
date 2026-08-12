@@ -2,9 +2,9 @@
   "phase": "3.8.15",
   "architecture_version": "3.x",
   "semantic_version": "3.8.15",
-  "repository_revision": "4fdd2e496d3af1d2cd195cd6e379dbb2fe765497",
+  "repository_revision": "3ddd47ac8d2724afeb6401d49a9a01294ca792e6",
   "branch": "main",
-  "commit": "4fdd2e496d3af1d2cd195cd6e379dbb2fe765497",
+  "commit": "3ddd47ac8d2724afeb6401d49a9a01294ca792e6",
   "tag": "v3.8.15-rc1",
   "remote": "git@github.com:bvrznski/Gordon.git",
   "working_tree": {
@@ -24,9 +24,9 @@
   "versioning": {
     "semantic_version": "3.8.15",
     "architecture_version": "3.x",
-    "repository_revision": "4fdd2e4",
+    "repository_revision": "3ddd47a",
     "release_identifier": "v3.8.15-rc1",
-    "timestamp": "2026-08-06T02:04:53Z"
+    "timestamp": "2026-08-06T01:59:00Z"
   },
   "documentation": {
     "readme_synced": true,
@@ -35,7 +35,7 @@
     "phase_reports_complete": true
   },
   "fingerprints": {
-    "git_commit_hash": "4fdd2e496d3af1d2cd195cd6e379dbb2fe765497",
+    "git_commit_hash": "3ddd47ac8d2724afeb6401d49a9a01294ca792e6",
     "tree_hash": "not_computed",
     "release_tag": "v3.8.15-rc1",
     "branch": "main",
@@ -60,10 +60,8 @@
   },
   "artifacts": [
     "phase-3.8.15-baseline-certificate.md",
-    "phase-3.8.15-changelog-report.md",
-    "phase-3.8.15-machine-readable-report.json",
-    "phase-3.8.15-release-notes.md",
-    "phase-3.8.15-repository-fingerprint-report.md"
+    "phase-3.8.13-machine-readable-report.json",
+    "phase-3.8.14-machine-readable-report.json"
   ],
   "baseline": {
     "canonical_baseline": true,
