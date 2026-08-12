@@ -34,7 +34,7 @@ Canonical Structure:
     src/agent/execution/
         ├── types/          # Neutral value types and identifiers
         ├── contracts/      # Core boundary protocols
-        ├── lifecycle/      # State machines and transitions
+        │                   # (Runtime state machines in core.lifecycle)
         ├── registry/       # Unit type registries
         ├── base.py         # Base classes and protocols
         ├── threads/        # Concrete thread implementations (future)
@@ -66,7 +66,6 @@ For detailed documentation, see the submodules and architecture documents.
 
 from .types import (
     ExecutionId,
-    ThreadId,
     LoopId,
     CycleId,
     StageId,
@@ -118,6 +117,7 @@ from .contracts import (
     CheckpointReference,
 )
 
+# Runtime state machines are defined in core.lifecycle and used via import
 from ..components.core.lifecycle import (
     ThreadLifecycleState,
     CycleState,
@@ -140,16 +140,80 @@ from .registry import (
 
 from .base import (
     ExecutionThread,
-    ExecutionLoop,
+    ExecutionLoop as BaseExecutionLoop,  # Legacy base class
     ExecutionCycle,
     ExecutionStage,
 )
 
+# Import Loop architecture (Phase 3.10.4) - behavioral policy controller
+try:
+    from .loops import (
+        # Modes
+        LoopMode,
+        # Decisions
+        DecisionType,
+        LoopDecision,
+        ContinueDecision,
+        SuspendDecision,
+        AwaitInputDecision,
+        CompleteDecision,
+        TerminateDecision,
+        RejectOutcomeDecision,
+        RequestRecoveryDecision,
+        DelegateDecision,
+        SwitchModeDecision,
+        ReplacePolicyDecision,
+        # Protocol and context
+        LoopPolicy,
+        LoopContext,
+        CycleOutcome,
+        LoopState,
+        # Coordinator
+        ExecutionLoop,  # Canonical Loop (replaces base.ExecutionLoop)
+        StandardPolicy,
+        # Errors
+        PolicyError,
+        InvalidModeTransitionError,
+    )
+except ImportError:
+    # Graceful fallback for import errors during development
+    pass
+
+# Import Thread architecture modules (Phase 3.10.3)
+try:
+    from .threads import (
+        ThreadId as ThreadIdV2,  # Semantic Thread identity
+        ThreadState,
+        ThreadLifecycleTransitionGraph as ThreadLifecyclGraph,
+        ThreadLifecycleReason,
+        ThreadLifecycleTransition,
+        ThreadLifecycleSnapshot,
+        ThreadDelta,
+        DeltaValidationResult,
+        RelationshipKind,
+        ThreadRelationship,
+        ParentChildRelationship,
+        ThreadRelationshipGraph,
+        ThreadSnapshot,
+    )
+except ImportError:
+    # Graceful fallback for import errors during development
+    pass
+
+
+# Exports from both sources (using alias to avoid conflict)
+from .types import (
+    ExecutionId as _ExecutionId,  # Keep original type export
+)
+
+from .loops import (
+    # Modes
+    LoopMode as _LoopMode,  # For type compatibility
+)
 
 __all__ = [
-    # Types
-    "ExecutionId",
-    "ThreadId",
+    # Types (original types from types module)
+    "ExecutionId",  # via alias to avoid conflict with threads.ThreadId
     "LoopId",
     "CycleId",
     "StageId",
@@ -221,4 +285,16 @@ __all__ = [
     "ExecutionLoop",
     "ExecutionCycle",
     "ExecutionStage",
+    
+    # Thread architecture (Phase 3.10.3) - semantic thread identity via threads module
+    "ThreadIdV2",  # Semantic ThreadId from threads module
+    "ThreadState",
+    "ThreadLifecycleTransitionGraph",
+    "ThreadLifecycleState",
+    "ThreadDelta",
+    "DeltaValidationResult",
+    "RelationshipKind",
+    "ThreadRelationship",
+    "ParentChildRelationship",
+    "ThreadSnapshot",
 ]

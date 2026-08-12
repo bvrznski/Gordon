@@ -305,8 +305,44 @@ Phase 3.10.1-B and beyond will implement:
 
 ## Migration Notes
 
-This phase creates a new `agent/execution/` directory from scratch.
-No existing components were modified during this foundational phase.
+### Phase 3.10.2 - Architecture Refinement (Current)
+
+Phase 3.10.1-A established the foundational execution package structure, but
+revealed an architectural issue: lifecycle state machines (`ThreadLifecycleState`,
+`CycleState`, etc.) were duplicated between `execution/lifecycle/` and
+`core/lifecycle/`.
+
+According to constitutional boundaries:
+- **Core** owns runtime mechanics including lifecycle state machines
+- **Execution** uses these through Core contracts, not as its own implementations
+
+### Resolution (Phase 3.10.2)
+
+| File | Change |
+|------|--------|
+| `src/agent/execution/lifecycle/__init__.py` | DELETED - duplicate runtime state machine definitions |
+| `src/agent/execution/__init__.py` | UPDATED - import from `core.lifecycle`, not local module |
+| Documentation | UPDATED - reflect Core ownership of lifecycle |
+
+### New Ownership Model
+
+```
+Runtime Lifecycle State Machines
+         │
+    ┌────┴────┐
+    ▼         ▼
+  Core     Execution (uses via contracts)
+   │           │
+   └── owns ───┘
+       (canonical)
+```
+
+### Verification Checklist (Phase 3.10.2)
+
+- [x] No duplicate lifecycle state machine definitions
+- [x] Execution imports from `core.lifecycle`, not local implementation
+- [x] All imports work correctly after cleanup
+- [x] Package structure matches canonical design
 
 Future phases will migrate existing execution-related code to use these
 foundations rather than duplicate the architecture.
