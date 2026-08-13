@@ -19,7 +19,7 @@ from typing import List, Dict, Tuple, Optional
 
 # Import readiness module - try direct import first
 try:
-    from gordon_system.src.agent.components.core.readiness.__init__ import (
+    from agent.components.core.readiness.__init__ import (
         ReadinessController,
         ReadinessStatus,
         ReadinessClass,

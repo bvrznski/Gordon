@@ -551,3 +551,22 @@ class RuntimeFailure:
     def _deserialize_metadata(data: Dict[str, Any]) -> Dict[str, Any]:
         """Deserialize metadata from storage/transmission."""
         return dict(data)
+
+
+# =============================================================================
+# Export all failure types
+# =============================================================================
+
+__all__ = [
+    # Enums (Classification)
+    "FailureKind",
+    "FailureSeverity",
+    "FailureDomain",
+    "FailureDisposition",
+    "RollbackMode",
+    "RollbackScope",
+    "RecoveryPolicy",
+    
+    # Runtime failure artifact
+    "RuntimeFailure",
+]

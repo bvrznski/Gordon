@@ -33,7 +33,7 @@ def runtime_id() -> str:
 def admission_controller(runtime_id: str) -> "AdmissionController":
     """Create an admission controller for testing."""
     try:
-        from gordon_system.src.agent.components.core.admission.__init__ import AdmissionController
+        from agent.components.core.admission.__init__ import AdmissionController
     except ImportError:
         try:
             from src.agent.components.core.admission import AdmissionController
@@ -53,7 +53,7 @@ class TestAdmissionStateTransitions:
     def test_initial_state_is_closed(self, runtime_id: str):
         """Test that initial admission state is CLOSED."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionStatus
             )
@@ -76,7 +76,7 @@ class TestAdmissionStateTransitions:
     def test_open_admission(self, runtime_id: str):
         """Test opening admission."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionStatus
             )
@@ -103,7 +103,7 @@ class TestAdmissionStateTransitions:
     def test_close_admission(self, runtime_id: str):
         """Test closing admission."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionStatus
             )
@@ -131,7 +131,7 @@ class TestAdmissionStateTransitions:
     def test_cannot_open_terminal_state(self, runtime_id: str):
         """Test that terminal states cannot be reopened."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionStatus
             )
@@ -169,7 +169,7 @@ class TestAdmissionGateEvaluation:
     def test_gates_execute_in_deterministic_order(self, runtime_id: str):
         """Test that gates are evaluated in a deterministic order."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionRequest,
                 AdmissionGate
@@ -203,7 +203,7 @@ class TestAdmissionGateEvaluation:
     def test_missing_evaluator_returns_unknown(self, runtime_id: str):
         """Test that missing gate evaluator returns unknown."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionRequest
             )
@@ -245,7 +245,7 @@ class TestWorkAcceptance:
     async def test_accept_request_when_all_gates_pass(self, runtime_id: str):
         """Test accepting a request when all gates pass."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionRequest
             )
@@ -288,7 +288,7 @@ class TestWorkAcceptance:
     async def test_reject_when_readiness_gate_fails(self, runtime_id: str):
         """Test rejecting when readiness gate fails."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionRequest
             )
@@ -317,7 +317,7 @@ class TestWorkAcceptance:
     def test_receipt_is_validated(self, runtime_id: str):
         """Test that admission receipts are validated correctly."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController
             )
         except ImportError:
@@ -351,7 +351,7 @@ class TestAdmissionMultiRuntime:
     def test_different_runtimes_independent(self):
         """Test that different runtimes have independent admission state."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController,
                 AdmissionStatus
             )
@@ -381,7 +381,7 @@ class TestAdmissionMultiRuntime:
     def test_boot_sessions_are_unique(self):
         """Test that each runtime has a unique boot session ID."""
         try:
-            from gordon_system.src.agent.components.core.admission.__init__ import (
+            from agent.components.core.admission.__init__ import (
                 AdmissionController
             )
         except ImportError:

@@ -142,110 +142,45 @@ class ExecutionThread(ABC):
 
 
 # =============================================================================
-# Base Loop
+# Base Loop (DEPRECATED - Use canonical Loop from execution.loops)
 # =============================================================================
+#
+# NOTE: This class is deprecated. The canonical Loop architecture has been
+# implemented in src/agent/execution/loops/__init__.py with proper separation of:
+#   - Behavioral policy (owned by Loop)
+#   - Semantic computation (owned by Capabilities) 
+#   - Runtime scheduling (owned by Core)
+#
+# Migration path: Replace imports from base.ExecutionLoop with:
+#   from agent.execution.loops import ExecutionLoop, StandardPolicy, LoopContext
 
 class ExecutionLoop(ABC):
     """
     Abstract base class for execution loops.
     
-    A loop is a policy function that maps thread state to next cycle choice.
+    DEPRECATED: This class uses an older API pattern.
+    Use src/agent/execution/loops/__init__.py instead.
     
-    Invariants:
-        L-001: Loops govern repetition but do not implement it directly
-        L-002: Loops must be stateless in behavior selection (state is input-only)
-        L-003: Loops may not own scheduling infrastructure
+    Canonical Loop Responsibilities:
+        - Behavioral policy: decide what to do next based on thread state + cycle outcome
+        - Cycle selection policy: choose which cycle to execute  
+        - Continuation policy: decide whether to continue, suspend, complete, etc.
+        - Interpretation of Cycle outcomes
+        - Policy-local adaptation state
     
-    Usage pattern:
-        1. Thread has current state and working memory
-        2. Loop.select_next(thread_state) returns next cycle class + policy
-        3. Core schedules the cycle
-        4. Loop.accept_result(result, thread_state) interprets outcome
-        5. Repeat until loop recommends termination/delegation
+    Canonical Loop Must NOT Own:
+        - Execute reasoning or planning algorithms (Capabilities do this)
+        - Invoke model runtimes directly (Core does this through Cycles)
+        - Own Thread continuity (Thread owns this)
+        - Mutate Thread state arbitrarily (Thread accepts deltas)
+        - Execute Stage logic (Cycles execute stages)
+        - Allocate runtime resources (Core does this)
     """
     
-    @abstractmethod
-    def select_next(
-        self,
-        thread: Any,  # ThreadView or similar read-only view
-        state: Dict[str, Any]
-    ) -> tuple:
-        """
-        Select the next cycle to execute.
-        
-        Args:
-            thread: Read-only view of thread state (identity, purpose, etc.)
-            state: Current working memory and context
-        
-        Returns:
-            Tuple of (CycleClass, Policy)
-            
-            Where Policy is one of:
-                - REPEAT: Run same or different cycle again
-                - TRANSITION: Move to different cycle type
-                - DELEGATE: Defer to another thread
-                - TERMINATE: Thread has completed
-        
-        Example returns:
-            (ConversationCycle, "repeat")  # Same cycle, continue conversation
-            (ReflectionCycle, "transition")  # Switch to reflection mode
-            (None, "terminate")  # Thread should terminate
-        """
-        ...
+    # This base class is kept for backward compatibility but should not be used
+    # for new implementations. All Loop functionality is now in:
+    #   src/agent/execution/loops/__init__.py
     
-    @abstractmethod
-    def accept_result(
-        self,
-        result: Any,  # CycleResult or similar
-        thread_state: Dict[str, Any]
-    ) -> str:
-        """
-        Interpret cycle execution result.
-        
-        This determines the loop's response to what just happened.
-        
-        Args:
-            result: The outcome from the executed cycle
-            thread_state: Current state after cycle completion
-        
-        Returns:
-            Policy for next action:
-                - "repeat": Run same cycle again (may have new parameters)
-                - "continue": Move to next cycle in sequence
-                - "wait": Wait for external event, don't schedule immediately
-                - "delegate": Defer to another unit
-                - "terminate": Thread should terminate
-        
-        Note: This method does NOT perform the action. It only recommends.
-              Core decides when and how to act on the recommendation.
-        """
-        ...
-    
-    @abstractmethod
-    def interruption_handler(self, reason: str) -> str:
-        """
-        Handle cycle interruption request.
-        
-        Args:
-            reason: Why was interruption requested?
-        
-        Returns:
-            Policy for handling interruption:
-                - "pause": Pause until resumed
-                - "skip": Skip current work, continue with next cycle
-                - "cleanup_then_terminate": Clean up and terminate thread
-        """
-        ...
-    
-    def get_repetition_count(self) -> int:
-        """Get current repetition count (if applicable)."""
-        return getattr(self, "_repetition_count", 0)
-    
-    def increment_repetition_count(self) -> None:
-        """Increment repetition counter."""
-        if not hasattr(self, "_repetition_count"):
-            self._repetition_count = 0
-        self._repetition_count += 1
 
 
 # =============================================================================

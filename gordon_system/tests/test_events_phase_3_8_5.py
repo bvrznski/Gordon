@@ -31,7 +31,7 @@ from typing import Dict, List, Optional
 # =============================================================================
 
 try:
-    from gordon_system.src.agent.components.core.events import (
+    from agent.components.core.events import (
         model,
         bus,
         dispatch,

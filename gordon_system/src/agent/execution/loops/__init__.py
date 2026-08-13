@@ -27,7 +27,7 @@ Canonical Flow:
         ↓
     Loop evaluates policy
         ↓
-    Loop produces LoopDecision
+    Loop produces ExecutionLoopDecision
         ↓
     Execution layer validates decision
         ↓
@@ -53,19 +53,50 @@ Package Structure:
 """
 
 from dataclasses import dataclass, field
-from typing import Protocol, Optional, List, Dict, Any, Union
+from typing import Protocol, Optional, List, Dict, Any, Union, Tuple
 from enum import Enum, auto
 
 # Import base types from threads for use in loops
 from ..threads.identity import ThreadId
+from ..types import (
+    ExecutionLoopDecisionId as LoopDecisionId,
+)
 
 
 # =============================================================================
-# Behavioral Modes (Policy State)
+# LoopKind (Semantic classification)
 # =============================================================================
 
 
-class LoopMode(Enum):
+class LoopKind(Enum):
+    """
+    Semantic classifications for Loops.
+    
+    These identify the behavioral policy category:
+        - CONVERSATION: ConversationThread behavior
+        - TASK: TaskThread behavior  
+        - PLANNING: PlanningLoop behavior (temporary replacement)
+        - MONITORING: MonitoringThread behavior
+        - RECOVERY: RecoveryLoop behavior (temporary replacement)
+        - IDLE: IdleThread behavior (internal threads)
+        - REFLECTION: ReflectionLoop behavior (internal threads)
+    """
+    
+    CONVERSATION = "conversation"
+    TASK = "task"
+    PLANNING = "planning"
+    MONITORING = "monitoring"
+    RECOVERY = "recovery"
+    IDLE = "idle"
+    REFLECTION = "reflection"
+
+
+# =============================================================================
+# Behavioral Modes (Policy-local state)
+# =============================================================================
+
+
+class BehavioralMode(Enum):
     """
     Behavioral modes that determine how a Loop makes decisions.
     
@@ -92,6 +123,14 @@ class LoopMode(Enum):
     AWAITING_INPUT = "awaiting_input"
     RECOVERY = "recovery"
     DELEGATED = "delegated"
+
+
+# =============================================================================
+# LoopMode (Backward compatibility alias)
+# =============================================================================
+
+# LoopMode is now BehavioralMode for clarity
+LoopMode = BehavioralMode
 
 
 # =============================================================================
@@ -125,7 +164,7 @@ class DecisionType(Enum):
 
 
 @dataclass(frozen=True)
-class LoopDecision:
+class ExecutionLoopDecision:
     """
     A decision produced by a Loop evaluation.
     
@@ -176,7 +215,7 @@ class LoopDecision:
 
 
 @dataclass(frozen=True)
-class ContinueDecision(LoopDecision):
+class ContinueDecision(ExecutionLoopDecision):
     """
     Decision to continue with a Cycle.
     
@@ -188,7 +227,7 @@ class ContinueDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class SuspendDecision(LoopDecision):
+class SuspendDecision(ExecutionLoopDecision):
     """
     Decision to suspend the Thread temporarily.
     
@@ -200,7 +239,7 @@ class SuspendDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class AwaitInputDecision(LoopDecision):
+class AwaitInputDecision(ExecutionLoopDecision):
     """
     Decision to await external input before continuing.
     """
@@ -210,7 +249,7 @@ class AwaitInputDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class CompleteDecision(LoopDecision):
+class CompleteDecision(ExecutionLoopDecision):
     """
     Decision that the Thread has completed successfully.
     """
@@ -220,7 +259,7 @@ class CompleteDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class TerminateDecision(LoopDecision):
+class TerminateDecision(ExecutionLoopDecision):
     """
     Decision to terminate the Thread abruptly.
     """
@@ -230,7 +269,7 @@ class TerminateDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class RejectOutcomeDecision(LoopDecision):
+class RejectOutcomeDecision(ExecutionLoopDecision):
     """
     Decision to reject current Cycle outcome and request another attempt.
     """
@@ -240,7 +279,7 @@ class RejectOutcomeDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class RequestRecoveryDecision(LoopDecision):
+class RequestRecoveryDecision(ExecutionLoopDecision):
     """
     Decision that semantic recovery is needed.
     """
@@ -250,7 +289,7 @@ class RequestRecoveryDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class DelegateDecision(LoopDecision):
+class DelegateDecision(ExecutionLoopDecision):
     """
     Decision to delegate work to a child Thread.
     """
@@ -260,7 +299,7 @@ class DelegateDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class SwitchModeDecision(LoopDecision):
+class SwitchModeDecision(ExecutionLoopDecision):
     """
     Decision to switch behavioral mode.
     """
@@ -270,7 +309,7 @@ class SwitchModeDecision(LoopDecision):
 
 
 @dataclass(frozen=True)
-class ReplacePolicyDecision(LoopDecision):
+class ReplacePolicyDecision(ExecutionLoopDecision):
     """
     Decision to replace the current policy with a different one.
     """
@@ -309,7 +348,7 @@ class LoopPolicy(Protocol):
         """Current behavioral mode of this policy."""
         ...
     
-    def decide(self, context: "LoopContext") -> LoopDecision:
+    def decide(self, context: "LoopContext") -> ExecutionLoopDecision:
         """
         Evaluate the current state and produce a decision.
         
@@ -317,7 +356,7 @@ class LoopPolicy(Protocol):
             context: Input containing Thread snapshot + cycle outcome
             
         Returns:
-            A single LoopDecision expressing what should happen next
+            A single ExecutionLoopDecision expressing what should happen next
             
         Raises:
             PolicyError: If evaluation fails (not a runtime error)
@@ -545,7 +584,7 @@ class ExecutionLoop:
         """Get current behavioral mode."""
         return self._state.current_mode
     
-    def evaluate(self, context: LoopContext) -> LoopDecision:
+    def evaluate(self, context: LoopContext) -> ExecutionLoopDecision:
         """
         Evaluate current state and produce a decision.
         
@@ -553,7 +592,7 @@ class ExecutionLoop:
             context: Thread snapshot + cycle outcome
             
         Returns:
-            A single LoopDecision
+            A single ExecutionLoopDecision
         """
         # Validate context
         if context.thread_id != self._thread_id:
@@ -720,7 +759,7 @@ class StandardPolicy(LoopPolicy):
     def current_mode(self) -> LoopMode:
         return self._current_mode
     
-    def decide(self, context: LoopContext) -> LoopDecision:
+    def decide(self, context: LoopContext) -> ExecutionLoopDecision:
         """
         Evaluate context and produce a decision.
         
@@ -775,7 +814,7 @@ class StandardPolicy(LoopPolicy):
             is_valid=True
         )
     
-    def _decide_from_outcome(self, outcome: CycleOutcome, thread_revision: int) -> LoopDecision:
+    def _decide_from_outcome(self, outcome: CycleOutcome, thread_revision: int) -> ExecutionLoopDecision:
         """Make a decision based on a Cycle outcome."""
         
         # Failed outcome
@@ -876,7 +915,7 @@ __all__ = [
     
     # Decisions
     "DecisionType",
-    "LoopDecision",
+    "ExecutionLoopDecision",
     "ContinueDecision",
     "SuspendDecision",
     "AwaitInputDecision",

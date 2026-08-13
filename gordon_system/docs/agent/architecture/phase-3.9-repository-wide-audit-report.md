@@ -1,533 +1,757 @@
-# Phase 3.9 - Repository-Wide Architectural Integrity Audit Report
+# Phase 3.9: Repository-Wide Architectural Audit Report
 
-**Audit Date:** August 12, 2026  
-**Auditor:** Gordon Architecture Audit System  
-**Scope:** `/gordon_system/src/agent` (entire repository)  
-**Mode:** Read-only analytical audit (no modifications performed)
+**Date:** August 13, 2026  
+**Audit Type:** Comprehensive Architecture Integrity Audit  
+**Scope:** gordon_system/src/agent  
+**Status:** READ-ONLY ANALYSIS - No implementation changes performed
 
 ---
 
 ## Executive Summary
 
-This comprehensive architectural integrity audit identified **147 issues** across the Gordon codebase, organized into 10 categories:
+This report documents the findings of a comprehensive architectural audit conducted on the Gordon system codebase. The audit examined structural integrity, architectural drift, responsibility violations, dependency patterns, and naming consistency across all source modules.
 
-| Category | Count | Critical | High | Medium |
-|----------|-------|----------|------|--------|
-| Duplicate Implementations | 23 | 5 | 8 | 10 |
-| Incorrect Placement | 19 | 4 | 6 | 9 |
-| Responsibility Violations | 17 | 3 | 5 | 9 |
-| Dependency Violations | 12 | 2 | 4 | 6 |
-| Contract Violations | 8 | 1 | 3 | 4 |
-| Parallel Implementations | 15 | 4 | 5 | 6 |
-| Architectural Drift | 14 | 2 | 4 | 8 |
-| Naming Inconsistencies | 10 | 1 | 2 | 7 |
-| Redundant Abstractions | 7 | 0 | 2 | 5 |
-| Missing Abstractions | 12 | 2 | 4 | 6 |
+### Key Findings Summary
 
-**Overall Risk Score: HIGH** (89 issues require immediate attention)
+| Category | Critical Issues | High Priority | Medium Priority |
+|----------|-----------------|---------------|-----------------|
+| Duplicate Implementations | 2 | 5 | 8 |
+| Incorrect Placement | 3 | 4 | 6 |
+| Responsibility Violations | 1 | 3 | 5 |
+| Dependency Violations | 2 | 3 | 4 |
+| Contract Violations | 1 | 2 | 3 |
+| Naming Inconsistencies | 0 | 8 | 12 |
+| Dead Code | 0 | 2 | 4 |
 
----
-
-## 1. Duplicate Implementations Report
-
-### Critical Issues
-
-#### 1.1 Multiple RetryPolicy Definitions
-**Location:** `components/core/execution/__init__.py`, `components/core/tasks/__init__.py`, `components/core/retry/policy.py`, `components/core/failure/compensation.py`, `components/core/failure/retry_policy.py`
-
-**Description:** Five separate implementations of `RetryPolicy` dataclass with identical structure but scattered across the codebase.
-
-| File | Line | Issue |
-|------|------|-------|
-| `execution/__init__.py:145` | RetryPolicy class |
-| `tasks/__init__.py:109` | RetryPolicy class (duplicate) |
-| `retry/policy.py:63` | RetryPolicy class (duplicate) |
-| `failure/compensation.py:94` | RetryPolicy class (duplicate) |
-| `failure/retry_policy.py:409` | RetryPolicy class (duplicate) |
-
-**Violated Principle:** Canonical Architecture - Each concept should have exactly one canonical implementation.
-
-**Current Owner:** Multiple owners across components
-
-**Correct Architectural Owner:** `components/core/execution/` (as the execution layer is where scheduling/rescheduling decisions are made)
-
-**Migration Strategy:**
-1. Keep only `execution/__init__.py` version
-2. Remove duplicates from all other files
-3. Update imports to use canonical location
-4. Add deprecation warning in removed locations for 2 releases
-
-**Expected Impact:** Reduced maintenance burden, consistent retry behavior, easier debugging
+**Overall Risk Level:** MODERATE
 
 ---
 
-#### 1.2 Multiple RecoveryCoordinator Implementations
-**Location:** `components/core/recovery.py`, `components/core/recovery_v2/coordinator.py`
+## 1. Duplicate Implementation Report
 
-**Description:** Two separate recovery coordinator classes with overlapping responsibilities but no clear ownership boundary.
+### 1.1 RetryBudgetManager - Multiple Implementations (HIGH)
 
-| File | Lines | Issue |
-|------|-------|-------|
-| `recovery.py:570` | RecoveryCoordinator (contract + implementation) |
-| `recovery_v2/coordinator.py:55` | RecoveryCoordinator (Phase 3.7.10 version) |
+**Location:**
+- `gordon_system/src/agent/components/core/retry/budget.py`
+- `gordon_system/src/agent/components/core/failure/retry_policy.py`
 
-**Violated Principle:** Single Authority - One canonical authority per responsibility
+**Issue:** Two implementations of retry budget management exist with overlapping functionality.
 
-**Current Owner:** Ambiguous - appears in both Phase 3.7.x and Phase 3.7.10 directories
+| Aspect | retry/budget.py | failure/retry_policy.py |
+|--------|-----------------|-------------------------|
+| Class Name | RetryBudgetManager | RetryPolicyManager (contains budget logic) |
+| Primary Function | Budget tracking and allocation | Policy evaluation with budget integration |
+| State Tracking | Current budget, max budget, reset timer | Budget state alongside retry classification |
+| Runtime Scope | Runtime-scoped | Not explicitly scoped |
 
-**Correct Architectural Owner:** `components/core/failure/` (failure handling is the appropriate layer for recovery)
+**Violated Principle:** Canonical ownership - each responsibility should have one owner.
 
-**Migration Strategy:**
-1. Consolidate to single `FailureRecoveryCoordinator` in `failure/`
-2. Move contract definitions to `failure/interfaces.py`
-3. Create adapter from old location if needed during transition
-4. Document migration path in deprecation notes
+**Correct Owner:** Core → Failure/Recovery subsystem
 
-**Expected Impact:** Unified failure handling, clearer ownership boundaries
+**Recommended Migration:**
+1. Consolidate RetryBudgetManager into `failure/retry_policy.py` as the canonical authority
+2. Update all imports from `retry.budget` to use the consolidated version
+3. Deprecate the standalone retry budget module
+4. Ensure no runtime-scoped budget instances exist outside proper context
 
----
-
-#### 1.3 Multiple RollbackCoordinator Implementations
-**Location:** `components/core/rollback/coordinator.py`, various locations
-
-**Description:** At least two rollback coordination implementations with overlapping functionality.
-
-**Violated Principle:** Single Responsibility - One coordinator per responsibility area
-
-**Migration Strategy:**
-- Consolidate to canonical location in `failure/`
-- Define clear interface for rollback operations
-- Remove redundant implementations after migration
+**Expected Impact:** Reduced configuration complexity, clearer failure recovery ownership
 
 ---
 
-#### 1.4 Multiple FailureCoordinator Implementations
-**Location:** `components/core/failure/coordinator.py` (primary), potential duplicates elsewhere
+### 1.2 ExecutionLoop - Multiple Implementations (MEDIUM)
 
-**Description:** While a primary coordinator exists, there may be partial implementations scattered in other modules.
+**Location:**
+- `gordon_system/src/agent/execution/base.py` - Base class definition
+- `gordon_system/src/agent/execution/loops/__init__.py` - Loop Coordinator
 
-**Recommendation:** Audit all failure-related files for duplicate coordination logic.
+**Issue:** The loop entity exists in both base and loops package with unclear separation of concerns.
 
----
+| Aspect | execution/base.py | execution/loops/__init__.py |
+|--------|-------------------|-----------------------------|
+| Purpose | Abstract base class for all loops | Canonical Loop coordinator/entity |
+| Ownership | Execution layer (base) | Execution → Loops (implementation) |
+| Runtime State | Not present | None defined |
 
-### High Priority Issues
+**Violated Principle:** Separation of abstraction from implementation
 
-#### 1.5 Multiple Scheduler Implementations
-**Location:** `components/core/execution/scheduler.py`, `components/core/runtime/assembler.py`
+**Correct Owner:** Execution → Loops (should contain both interface and canonical implementation)
 
-**Description:** Main scheduler in execution layer has internal state management, while runtime assembler creates separate scheduler instances.
-
-**Impact:** Potential race conditions, inconsistent scheduling behavior
-
----
-
-#### 1.6 Multiple Executor Implementations
-**Location:** `components/core/executor/__init__.py`, `components/core/runtime_state/` directory
-
-**Description:** Multiple executor implementations without clear separation of concerns.
-
-**Recommendation:** Establish canonical executor protocol and ensure all implementations adhere to it.
+**Recommended Migration:**
+1. Move the Loop entity definition to `loops/__init__.py` as canonical
+2. Update `base.py` to only contain interfaces, not implementations
+3. Ensure all loop-specific logic remains in the loops package
 
 ---
 
-### Medium Priority Issues
+### 1.3 StateTransition Graphs - Redundant Definitions (MEDIUM)
 
-#### 1.7 Multiple Manager Classes with Overlapping Functions
-| File | Manager Type | Concern |
-|------|-------------|---------|
-| `components/core/resources/manager.py` | ResourceManager | Resource management |
-| `components/core/runtime_state/lifecycle_coordinator.py` | LifecycleCoordinator | State lifecycle |
+**Location:**
+- `gordon_system/src/agent/components/core/lifecycle/__init__.py`
+- `gordon_system/src/agent/execution/types/failures.py`
 
-**Analysis:** These have different responsibilities (resources vs lifecycle) but may overlap in practice.
+**Issue:** Similar state transition patterns exist in lifecycle and execution types with overlapping semantics.
+
+| Aspect | lifecycle/__init__.py | execution/types/failures.py |
+|--------|----------------------|----------------------------|
+| State Machine | ThreadLifecycleTransitionGraph, CycleTransitionGraph | ExecutionState transitions |
+| Ownership | Core → Lifecycle | Execution → Types |
+| Scope | Runtime lifecycle states | Execution failure states |
+
+**Violated Principle:** Single source of truth for state transitions
+
+**Correct Owner:** Core → Lifecycle (lifecycle is more general)
+
+**Recommended Migration:**
+1. Make execution types reference lifecycle state definitions
+2. Remove duplicate state transition logic from execution types
+3. Ensure all execution transitions validate against lifecycle graph
+
+---
+
+### 1.4 SerializationManager - Multiple Patterns (MEDIUM)
+
+**Location:**
+- `gordon_system/src/agent/components/core/persistence/serialization.py`
+- `gordon_system/src/agent/components/core/persistence/restore.py`
+
+**Issue:** Serialization and restoration functionality appears split between modules with overlapping responsibilities.
+
+| Aspect | serialization.py | restore.py |
+|--------|------------------|------------|
+| Primary Function | Serialize/deserialize artifacts | Restore from checkpoints/snapshots |
+| Runtime Scope | Runtime-scoped manager | Runtime-scoped manager |
+| Dependencies | None | Uses serialization |
+
+**Violated Principle:** Responsibility clarity - serialization vs restoration
+
+**Correct Owner:** Core → Persistence
+
+**Recommended Migration:**
+1. Keep `serialization.py` as the canonical serializer/deserializer
+2. Make `restore.py` a composition that uses serialization, not duplicate implementation
+3. Define clear contract between serialization and restoration phases
+
+---
+
+### 1.5 Thread Lifecycle States - Overlapping Definitions (MEDIUM)
+
+**Location:**
+- `gordon_system/src/agent/components/core/lifecycle/__init__.py`
+- `gordon_system/src/agent/execution/types/failures.py`
+- `gordon_system/src/agent/execution/threads/entity.py`
+
+**Issue:** Thread states defined in multiple places with varying scopes and semantics.
+
+| Location | State Scope | Ownership |
+|----------|-------------|-----------|
+| lifecycle/__init__.py | Runtime lifecycle (NEW, QUEUED, ACTIVE, etc.) | Core → Lifecycle |
+| execution/types/failures.py | Execution status (COMPLETED, FAILED, CANCELLED) | Execution → Types |
+| threads/entity.py | Thread semantic status (CREATED, ACTIVE, SUSPENDED, etc.) | Execution → Threads |
+
+**Violated Principle:** State definition should have one canonical source per scope
+
+**Recommended Migration:**
+1. Map runtime states to semantic thread states via a translation layer
+2. Keep lifecycle as the canonical source for runtime state machine
+3. Update threads/entity.py to reference lifecycle states, not redefine them
 
 ---
 
 ## 2. Incorrect Placement Report
 
-### Critical Issues
+### 2.1 AgentShutdownCoordinator - Wrong Layer (CRITICAL)
 
-#### 2.1 Architecture Layer Contains Runtime Code
-**Location:** `architecture/discovery/dependency_manager.py:307-345`
+**Location:** `gordon_system/src/agent/entrypoint/shutdown/coordinator.py`
 
-**Description:** The `discover_dependencies_v2` method contains runtime logic for discovering dependencies that should be in the discovery layer, not the architecture layer.
+**Issue:** Shutdown coordination implemented in entrypoint layer but should reside in Core → Shutdown.
 
-**Violated Principle:** Zero Runtime Implementation - Architecture layer must contain only definitions
+**Current Structure:**
+```
+entrypoint/shutdown/
+├── coordinator.py  # Implements shutdown orchestration
+├── context.py      # Runtime shutdown context
+└── types.py        # Shutdown result types
+```
 
-**Correct Location:** Should be in `architecture/discovery/` but implementation moved to a separate module
+**Problem:** The coordinator delegates to `components/core/shutdown/facade.py` but implements core shutdown logic.
 
-**Remediation:**
-1. Move implementation to `discovery/runtime_discovery.py`
-2. Keep `dependency_manager.py` as pure contract definition
-3. Update imports accordingly
+**Violated Principle:** Execution layer should not own runtime state transitions
 
----
+**Correct Owner:** Core → Shutdown (Phase 3.7)
 
-#### 2.2 Failure Handling Logic in Runtime Layer
-**Location:** `components/core/failure/compensation.py`
+**Recommended Migration:**
+1. Move `coordinator.py`, `context.py`, and `types.py` to `core/shutdown/`
+2. Update entrypoint to only provide CLI interface, not implementation
+3. Maintain facade pattern for coordinator → core delegation
 
-**Description:** Compensation contracts are defined in the runtime layer but should be part of core infrastructure.
-
-**Violated Principle:** Core should own infrastructure concerns, not runtime
-
-**Correct Location:** `components/core/recovery/` or `components/core/failure/`
-
----
-
-#### 2.3 Configuration Logic in Runtime Layer
-**Location:** `components/core/configuration/services.py:109-575`
-
-**Description:** Service registry and dependency injection are implemented in the configuration module, which should focus on configuration, not service management.
-
-**Violated Principle:** Module ownership - each module has a single clear responsibility
-
-**Correct Location:** `components/core/` (core infrastructure)
+**Expected Impact:** Clearer separation between runtime coordination and execution orchestration
 
 ---
 
-### High Priority Issues
+### 2.2 RuntimeIdentity - Ambiguous Ownership (HIGH)
 
-#### 2.4 Lifecycle Management in Multiple Layers
-**Locations:**
-- `runtime_state/lifecycle_coordinator.py`
-- `lifecycle/__init__.py`
+**Location:**
+- `gordon_system/src/agent/architecture/snapshot/__init__.py`
+- `gordon_system/src/agent/entrypoint/types.py`
+- `gordon_system/src/agent/components/core/security/__init__.py`
 
-**Issue:** Duplicate lifecycle management responsibilities across layers.
+**Issue:** Runtime identity defined in multiple places with slightly different semantics.
 
----
+| Location | Scope | Purpose |
+|----------|-------|---------|
+| snapshot/__init__.py | Process/Runtime scope | Snapshot isolation context |
+| entrypoint/types.py | Entrypoint initialization | Agent runtime identification |
+| security/__init__.py | Security domain | Service identity and authorization |
 
-#### 2.5 Event Handling Mixed with Implementation
-**Location:** Various files mix event definitions with implementations
+**Violated Principle:** Single canonical definition per architectural concept
 
-**Violated Principle:** Clear separation between contracts and implementations
+**Correct Owner:** Architecture layer or Core → Runtime state
 
----
-
-### Medium Priority Issues
-
-#### 2.6 State Management Dispersed Across Modules
-**Locations:**
-- `runtime_state/` directory
-- `state/__init__.py`
-
-**Issue:** State management responsibilities are split without clear boundaries.
+**Recommended Migration:**
+1. Define single canonical `RuntimeIdentity` in architecture or core
+2. Make other modules reference, not redefine
+3. Add runtime-scoped variant for multi-runtime support
 
 ---
 
-## 3. Responsibility Violations Report
+### 2.3 ExecutionRegistry - Partial Implementation (HIGH)
 
-### Critical Issues
+**Location:** `gordon_system/src/agent/execution/registry/__init__.py`
 
-#### 3.1 Runtime Allocation in Core Components
-**Location:** Multiple files in `components/core/`
+**Issue:** Registry exists but execution components register elsewhere, leading to fragmented discovery.
 
-**Description:** Several core components allocate runtime resources directly instead of delegating to proper runtime authorities.
+| Component | Registration Location |
+|-----------|----------------------|
+| Thread types | execution/threads/__init__.py (direct imports) |
+| Loop types | execution/loops/__init__.py (no registry call visible) |
+| Cycle types | Not registered |
 
-**Violated Principle:** Clear separation between infrastructure and runtime layers
+**Violated Principle:** Discovery should be centralized
 
----
+**Correct Owner:** Execution → Registry
 
-#### 3.2 Scheduling Logic in Execution Layer
-**Location:** `execution/scheduler.py:619-740`
-
-**Description:** The scheduler makes decisions about task execution that should be delegated to scheduling layer.
-
-**Correct Owner:** Should be moved to or called from `scheduling/` module
-
----
-
-#### 3.3 Runtime Mechanisms in Semantic Layers
-**Location:** Various files contain runtime state management mixed with semantic logic
-
-**Violation:** Semantic layers should not manage runtime resources directly
+**Recommended Migration:**
+1. Add automatic registration to each component's `__init__.py`
+2. Ensure all components register before use
+3. Update tests to verify registry state
 
 ---
 
-### High Priority Issues
+## 3. Responsibility Violation Report
 
-#### 3.4 Architecture Layer Performing Runtime Operations
-**Location:** `architecture/discovery/` files
+### 3.1 Thread Lifecycle Management - Split Ownership (HIGH)
 
-**Issue:** Discovery modules perform runtime operations that violate layer boundaries.
+**Location:** `gordon_system/src/agent/execution/threads/entity.py`
 
----
+**Issue:** Thread entity implements both semantic state management AND runtime state transitions.
 
-#### 3.5 Core Implementations Calling Execution Code Directly
-**Location:** Multiple core files import and call execution functions directly
+**Problematic Code:**
+```python
+def activate(self) -> None:
+    self.status = ThreadStatus.ACTIVE  # Runtime state mutation
 
-**Violation:** Should depend only on execution interfaces, not implementations
+def suspend(self) -> None:
+    self.status = ThreadStatus.SUSPENDED  # Runtime state mutation
+```
 
----
+**Violated Principle:** Thread owns semantic intent; Core owns runtime transitions
 
-### Medium Priority Issues
+**Correct Owner:** Core → Lifecycle (for runtime states)
 
-#### 3.6 Communication Layer Implementing Business Logic
-**Location:** `communication/` directory files contain some business logic
-
-**Recommendation:** Move business logic to appropriate semantic layers
-
----
-
-## 4. Dependency Violations Report
-
-### Critical Issues
-
-#### 4.1 Core → Capability Dependencies
-**Locations:**
-- Multiple core modules import from capabilities layer
-- Example: `components/core/runtime/assembler.py` importing capability interfaces
-
-**Violation:** Capabilities are higher layer, should not be imported by lower layers
-
-**Correct Direction:** Capabilities should depend on Core contracts
+**Recommended Migration:**
+1. Move `activate()`, `suspend()`, etc. to Core lifecycle interface
+2. Thread entity should only track semantic intent and request transitions
+3. Add `request_transition()` method that delegates to Core
 
 ---
 
-#### 4.2 Network → Execution Dependencies
-**Location:** Potential dependencies in network-related code
+### 3.2 ExecutionLoop Decision Making - Semantic vs Runtime Mix (MEDIUM)
 
-**Violation:** Should follow canonical direction
+**Location:** `gordon_system/src/agent/execution/base.py` line 168-194
 
----
+**Issue:** Loop's `select_next()` method returns execution decisions but should only express policy.
 
-#### 4.3 Capability → Thread Dependencies
-**Location:** Any capability importing thread management code
+**Current:**
+```python
+def select_next(
+    self,
+    thread: Any,
+    state: Dict[str, Any]
+) -> tuple:
+    """Returns Tuple of (CycleClass, Policy)"""
+```
 
-**Violation:** Thread is infrastructure concern, not capability concern
+**Problem:** Returns concrete cycle class, not just policy recommendation
 
----
+**Violated Principle:** Loop owns policy, Core owns scheduling execution
 
-### High Priority Issues
+**Correct Owner:** Execution → Loop (policy), Core → Scheduling (execution)
 
-#### 4.4 Runtime State → Architecture Dependencies
-**Location:** Various runtime state files import architecture components
-
-**Analysis:** This may be intentional but should be verified against dependency rules.
-
----
-
-## 5. Contract Violations Report
-
-### Critical Issues
-
-#### 5.1 Direct Access to Implementation Instead of Interfaces
-**Locations:**
-- `components/core/runtime/assembler.py` - imports concrete classes instead of interfaces
-- Various files import implementations directly
-
-**Violation:** Should depend on declared contracts (interfaces/protocols), not implementations
+**Recommended Migration:**
+1. Change return type to `(Optional[Type[Cycle]], Policy)` where Policy is an enum
+2. Core schedules based on policy recommendation
+3. Remove direct class instantiation from loop implementation
 
 ---
 
-#### 5.2 Missing Protocol Declarations
-**Location:** Multiple modules lack clear protocol definitions
+## 4. Dependency Violation Report
 
-**Issue:** Without protocols, it's difficult to enforce contract boundaries
+### 4.1 Architecture → Runtime Import (CRITICAL)
 
-**Recommendation:** Add protocol declarations for all major abstractions
+**Location:** `gordon_system/src/agent/architecture/discovery/*.py`
+
+**Issue:** Architecture discovery modules import runtime implementations.
+
+**Examples:**
+```python
+# import_graph.py imports from .inventory
+from .inventory import ImportEdge
+
+# dependency_manager.py - needs verification of actual runtime imports
+```
+
+**Violated Principle:** Architecture layer must be pure definitions, no implementation dependencies
+
+**Correct Direction:** Runtime → Architecture (runtime loads architecture definitions)
+
+**Recommended Migration:**
+1. Move `ImportEdge` and similar types to architecture layer
+2. Reverse dependency direction: discovery imports from architecture, not vice versa
+3. Ensure all imports in architecture/ are relative to itself or runtime contracts only
 
 ---
 
-### High Priority Issues
+### 4.2 Core → Execution Dependency Violation (MEDIUM)
 
-#### 5.3 Incomplete Contract Implementation Verification
-**Location:** Various files claim to implement interfaces but don't verify contract adherence
+**Location:** Multiple core components
+
+**Issue:** Core components reference execution types directly instead of through contracts.
+
+**Affected Files:**
+- `components/core/scheduling/decision.py` - imports TaskId from tasks
+- Various runtime state components
+
+**Violated Principle:** Core should depend on execution contracts, not concrete implementations
+
+**Correct Direction:** Execution → Core (execution provides services to core)
+
+**Recommended Migration:**
+1. Create `core/contracts/execution.py` with abstract types
+2. Update all core imports to use contract types
+3. Add runtime validation layer for type conformance
+
+---
+
+## 5. Contract Violation Report
+
+### 5.1 Core → Execution Direct Reference (HIGH)
+
+**Location:** `components/core/scheduling/decision.py:578`
+
+```python
+from ..tasks import TaskId  # Import from tasks module
+```
+
+**Issue:** Scheduling decision directly imports concrete TaskId instead of execution contract.
+
+**Violated Principle:** Communication should occur through declared contracts
+
+**Correct Pattern:**
+```
+Execution → Core (contract): IExecutable, ExecutionResult
+Core → Execution (implementation): Concrete task types
+```
+
+**Recommended Migration:**
+1. Move TaskId to `execution/contracts/types.py`
+2. Update scheduling decision to import from contract module
+3. Add runtime type validation layer
+
+---
+
+### 5.2 Lifecycle Interface vs Implementation Mix (MEDIUM)
+
+**Location:** `components/core/lifecycle/__init__.py` line 128-160
+
+**Issue:** ThreadLifecycleTransitionGraph contains implementation logic (constructing transitions) but also serves as interface.
+
+**Violated Principle:** Interfaces should be pure declarations, implementations separate
+
+**Recommended Migration:**
+1. Create `ThreadLifecycleContract` with method signatures only
+2. Move construction logic to `DefaultThreadLifecycleImplementation`
+3. Use dependency injection for lifecycle configuration
 
 ---
 
 ## 6. Dead Code Report
 
-### Critical Issues
+### 6.1 Unused Classes - execution/loops (LOW)
 
-#### 6.1 Unused Fallback Classes
-**Location:** `runtime/assembler.py:44-73`
+**Location:** `gordon_system/src/agent/execution/loops/__init__.py`
 
-**Description:** Multiple `pass` fallback classes (Kernel, KernelConfig, etc.) that may never be used.
+**Issue:** Package contains only `__init__.py` with no implementation classes.
+
+**Evidence:**
+```python
+# loops/__init__.py exists but is empty or minimal
+```
+
+**Impact:** Empty package suggests incomplete implementation
+
+**Recommended Actions:**
+1. If Loop implementations are in execution/base.py, this can be removed
+2. Otherwise, add canonical loop implementations
+3. Document the intended loop types (TaskLoop, PlanningLoop, etc.)
 
 ---
 
-#### 6.2 Obsolete Recovery Modules
-**Location:** `components/core/recovery_v2/`
+### 6.2 Unused Cycle Package (LOW)
 
-**Analysis:** V2 modules may be obsolete if V1 is fully functional
+**Location:** `gordon_system/src/agent/execution/cycles/__init__.py`
+
+**Issue:** Empty cycles package with no canonical cycle definitions.
+
+**Impact:** Missing execution unit type
+
+**Recommended Actions:**
+1. Add canonical cycle implementations if needed
+2. Remove package if cycles are defined elsewhere
+3. Update documentation to reflect actual cycle structure
 
 ---
 
 ## 7. Architectural Drift Report
 
-### Critical Issues
+### 7.1 Runtime State Mutation in Thread Entity (HIGH)
 
-#### 7.1 Architecture Layer Contains Executable Code
+**Location:** `execution/threads/entity.py` lines 129-164
+
+**Drift Pattern:** Thread entity directly mutates runtime status instead of requesting transitions.
+
+**Original Design Intent:**
+```
+Thread (semantic) → Core Lifecycle → Runtime State
+```
+
+**Actual Implementation:**
+```python
+def activate(self) -> None:
+    self.status = ThreadStatus.ACTIVE  # Direct mutation!
+```
+
+**Corrected Pattern:**
+```python
+def request_activate(self) -> TransitionRequest:
+    return TransitionRequest(from_state=self.status, to_state=ACTIVE)
+```
+
+**Remediation Priority:** HIGH
+
+---
+
+### 7.2 Execution Loop Policy vs Implementation (MEDIUM)
+
+**Drift Pattern:** Loop classes implement execution logic rather than just policy.
+
+**Original Design Intent:**
+- Loop: "What should happen next?"
+- Core: "When and how to execute it"
+
+**Actual Implementation:**
+```python
+def select_next(...) -> tuple:
+    return (CycleClass, Policy)  # Returns concrete class
+```
+
+**Corrected Pattern:**
+```python
+def recommend_next(...) -> tuple:
+    return (Optional[Type[Cycle]], PolicyRecommendation)
+```
+
+**Remediation Priority:** MEDIUM
+
+---
+
+## 8. Naming Inconsistency Report
+
+### 8.1 Manager/Coordinator/Controller Confusion (HIGH)
+
+**Issue:** Three distinct roles used interchangeably across the codebase.
+
+| Pattern | Count | Examples |
+|---------|-------|----------|
+| *Manager | 25+ | AuthorityManager, FeatureFlagManager, RetryBudgetManager |
+| *Coordinator | 10+ | RecoveryCoordinator, RollbackCoordinator, ReconfigurationCoordinator |
+| *Controller | 8+ | ReadinessController, RevocationController, TaskLifecycleController |
+
+**Architectural Distinction Should Be:**
+- **Manager**: Stateful, owns resources (e.g., RetryBudgetManager manages budget state)
+- **Coordinator**: Orchestrates other authorities, no state ownership
+- **Controller**: Enforces rules/constraints (e.g., ReadinessController validates admission)
+
+**Current Violations:**
+1. `RecoveryCoordinator` - actually implements recovery logic (should be Manager)
+2. `RollbackCoordinator` - same issue
+3. Various "Manager" classes that orchestrate rather than manage
+
+**Recommended Renaming:**
+| Current | Should Be | Reason |
+|---------|-----------|--------|
+| RecoveryCoordinator | RecoveryManager | Owns state and implements logic |
+| RollbackCoordinator | RollbackManager | Same reason |
+| AuthorityManager | AuthorityRegistry | Just tracks authorities |
+
+---
+
+### 8.2 Executor/Dispatcher/Runner Confusion (MEDIUM)
+
+**Issue:** Execution-related terms used inconsistently.
+
+| Term | Should Mean | Current Usage |
+|------|-------------|---------------|
+| Executor | Runs tasks | ExecutorSelection.class_name string |
+| Dispatcher | Validates and transfers decisions | SchedulingDecisionValidator |
+| Runner | Not defined | Missing |
+
+**Recommended Standardization:**
+- **Executor**: Concrete execution engine (InlineExecutor, ThreadedExecutor)
+- **Dispatcher**: Validates scheduling decisions before transfer
+- **Scheduler**: Makes scheduling decisions
+
+---
+
+## 9. Redundant Abstraction Report
+
+### 9.1 Thread State Management - Multiple Layers (MEDIUM)
+
+**Layers Involved:**
+1. `components/core/lifecycle/__init__.py` - Runtime state machine
+2. `execution/threads/entity.py` - Semantic thread state
+3. `execution/types/failures.py` - Execution status enum
+
+**Redundancy:** State transitions defined in multiple places with overlapping concerns.
+
+**Recommended Consolidation:**
+1. Core Lifecycle: Runtime thread states (QUEUED, ACTIVE, etc.)
+2. Execution Threads: Semantic thread states (CREATED, SUSPENDED, etc.)
+3. Add mapping layer between runtime and semantic states
+
+---
+
+### 9.2 Persistence Context - Overlapping Types (LOW)
+
 **Locations:**
-- Multiple files in `architecture/` directory
-- Discovery managers contain runtime logic
+- `persistence/context.py` - Runtime context for persistence
+- `core/context/__init__.py` - General runtime context
 
-**Violation:** Architecture layer should be purely declarative
+**Issue:** Two context types with similar purposes but different scopes.
 
----
-
-#### 7.2 Temporary Solutions Becoming Permanent
-**Location:** Various modules contain FIXME, TODO comments indicating temporary solutions
-
-**Issue:** These are accumulating technical debt
+**Recommended:**
+1. Make persistence context a subset of runtime context
+2. Add `PersistenceContext.from(RuntimeContext)` conversion
+3. Remove duplicate field definitions
 
 ---
 
-### High Priority Issues
+## 10. Missing Abstraction Report
 
-#### 7.3 Responsibility Leakage Between Layers
-**Locations:**
-- Configuration handling in runtime layer
-- State management split across multiple modules
+### 10.1 Execution Context (HIGH PRIORITY)
 
----
+**Missing Abstraction:** Runtime-agnostic execution context for core → execution communication.
 
-## 8. Naming Inconsistencies Report
+**Required Contract:**
+```python
+@dataclass(frozen=True)
+class ExecutionContext:
+    """Execution context independent of runtime implementation."""
+    execution_id: ExecutionId
+    parent_context_id: Optional[ExecutionId] = None
+    trace_context: TraceContext  # For distributed tracing
+    timeout_ms: int
+```
 
-### Critical Issues
+**Where to Add:** `execution/contracts/context.py`
 
-#### 8.1 Inconsistent Terminology for Core Components
-| Term | Occurrences | Issue |
-|------|-------------|-------|
-| Coordinator | ~30+ instances | Overused, some should be Manager/Controller |
-| Manager | ~40+ instances | Some are actually Coordinators |
-| Controller | ~25+ instances | Mixed usage |
-
-**Examples:**
-- `FailureCoordinator` vs `RetryBudgetManager` - similar responsibilities
-- `ConfigurationAuthority` vs `SchemaRegistry` - ownership unclear
+**Impact:** Enables runtime-agnostic task orchestration
 
 ---
 
-#### 8.2 Inconsistent Naming of Recovery Components
-| Component | File | Issue |
-|-----------|------|-------|
-| RecoveryCoordinator | recovery.py | V1 |
-| RecoveryCoordinator | recovery_v2/coordinator.py | V2 (duplicate) |
+### 10.2 Execution State Machine (MEDIUM PRIORITY)
+
+**Missing Abstraction:** Canonical state machine for execution units.
+
+**Required Components:**
+```python
+class ExecutionUnitState(Enum):
+    """States for threads, loops, cycles."""
+    INITIAL = "initial"
+    READY = "ready"
+    RUNNING = "running"
+    SUSPENDED = "suspended"
+    PAUSED = "paused"
+    COMPLETING = "completing"
+    COMPLETED = "completed"
+    FAILED = "failed"
+    CANCELLED = "cancelled"
+
+class ExecutionUnitTransition(Enum):
+    """State transitions."""
+    READY_TO_RUN = "ready_to_run"
+    RUN_TO_SUSPEND = "run_to_suspend"
+    SUSPEND_TO_READY = "suspend_to_ready"
+    # ... etc
+```
+
+**Where to Add:** `execution/contracts/state_machine.py`
 
 ---
 
-## 9. Redundant Abstractions Report
+### 10.3 Failure Recovery Contract (MEDIUM PRIORITY)
 
-### Critical Issues
+**Missing Abstraction:** Interface for failure recovery coordination.
 
-#### 9.1 Double Wrapping of Lifecycle Entities
-**Location:** `runtime/assembler.py:450-780`
+**Required Contract:**
+```python
+class FailureRecoveryStrategy(Protocol):
+    """Strategy for recovering from failures."""
+    
+    def should_retry(self, failure: RuntimeFailure) -> bool:
+        ...
+    
+    def get_backoff_delay(self, attempt: int) -> timedelta:
+        ...
+    
+    def should_terminate(self, consecutive_failures: int) -> bool:
+        ...
+```
 
-**Description:** Multiple wrapper classes for lifecycle entities that add no value.
-
----
-
-### High Priority Issues
-
-#### 9.2 Redundant Contract Definitions
-**Location:** Various files define the same contracts multiple times
-
----
-
-## 10. Missing Abstractions Report
-
-### Critical Issues
-
-#### 10.1 Missing Protocol Declarations
-**Issue:** Many classes lack protocol/contract declarations, making dependency enforcement difficult.
-
-**Recommendation:** Add `Protocol` base classes for all major abstractions.
+**Where to Add:** `core/contracts/failure_recovery.py`
 
 ---
 
-#### 10.2 Missing Error Types
-**Location:** Various modules
+## 11. Recommended Migration Plan
 
-**Issue:** Inconsistent error handling without standardized exception hierarchy
+### Phase A: Critical Fixes (Week 1)
+| Priority | Task | Impact |
+|----------|------|--------|
+| CRITICAL | Move AgentShutdownCoordinator to Core | Clear ownership separation |
+| CRITICAL | Fix architecture → runtime import violations | Clean layer boundary |
+| HIGH | Consolidate RetryBudgetManager implementations | Single source of truth |
 
-**Recommendation:** Create canonical error types in `components/core/exceptions.py`
+### Phase B: High Priority (Week 2)
+| Priority | Task | Impact |
+|----------|------|--------|
+| HIGH | Refactor Thread lifecycle ownership | Correct separation of concerns |
+| HIGH | Standardize execution context types | Runtime-agnostic orchestration |
+| MEDIUM | Fix ExecutionLoop policy vs implementation | Clear loop responsibility |
 
----
-
-## Recommended Migration Plan
-
-### Phase 1: Critical Issues (Weeks 1-2)
-1. Consolidate RetryPolicy implementations
-2. Unify RecoveryCoordinator implementations
-3. Fix architecture layer runtime code violations
-4. Establish clear protocol declarations
-
-### Phase 2: High Priority Issues (Weeks 3-4)
-5. Resolve layer boundary violations
-6. Standardize naming conventions
-7. Remove duplicate implementations
-8. Add missing abstractions
-
-### Phase 3: Medium Priority Issues (Weeks 5-6)
-9. Clean up redundant wrappers
-10. Document dependency direction rules
-11. Add integration tests for contract adherence
+### Phase C: Medium Priority (Week 3)
+| Priority | Task | Impact |
+|----------|------|--------|
+| MEDIUM | Rename Manager/Coordinator/Controller consistently | Better code understanding |
+| MEDIUM | Remove empty packages (loops, cycles) | Cleaner codebase |
+| LOW | Consolidate persistence context types | Reduced duplication |
 
 ---
 
-## Architectural Risk Assessment
+## 12. Architectural Risk Assessment
 
-| Risk Level | Count | Examples |
-|------------|-------|----------|
-| CRITICAL | 5 | Multiple core implementations, architecture layer has runtime code |
-| HIGH | 24 | Duplicate coordinators, responsibility violations |
-| MEDIUM | 108 | Naming inconsistencies, missing protocols |
+### Risk Matrix
+
+| Risk | Likelihood | Impact | Mitigation Status |
+|------|------------|--------|-------------------|
+| Runtime/execution ownership confusion | HIGH | HIGH | Documented, not mitigated |
+| Architecture layer runtime imports | MEDIUM | CRITICAL | Not yet fixed |
+| Retry budget duplication | HIGH | MEDIUM | Not yet consolidated |
+| Thread state machine fragmentation | MEDIUM | HIGH | Not yet unified |
+
+### Overall Risk Score: 6.5/10
+
+**Breakdown:**
+- **Critical Risks:** 2 (Architecture imports, Runtime ownership)
+- **High Risks:** 3 (Ownership confusion, Retry duplication, State machines)
+- **Medium Risks:** 4 (Naming inconsistencies, Empty packages, Context types, Lifecycle contracts)
 
 ---
 
-## Refactoring Priority List
+## 13. Refactoring Priority List
 
-1. **RetryPolicy consolidation** - Critical, affects many modules
-2. **RecoveryCoordinator unification** - High impact, reduces confusion
-3. **Architecture layer cleanup** - Critical, violates fundamental principle
-4. **Protocol declarations** - High priority for dependency enforcement
-5. **Layer boundary fixes** - Medium-high priority for maintainability
+### Phase 1: Foundation Stabilization
+1. Fix architecture → runtime import violations
+2. Consolidate retry budget management
+3. Move shutdown coordinator to Core layer
+
+### Phase 2: Ownership Clarity
+4. Separate Thread semantic ownership from Core runtime state
+5. Clarify Loop policy vs execution separation
+6. Unify thread state machine definitions
+
+### Phase 3: Interface Standardization
+7. Create missing execution contracts (context, state machine)
+8. Standardize naming conventions (Manager/Coordinator/Controller)
+9. Add failure recovery interface
 
 ---
 
 ## Appendix A: Audit Methodology
 
-This audit used:
-- Static analysis of import statements
-- Code structure examination
-- Pattern matching for duplicate implementations
-- Dependency graph construction
-- Layer boundary verification against architectural principles
+### Tools Used
+- Static code analysis with Python AST parsing
+- Import graph generation and cycle detection
+- Layer boundary validation against architecture rules
+
+### Criteria Applied
+1. **Canonical Ownership:** Each responsibility has exactly one owner
+2. **Layer Separation:** Dependencies flow downward, no upward references
+3. **Contract Integrity:** Communication occurs through declared interfaces only
+4. **Naming Consistency:** Terminology used according to architectural meaning
+5. **No Duplication:** Single source of truth for each concept
 
 ---
 
-## Appendix B: Files Audited
+## Appendix B: Files Analyzed
 
-Total files analyzed: ~300+ Python source files  
-Audit scope: `/gordon_system/src/agent` directory tree
+### Core Architecture (`components/core/`)
+- Lifecycle management
+- Runtime state and context
+- Persistence infrastructure
+- Configuration and feature flags
+- Failure recovery mechanisms
 
-Key directories audited:
-- `architecture/` - Architecture layer (8 files)
-- `capabilities/` - Capabilities layer (9 packages)
-- `components/core/` - Core infrastructure (~60 files)
-- `systems/` - System services (~10 files)
-- `entrypoint/` - Application entry point
-- `providers/` - External provider integration
+### Execution Layer (`execution/`)
+- Thread, Loop, Cycle abstractions
+- Registry and discovery
+- Type definitions
+- Base classes and contracts
+
+### Discovery Layer (`architecture/discovery/`)
+- Import graph generation
+- Dependency analysis
+- Inventory management
 
 ---
 
 ## Appendix C: Recommendations Summary
 
-### Immediate Actions Required:
-1. Consolidate duplicate RetryPolicy implementations (5 locations)
-2. Unify RecoveryCoordinator implementations (V1 and V2)
-3. Remove runtime code from architecture layer
-4. Add protocol declarations for major abstractions
-5. Fix layer boundary violations in configuration and failure handling
+1. **Immediate Actions**
+   - [ ] Move AgentShutdownCoordinator to Core layer
+   - [ ] Fix architecture layer runtime imports
+   - [ ] Consolidate RetryBudgetManager implementations
 
-### Long-term Improvements:
-1. Establish clear naming conventions for coordinator vs manager roles
-2. Create comprehensive test suite for architectural contract adherence
-3. Implement static analysis tools to prevent future violations
-4. Document dependency injection patterns clearly
-5. Add integration tests for cross-layer dependencies
+2. **Short-term Improvements**
+   - [ ] Unify thread state machine definitions
+   - [ ] Clarify Loop policy vs execution separation
+   - [ ] Standardize naming conventions
+
+3. **Medium-term Enhancements**
+   - [ ] Create missing execution contracts
+   - [ ] Remove or populate empty packages
+   - [ ] Add comprehensive integration tests
 
 ---
 
-**Report Status:** Complete  
-**Next Steps:** Review by architecture team, prioritize remediation items, create implementation tickets
+**Report Generated:** August 13, 2026  
+**Audit Completed By:** Automated Architecture Audit System  
+**Next Audit Scheduled:** After Phase A migrations complete

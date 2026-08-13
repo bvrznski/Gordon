@@ -19,6 +19,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Callable, Awaitable, Any
 
+# Import RetryPolicy from canonical core execution location
+from ..execution import RetryPolicy
 
 # =============================================================================
 # Compensation Contract Types
@@ -75,7 +77,7 @@ class CompensationAction:
     target_entity: Optional[str] = None
     parameters: Dict[str, Any] = field(default_factory=dict)
     
-    retry_policy: "RetryPolicy" = field(
+    retry_policy: RetryPolicy = field(
         default_factory=lambda: RetryPolicy(max_attempts=3, initial_delay_seconds=1.0)
     )
 
@@ -90,12 +92,8 @@ class CompensationType(Enum):
     CANCEL = "cancel"              # Cancel pending operation
 
 
-# RetryPolicy - Import from canonical execution location
-from ..execution import RetryPolicy as _RetryPolicy
-
-# Alias for backward compatibility during transition period
-RetryPolicy = _RetryPolicy
-
+# Note: RetryPolicy is imported at module top-level from core.execution
+# This ensures proper architectural ownership (Core owns runtime primitives)
 
 # =============================================================================
 # Condition Types for Contracts

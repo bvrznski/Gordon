@@ -1,50 +1,24 @@
-# Thread Architecture Package
-# ===========================
+# ExecutionThread Architecture Package
+# ====================================
+#
+# PHASE 3.10.7 - Canonical ExecutionThread Architecture
+# PHASE 3.10.9 - Concrete execution taxonomy implementation
+#
+# An ExecutionThread is NOT:
+#     - An operating-system thread, coroutine, task, worker, process, or scheduler entry
+#     - A runtime execution unit (that belongs to Core)
+#     - A scheduling entity (that belongs to Core)
+#
+# An ExecutionThread IS:
+#     - The semantic owner of one continuous agent activity
+#     - Persistent identity across multiple finite executions  
+#     - Purpose-driven: maintains purpose while objectives may evolve
+#     - Lifecycle-managed through controlled delta application
+#
+# Ownership Model:
+#     Core:  runtime scheduling, lifecycle state transitions, resource allocation
+#     ExecutionThread: semantic continuity, identity, purpose, objectives, completion intent
 
-"""
-Canonical Thread architecture for semantic continuity.
-
-A Thread is NOT:
-    - An operating-system thread, coroutine, task, worker, process, or scheduler entry
-    - A runtime execution unit (that belongs to Core)
-    - A scheduling entity (that belongs to Core)
-
-A Thread IS:
-    - The semantic owner of one continuous agent activity
-    - Persistent identity across multiple finite executions
-    - Purpose-driven: maintains purpose while objectives may evolve
-    - Lifecycle-managed through controlled transitions
-
-Architecture:
-
-    src/agent/execution/threads/
-        ├── __init__.py           # Package exports
-        ├── base.py               # Abstract Thread, Loop, Cycle contracts (TBD)
-        ├── identity.py           # Semantic Thread identity (immutable)
-        ├── state.py              # Thread semantic state (controlled mutation)
-        ├── lifecycle.py          # Lifecycle transitions and states
-        ├── delta.py              # Semantic delta application model
-        ├── relationships.py      # Parent-child Thread relationships
-        ├── snapshot.py           # Immutable snapshots for persistence
-        └── validation.py         # Invariant validators
-
-Ownership Model:
-
-    Thread: semantic continuity, identity, purpose, objectives, completion intent
-    Core: runtime scheduling, lifecycle state transitions, resource allocation
-
-Architecture Invariants:
-    T-001: Thread identity is immutable (semantic, not runtime)
-    T-002: A Thread has exactly one active Loop when behavior progresses
-    T-003: A Thread has at most one active authoritative Cycle
-    T-004: Semantic state changes occur through controlled delta application
-    T-005: Thread lifecycle transitions are validated by core.lifecycle
-
-NOTE: Base classes (Thread, Loop, Cycle) will be defined in base.py when
-      concrete implementations are ready. For now, they serve as placeholders.
-"""
-
-# Identity imports
 from .identity import (
     ThreadId,
     ThreadName,
@@ -52,27 +26,30 @@ from .identity import (
     ThreadDescriptor,
 )
 
-# Lifecycle imports
 from .lifecycle import (
-    ThreadLifecycleState as ThreadState,
-    ThreadLifecycleTransitionGraph,
+    ThreadLifecycleState,
+    ThreadLifecycleTransitionGraph, 
     ThreadLifecycleReason,
-    ThreadLifecycleTransition,
     ThreadLifecycleSnapshot,
     ThreadLifecycleTransitionRequest,
     ThreadLifecycleTransitionResult,
 )
 
-# Delta imports
+from .state import (
+    ThreadSemanticState,
+    ThreadContext,
+    BehavioralMode,
+    ThreadObjective,
+)
+
 from .delta import (
-    ThreadSemanticDelta as ThreadDelta,
     DeltaValidationResult,
-    ThreadDeltaBatch,
+    ThreadSemanticDelta,
+    ThreadDeltaBatch, 
     DeltaApplicationResult,
     ThreadDeltaValidator,
 )
 
-# Relationships imports
 from .relationships import (
     RelationshipKind,
     ThreadRelationship,
@@ -81,41 +58,80 @@ from .relationships import (
     ThreadRelationshipSnapshot,
 )
 
-# Snapshot imports
 from .snapshot import (
-    ThreadSnapshot,
-    ThreadRecoveryDescriptor,
-    ThreadSnapshotBuilder,
-    ThreadSnapshotChain,
+    ThreadSnapshot as SnapshotClass,
 )
 
-# Validation imports
-from .validation import (
-    ValidationResult,
-    ThreadValidator,
+from .entity import (
+    ExecutionThread,
+    ExecutionThreadSnapshot,
+    # Backward compatibility aliases (deprecated, will be removed in future)
+    Thread as ExecutionThreadAlias,
+    ThreadSnapshot as ExecutionThreadSnapshotAlias,
 )
 
+# =============================================================================
+# PHASE 3.10.9 - Concrete Thread Types
+# =============================================================================
+
+from .concrete import (
+    # Conversation thread types
+    ConversationPurpose,
+    ConversationParticipant,
+    ConversationState,
+    ConversationThread,
+    ConversationSnapshot,
+    
+    # Task thread types
+    TaskStatus,
+    TaskConstraints,
+    TaskPlan,
+    TaskProgress,
+    TaskState,
+    TaskThread,
+    TaskSnapshot,
+    
+    # Monitoring thread types
+    ObservationType,
+    MonitoringTarget,
+    Baseline,
+    MonitoringState,
+    MonitoringThread,
+    MonitoringSnapshot,
+    
+    # Internal thread types
+    InternalPurpose,
+    InternalContext,
+    InternalState,
+    InternalThread,
+    InternalSnapshot,
+)
 
 __all__ = [
     # Identity
-    "ThreadId",
+    "ThreadId",           # Canonical semantic identity for ExecutionThread
     "ThreadName",
-    "ThreadMetadata",
+    "ThreadMetadata", 
     "ThreadDescriptor",
     
-    # Lifecycle
-    "ThreadState",
-    "ThreadLifecycleTransitionGraph",
+    # Lifecycle (semantic intent)
+    "ThreadLifecycleState",
+    "ThreadLifecycleTransitionGraph", 
     "ThreadLifecycleReason",
-    "ThreadLifecycleTransition",
     "ThreadLifecycleSnapshot",
     "ThreadLifecycleTransitionRequest",
     "ThreadLifecycleTransitionResult",
     
-    # Delta
-    "ThreadDelta",
+    # Semantic state
+    "ThreadSemanticState",
+    "ThreadContext",
+    "BehavioralMode",
+    "ThreadObjective",
+    
+    # Delta (controlled state change)
     "DeltaValidationResult",
-    "ThreadDeltaBatch",
+    "ThreadSemanticDelta",
+    "ThreadDeltaBatch", 
     "DeltaApplicationResult",
     "ThreadDeltaValidator",
     
@@ -126,13 +142,53 @@ __all__ = [
     "ThreadRelationshipGraph",
     "ThreadRelationshipSnapshot",
     
-    # Snapshots
-    "ThreadSnapshot",
-    "ThreadRecoveryDescriptor",
-    "ThreadSnapshotBuilder",
-    "ThreadSnapshotChain",
+    # Snapshots (immutable views)
+    "SnapshotClass",
     
-    # Validation
-    "ValidationResult",
-    "ThreadValidator",
+    # Canonical ExecutionThread entity (IMMUTABLE!)
+    "ExecutionThread",           # Primary canonical name
+    "ExecutionThreadSnapshot",   # Read-only snapshot for Loop evaluation
+    
+    # Backward compatibility aliases (deprecated, will be removed in future)
+    "ExecutionThreadAlias",      # Alias for Thread → use ExecutionThread instead
+    "ExecutionThreadSnapshotAlias",
+    
+    # =============================================================================
+    # PHASE 3.10.9 - Concrete Thread Types
+    # =============================================================================
+    
+    # Conversation thread types
+    "ConversationPurpose",
+    "ConversationParticipant",
+    "ConversationState",
+    "ConversationThread",
+    "ConversationSnapshot",
+    
+    # Task thread types
+    "TaskStatus",
+    "TaskConstraints",
+    "TaskPlan",
+    "TaskProgress",
+    "TaskState",
+    "TaskThread",
+    "TaskSnapshot",
+    
+    # Monitoring thread types
+    "ObservationType",
+    "MonitoringTarget",
+    "Baseline",
+    "MonitoringState",
+    "MonitoringThread",
+    "MonitoringSnapshot",
+    
+    # Internal thread types
+    "InternalPurpose",
+    "InternalContext",
+    "InternalState",
+    "InternalThread",
+    "InternalSnapshot",
 ]
+
+# Backward compatibility: Thread and ThreadSnapshot are now aliased to ExecutionThread
+Thread = ExecutionThread
+ThreadSnapshot = ExecutionThreadSnapshot

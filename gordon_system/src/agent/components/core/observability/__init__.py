@@ -14,6 +14,15 @@ This package provides:
 - Telemetry collection and export (telemetry_manager.py)
 - Diagnostics generation (diagnostics_manager.py)
 - Observability orchestration (observability_manager.py)
+- Telemetry contracts (contracts.py) - canonical interfaces
+- Error handling (errors.py) - exception hierarchy
+
+Additional modules (Phase 3.8.11):
+- Instrumentation framework (instrumentation.py) - hooks and execution tracking
+- Analytics pipeline (analytics.py) - aggregation, KPIs, health scoring
+- Reporting framework (reporting.py) - reports, dashboards, exports
+- Profiling framework (profiling.py) - CPU/memory profiling, flame graphs
+- Governance layer (governance.py) - policies, orchestration, lifecycle
 
 All observability is OBSERVATIONAL - it never changes runtime behavior.
 """
@@ -166,6 +175,137 @@ from .observability_manager import (
     RuntimeObservability,
 )
 
+# =============================================================================
+# PHASE 3.8.11 NEW MODULES
+# =============================================================================
+
+# Contracts (canonical interfaces)
+from .contracts import (
+    TelemetryVersion,
+    CorrelationContract,
+    TimestampContract,
+    MetadataContract,
+    TelemetryEventContract,
+    TelemetryExporterContract,
+    MetricContract,
+    SpanContract,
+    LogContract,
+    TelemetryPolicyContract,
+    TelemetryConsumerContract,
+    TelemetryContextManagerContract,
+    TelemetryManagerInterface,
+)
+
+# Errors (exception hierarchy)
+from .errors import (
+    ObservabilityError,
+    TelemetryError,
+    MetricsError,
+    TraceError,
+    LoggingError,
+    ExportError,
+    AnalyticsError,
+    GovernanceError,
+    InstrumentationError,
+    MetricsCollectionError,
+    TraceCollectionError,
+    LogPipelineError,
+    ExportPipelineError,
+    AnalyticsPipelineError,
+    GovernanceViolationError,
+    TelemetryOrchestrationError,
+    SamplingError,
+    CorrelationError,
+    DashboardError,
+    ProfilingError,
+    error_to_dict,
+    log_error_chain,
+)
+
+# Instrumentation framework
+from .instrumentation import (
+    HookType,
+    HookDescriptor,
+    InstrumentationHook,
+    LifecycleHook,
+    ExecutionHook,
+    ResourceHook,
+    PerfHook,
+    HookRegistry,
+    InstrumentationContext,
+    InstrumentationManager,
+)
+
+# Analytics pipeline
+from .analytics import (
+    AggregationType,
+    AggregationDefinition,
+    KPICategory,
+    KPIDefinition,
+    AnomalyDetectionStrategy,
+    AnomalyDetectionConfig,
+    TrendData,
+    TrendAnalysis,
+    HealthScoreSource,
+    HealthScoreComponent,
+    HealthScoreReport,
+    AnalyticsPipeline,
+    AggregationPipeline,
+    KPICalculationPipeline,
+    HealthScoringPipeline,
+)
+
+# Reporting framework
+from .reporting import (
+    ReportType,
+    ReportSchedule,
+    ReportDefinition,
+    ReportOutputFormat,
+    ReportOutput,
+    ReportGenerator,
+    StructuredReportGenerator,
+    ReportScheduler,
+    DashboardType,
+    DashboardDefinition,
+    DashboardWidget,
+    DashboardGenerator,
+    ExportFormat,
+    ExportConfig,
+)
+
+# Profiling framework
+from .profiling import (
+    ProfileType,
+    ProfileDefinition,
+    ProfileSession,
+    FlameGraphNode,
+    FlameGraph,
+    ProfileCollector,
+    CpuProfiler,
+    MemoryProfiler,
+    ProfilingSessionManager,
+    BottleneckAnalysis,
+    CapacityAnalysis,
+    PerformanceBaseline,
+    RegressionDetector,
+    ProfiledBlock,
+    PerformanceProfiler,
+)
+
+# Governance layer
+from .governance import (
+    PolicyScope,
+    TelemetryPolicy,
+    GovernanceRule,
+    SamplingRule,
+    RetentionRule,
+    RuntimeObservabilityState,
+    TelemetryOrchestrator,
+    LifecycleEvent,
+    ObservabilityLifecycleHooks,
+    ObservabilityGovernanceEngine,
+)
+
 __all__ = [
     # LEGACY exports (backward compatibility)
     "RuntimeEvent",
@@ -277,4 +417,117 @@ __all__ = [
     "ObservabilityConfig",
     "ObservabilityManager",  # Canonical observability orchestrator - exactly one per runtime
     "RuntimeObservability",
+    
+    # Contracts (Phase 3.8.11)
+    "TelemetryVersion",
+    "CorrelationContract",
+    "TimestampContract",
+    "MetadataContract",
+    "TelemetryEventContract",
+    "TelemetryExporterContract",
+    "MetricContract",
+    "SpanContract",
+    "LogContract",
+    "TelemetryPolicyContract",
+    "TelemetryConsumerContract",
+    "TelemetryContextManagerContract",
+    "TelemetryManagerInterface",
+    
+    # Errors (Phase 3.8.11)
+    "ObservabilityError",
+    "TelemetryError",
+    "MetricsError",
+    "TraceError",
+    "LoggingError",
+    "ExportError",
+    "AnalyticsError",
+    "GovernanceError",
+    "InstrumentationError",
+    "MetricsCollectionError",
+    "TraceCollectionError",
+    "LogPipelineError",
+    "ExportPipelineError",
+    "AnalyticsPipelineError",
+    "GovernanceViolationError",
+    "TelemetryOrchestrationError",
+    "SamplingError",
+    "CorrelationError",
+    "DashboardError",
+    "ProfilingError",
+    "error_to_dict",
+    "log_error_chain",
+    
+    # Instrumentation (Phase 3.8.11)
+    "HookType",
+    "HookDescriptor",
+    "InstrumentationHook",
+    "LifecycleHook",
+    "ExecutionHook",
+    "ResourceHook",
+    "PerfHook",
+    "HookRegistry",
+    "InstrumentationContext",
+    "InstrumentationManager",
+    
+    # Analytics (Phase 3.8.11)
+    "AggregationType",
+    "AggregationDefinition",
+    "KPICategory",
+    "KPIDefinition",
+    "AnomalyDetectionStrategy",
+    "AnomalyDetectionConfig",
+    "TrendData",
+    "TrendAnalysis",
+    "HealthScoreSource",
+    "HealthScoreComponent",
+    "HealthScoreReport",
+    "AnalyticsPipeline",
+    "AggregationPipeline",
+    "KPICalculationPipeline",
+    "HealthScoringPipeline",
+    
+    # Reporting (Phase 3.8.11)
+    "ReportType",
+    "ReportSchedule",
+    "ReportDefinition",
+    "ReportOutputFormat",
+    "ReportOutput",
+    "ReportGenerator",
+    "StructuredReportGenerator",
+    "ReportScheduler",
+    "DashboardType",
+    "DashboardDefinition",
+    "DashboardWidget",
+    "DashboardGenerator",
+    "ExportFormat",
+    "ExportConfig",
+    
+    # Profiling (Phase 3.8.11)
+    "ProfileType",
+    "ProfileDefinition",
+    "ProfileSession",
+    "FlameGraphNode",
+    "FlameGraph",
+    "ProfileCollector",
+    "CpuProfiler",
+    "MemoryProfiler",
+    "ProfilingSessionManager",
+    "BottleneckAnalysis",
+    "CapacityAnalysis",
+    "PerformanceBaseline",
+    "RegressionDetector",
+    "ProfiledBlock",
+    "PerformanceProfiler",
+    
+    # Governance (Phase 3.8.11)
+    "PolicyScope",
+    "TelemetryPolicy",
+    "GovernanceRule",
+    "SamplingRule",
+    "RetentionRule",
+    "RuntimeObservabilityState",
+    "TelemetryOrchestrator",
+    "LifecycleEvent",
+    "ObservabilityLifecycleHooks",
+    "ObservabilityGovernanceEngine",
 ]

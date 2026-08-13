@@ -1,8 +1,6 @@
-from ..execution import (
-    RetryPolicy,
-    ExecutionState,
-)
-
+# Import from canonical core location instead of execution layer
+# Note: TaskPriority, TaskId, and TaskState are defined in this module (core.tasks)
+# RetryPolicy is now imported from core.execution which is the canonical source
 # Core Task Models and Lifecycle Control
 # ======================================
 
@@ -216,11 +214,7 @@ class ResourceRequirements:
     execution_slots: int = 1        # Concurrent execution slots needed
 
 
-# =============================================================================
-# RETRY POLICY - IMPORT FROM CANONICAL EXECUTION LOCATION
-# =============================================================================
-
-# RetryPolicy is imported from execution module as canonical source
+from ..execution import RetryPolicy
 
 
 # =============================================================================

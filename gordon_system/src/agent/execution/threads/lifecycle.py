@@ -1,52 +1,57 @@
 # Thread Lifecycle Model
 # =======================
-
-"""
-Thread lifecycle state machine for semantic transitions.
-
-This module defines the canonical lifecycle states and transitions for a Thread.
-It uses Core's runtime state machines for actual execution management while
-providing semantic lifecycle semantics.
-
-Lifecycle States:
-    CREATED: Thread artifact exists, not yet queued for behavior
-    ACTIVE: Thread is actively engaged in semantic activity (has active Loop)
-    SUSPENDED: Behavioral progression paused, identity preserved
-    AWAITING_INPUT: Waiting for external input before resuming
-    DELEGATED: Work has been delegated to a child thread
-    COMPLETED: Thread fulfilled its purpose
-    INTERRUPTED: Semantic or runtime condition prevented continuation
-    TERMINATED: Thread stopped without normal completion
-
-Allowed Transitions:
-    CREATED → ACTIVE (initial activation)
-    ACTIVE → SUSPENDED (pause intent)
-    SUSPENDED → ACTIVE (resume intent)
-    ACTIVE → AWAITING_INPUT (awaiting external input)
-    AWAITING_INPUT → ACTIVE (input received)
-    ACTIVE → DELEGATED (delegation to child)
-    DELEGATED → COMPLETED (child completion)
-    ACTIVE → COMPLETED (purpose fulfilled)
-    Any state → INTERRUPTED (interruption event)
-    Any terminal state → REOPENED (if architecture allows reopening)
-"""
+#
+# PHASE 3.10.3 UPDATE - Canonical Thread lifecycle model.
+#
+# This module defines the semantic lifecycle states for a Thread.
+# 
+# Ownership Model:
+#     - Core owns runtime state transitions (via core.lifecycle.ThreadLifecycleState)
+#     - Thread owns semantic lifecycle intent (when to complete/interrupt/terminate)
+#
+# Semantic vs Runtime States:
+#     Runtime (Core):   NEW, QUEUED, ACTIVE, PAUSED, TERMINATING, TERMINATED
+#     Semantic (Thread): CREATED, ACTIVE, SUSPENDED, AWAITING_INPUT, DELEGATED,
+#                        COMPLETED, INTERRUPTED, TERMINATED
 
 from dataclasses import dataclass, field
 from typing import Dict, Tuple, Optional
 from enum import Enum
 
 
+# =============================================================================
+# SEMANTIC LIFECYCLE STATES (Thread-owned intent)
+# =============================================================================
+
+
 class ThreadLifecycleState(Enum):
     """
-    Canonical thread lifecycle states.
+    Semantic thread lifecycle states.
     
-    State Flow:
-        [CREATED] → [ACTIVE] ⇄ [SUSPENDED] → [TERMINATING] → [TERMINATED]
-           |            ↓         ↑              ↓
-           └─── DELEGATE ─────   AWAITING_INPUT  COMPLETE
-        
-        Terminal states (no outgoing):
-            COMPLETED, INTERRUPTED, TERMINATED
+    These represent the thread's *intention* about its state:
+        - CREATED: Thread artifact exists, not yet activated by Core
+        - ACTIVE: Thread is actively engaged in semantic activity
+        - SUSPENDED: Behavioral progression paused, identity preserved
+        - AWAITING_INPUT: Waiting for external input before resuming
+        - DELEGATED: Work delegated to child thread
+        - COMPLETED: Thread fulfilled its purpose (semantic intent)
+        - INTERRUPTED: Semantic/interrupted condition prevented continuation
+        - TERMINATED: Thread stopped without normal completion
+    
+    Runtime state transitions are managed by Core, but semantic intent
+    comes from the Thread.
+    
+    Allowed Transitions:
+        CREATED → ACTIVE (Core activates thread)
+        ACTIVE → SUSPENDED (Thread requests pause intent)
+        SUSPENDED → ACTIVE (Thread resumes)
+        ACTIVE → AWAITING_INPUT (Thread awaits external input)
+        AWAITING_INPUT → ACTIVE (Input received, resume intent)
+        ACTIVE → DELEGATED (Thread delegates to child)
+        DELEGATED → COMPLETED (Child completion triggers parent completion)
+        ACTIVE → COMPLETED (Thread completes by semantic intent)
+        Any state → INTERRUPTED (Core or Thread interruption)
+        Terminal states have no outgoing transitions
     """
     
     # Initial state
@@ -61,7 +66,7 @@ class ThreadLifecycleState(Enum):
     DELEGATED = "delegated"        # Work delegated to child thread
     
     # Terminal states (no outgoing transitions)
-    COMPLETED = "completed"        # Purpose fulfilled
+    COMPLETED = "completed"        # Purpose fulfilled (semantic intent)
     INTERRUPTED = "interrupted"    # Interrupted before completion
     TERMINATED = "terminated"      # Terminated without completion
 
@@ -92,17 +97,17 @@ class ThreadLifecycleReason(Enum):
 @dataclass(frozen=True)
 class ThreadLifecycleTransition:
     """
-    A single lifecycle state transition.
+    A single semantic lifecycle state transition.
     
-    Defines the rules for one state → another state transition in a thread's
-    semantic lifecycle.
+    This defines the *semantic intent* for a transition - what the thread
+    wants to happen. Core validates and commits runtime transitions.
     """
     
     from_state: ThreadLifecycleState
     to_state: ThreadLifecycleState
     
-    # Who may request this transition?
-    requester: str  # e.g., "thread", "core", "user"
+    # Semantic requester (who has the intent)
+    requester: str  # e.g., "thread", "core"
     
     # Conditions
     precondition: Optional[str] = None  # What must be true before transition?
@@ -119,11 +124,14 @@ class ThreadLifecycleTransition:
 @dataclass(frozen=True)
 class ThreadLifecycleTransitionGraph:
     """
-    Thread lifecycle state transition graph.
+    Thread semantic lifecycle state transition graph.
     
-    This is the canonical authority for what transitions are valid in a thread's
-    semantic lifecycle. It may use Core's runtime state machines for enforcement
-    but maintains its own semantic layer.
+    This defines valid semantic transitions for threads. The graph is
+    immutable and used for validation of thread intent before Core
+    executes the runtime transition.
+    
+    Runtime execution is handled by core.lifecycle.ThreadLifecycleTransitionGraph,
+    but this graph validates semantic correctness first.
     """
     
     # Valid transitions: (from_state, to_state) -> Transition
@@ -140,37 +148,35 @@ class ThreadLifecycleTransitionGraph:
             self,
             "_transitions",
             {
-                # Initial state
+                # Initial state - Core activates the thread
                 (ThreadLifecycleState.CREATED, ThreadLifecycleState.ACTIVE): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.CREATED,
                     to_state=ThreadLifecycleState.ACTIVE,
-                    requester="core",  # Core decides when to activate
+                    requester="core",
                     reason=ThreadLifecycleReason.INITIAL_ACTIVATION,
                 ),
                 
-                # Active state transitions
+                # Active state transitions (thread may request)
                 (ThreadLifecycleState.ACTIVE, ThreadLifecycleState.SUSPENDED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.ACTIVE,
                     to_state=ThreadLifecycleState.SUSPENDED,
-                    requester="thread",  # Thread may request suspension
+                    requester="thread",
                     reason=ThreadLifecycleReason.SUSPEND_REQUESTED,
                 ),
                 (ThreadLifecycleState.ACTIVE, ThreadLifecycleState.AWAITING_INPUT): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.ACTIVE,
                     to_state=ThreadLifecycleState.AWAITING_INPUT,
                     requester="thread",
-                    reason=ThreadLifecycleReason.INPUT_RECEIVED,  # Actually waiting for input
+                    reason=ThreadLifecycleReason.INPUT_RECEIVED,
                 ),
                 
-                # Resume transitions (suspended → active)
+                # Resume transitions
                 (ThreadLifecycleState.SUSPENDED, ThreadLifecycleState.ACTIVE): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.SUSPENDED,
                     to_state=ThreadLifecycleState.ACTIVE,
-                    requester="thread",  # Thread requests resumption
+                    requester="thread",
                     reason=ThreadLifecycleReason.RESUME,
                 ),
-                
-                # Input received (awaiting → active)
                 (ThreadLifecycleState.AWAITING_INPUT, ThreadLifecycleState.ACTIVE): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.AWAITING_INPUT,
                     to_state=ThreadLifecycleState.ACTIVE,
@@ -182,52 +188,52 @@ class ThreadLifecycleTransitionGraph:
                 (ThreadLifecycleState.ACTIVE, ThreadLifecycleState.DELEGATED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.ACTIVE,
                     to_state=ThreadLifecycleState.DELEGATED,
-                    requester="thread",  # Thread may delegate work
+                    requester="thread",
                     reason=ThreadLifecycleReason.DELEGATE_TO_CHILD,
                 ),
                 
-                # Child completion (delegated → completed)
+                # Child completion
                 (ThreadLifecycleState.DELEGATED, ThreadLifecycleState.COMPLETED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.DELEGATED,
                     to_state=ThreadLifecycleState.COMPLETED,
-                    requester="thread",  # Child completion leads to parent completion
+                    requester="thread",
                     reason=ThreadLifecycleReason.CHILD_COMPLETED,
                     is_terminal=True,
                 ),
                 
-                # Completion (active → completed)
+                # Completion
                 (ThreadLifecycleState.ACTIVE, ThreadLifecycleState.COMPLETED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.ACTIVE,
                     to_state=ThreadLifecycleState.COMPLETED,
-                    requester="thread",  # Thread decides it's complete
+                    requester="thread",
                     reason=ThreadLifecycleReason.PURPOSE_FULFILLED,
                     is_terminal=True,
                 ),
                 
-                # Interruption (any state → interrupted)
+                # Interruption
                 (ThreadLifecycleState.CREATED, ThreadLifecycleState.INTERRUPTED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.CREATED,
                     to_state=ThreadLifecycleState.INTERRUPTED,
-                    requester="core",  # Core may interrupt
+                    requester="core",
                     reason=ThreadLifecycleReason.INTERRUPTION_REQUESTED,
                     is_terminal=True,
                 ),
                 (ThreadLifecycleState.ACTIVE, ThreadLifecycleState.INTERRUPTED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.ACTIVE,
                     to_state=ThreadLifecycleState.INTERRUPTED,
-                    requester="core",
+                    requester="thread_or_core",
                     reason=ThreadLifecycleReason.INTERRUPTION_REQUESTED,
                     is_terminal=True,
                 ),
                 (ThreadLifecycleState.SUSPENDED, ThreadLifecycleState.INTERRUPTED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.SUSPENDED,
                     to_state=ThreadLifecycleState.INTERRUPTED,
-                    requester="core",
+                    requester="thread_or_core",
                     reason=ThreadLifecycleReason.INTERRUPTION_REQUESTED,
                     is_terminal=True,
                 ),
                 
-                # Termination (any state → terminated)
+                # Termination
                 (ThreadLifecycleState.CREATED, ThreadLifecycleState.TERMINATED): ThreadLifecycleTransition(
                     from_state=ThreadLifecycleState.CREATED,
                     to_state=ThreadLifecycleState.TERMINATED,
@@ -261,7 +267,7 @@ class ThreadLifecycleTransitionGraph:
     def is_valid_transition(
         self, from_state: ThreadLifecycleState, to_state: ThreadLifecycleState
     ) -> bool:
-        """Check if a transition is valid according to the graph."""
+        """Check if a semantic transition is valid."""
         return (from_state, to_state) in self._transitions
     
     def get_allowed_transitions(self, state: ThreadLifecycleState) -> Tuple[ThreadLifecycleState, ...]:
@@ -279,10 +285,10 @@ class ThreadLifecycleTransitionGraph:
 @dataclass(frozen=True)
 class ThreadLifecycleSnapshot:
     """
-    Immutable snapshot of thread lifecycle state.
+    Immutable snapshot of thread semantic lifecycle state.
     
     Used for persistence and recovery. Contains only the essential
-    lifecycle information, not full semantic state.
+    semantic lifecycle information, not runtime details.
     """
     
     thread_id: str
@@ -311,9 +317,10 @@ class ThreadLifecycleSnapshot:
 @dataclass(frozen=True)
 class ThreadLifecycleTransitionRequest:
     """
-    Request to perform a thread lifecycle state transition.
+    Request to perform a thread semantic lifecycle state transition.
     
     Contains all information needed for validation and commitment.
+    The request goes through Core's runtime state machine after validation.
     """
     
     thread_id: str

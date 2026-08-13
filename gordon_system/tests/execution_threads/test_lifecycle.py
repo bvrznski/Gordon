@@ -6,7 +6,7 @@ Tests for Thread lifecycle model and transitions.
 """
 
 import pytest
-from agent.execution.threads import (
+from agent.execution.threads.lifecycle import (
     ThreadLifecycleState,
     ThreadLifecycleTransitionGraph,
 )
@@ -19,7 +19,7 @@ class TestThreadLifecycleState:
         """All expected states should be defined."""
         states = list(ThreadLifecycleState)
         
-        assert len(states) == 7  # CREATED, ACTIVE, SUSPENDED, AWAITING_INPUT, DELEGATED, COMPLETED, INTERRUPTED, TERMINATED
+        assert len(states) == 8  # CREATED, ACTIVE, SUSPENDED, AWAITING_INPUT, DELEGATED, COMPLETED, INTERRUPTED, TERMINATED
     
     def test_state_values(self):
         """Each state should have a valid string value."""
@@ -118,7 +118,7 @@ class TestThreadLifecycleTransition:
     
     def test_transition_metadata(self):
         """Transitions should have proper metadata."""
-        from agent.execution.threads import (
+        from agent.execution.threads.lifecycle import (
             ThreadLifecycleState,
             ThreadLifecycleReason,
             ThreadLifecycleTransition,
@@ -142,7 +142,7 @@ class TestThreadLifecycleSnapshot:
     
     def test_snapshot_creation(self):
         """Create and validate a lifecycle snapshot."""
-        from agent.execution.threads import (
+        from agent.execution.threads.lifecycle import (
             ThreadLifecycleState,
             ThreadLifecycleSnapshot,
         )
@@ -167,7 +167,7 @@ class TestThreadLifecycleTransitionRequest:
     
     def test_request_creation(self):
         """Create and validate a transition request."""
-        from agent.execution.threads import (
+        from agent.execution.threads.lifecycle import (
             ThreadLifecycleState,
             ThreadLifecycleTransitionRequest,
         )
@@ -189,7 +189,7 @@ class TestThreadLifecycleTransitionRequest:
     
     def test_request_to_dict(self):
         """to_dict should return serializable format."""
-        from agent.execution.threads import (
+        from agent.execution.threads.lifecycle import (
             ThreadLifecycleState,
             ThreadLifecycleTransitionRequest,
         )
@@ -214,7 +214,7 @@ class TestThreadLifecycleTransitionResult:
     
     def test_accepted_result(self):
         """Create an accepted transition result."""
-        from agent.execution.threads import (
+        from agent.execution.threads.lifecycle import (
             ThreadLifecycleState,
             ThreadLifecycleTransitionResult,
         )
@@ -232,7 +232,7 @@ class TestThreadLifecycleTransitionResult:
     
     def test_rejected_result(self):
         """Create a rejected transition result."""
-        from agent.execution.threads import (
+        from agent.execution.threads.lifecycle import (
             ThreadLifecycleState,
             ThreadLifecycleTransitionResult,
         )

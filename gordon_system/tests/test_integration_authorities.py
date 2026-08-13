@@ -79,12 +79,12 @@ class TestStateSynchronization:
     async def test_sync_state_with_mocked_authorities(self, runtime_id: str):
         """Test state synchronization with mock authorities."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController,
                 StateSyncResult
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController,
                 StateSyncResult
             )
@@ -103,12 +103,12 @@ class TestStateSynchronization:
     async def test_detects_state_drift(self, runtime_id: str):
         """Test that state drift is detected."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController,
                 StateSyncResult
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController,
                 StateSyncResult
             )
@@ -146,11 +146,11 @@ class TestRevocationPropagation:
     async def test_readiness_revocation_closes_admission(self, runtime_id: str):
         """Test that readiness revocation closes admission."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         
@@ -181,11 +181,11 @@ class TestRevocationPropagation:
     async def test_non_critical_revocation_restricts_not_closes(self, runtime_id: str):
         """Test that non-critical revocation restricts rather than closes."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         
@@ -224,11 +224,11 @@ class TestOperationalTransition:
     async def test_transition_requires_both_conditions(self, runtime_id: str):
         """Test that transition to operational requires both readiness and admission."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         
@@ -246,11 +246,11 @@ class TestOperationalTransition:
     async def test_blocked_without_readiness(self, runtime_id: str):
         """Test that transition is blocked without readiness."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         
@@ -268,11 +268,11 @@ class TestOperationalTransition:
     async def test_blocked_without_admission(self, runtime_id: str):
         """Test that transition is blocked without admission."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         
@@ -298,11 +298,11 @@ class TestIntegrationMultiRuntime:
     def test_integration_snapshots_contain_correct_runtime(self, runtime_id: str):
         """Test that integration snapshots contain correct runtime ID."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         
@@ -315,11 +315,11 @@ class TestIntegrationMultiRuntime:
     def test_different_runtimes_have_independent_state(self):
         """Test that different runtimes have independent integration state."""
         try:
-            from gordon_system.src.agent.components.core.integration import (
+            from agent.components.core.integration import (
                 RuntimeIntegrationController
             )
         except ImportError:
-            from gordon_system.src.agent.components.core.integration.__init__ import (
+            from agent.components.core.integration.__init__ import (
                 RuntimeIntegrationController
             )
         

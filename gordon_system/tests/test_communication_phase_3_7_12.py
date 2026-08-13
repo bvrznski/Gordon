@@ -37,7 +37,7 @@ from unittest.mock import Mock, patch
 # =============================================================================
 
 try:
-    from gordon_system.src.agent.components.core.communication import (
+    from agent.components.core.communication import (
         model, envelope, event_bus, message_router, signal_manager,
         coordinator, subscriber, queues, channels, replay, observability
     )

@@ -48,18 +48,19 @@ from enum import Enum, auto
 import uuid
 import time
 
-# Re-export core execution primitives
+# Note: Core owns its own execution primitives.
+# These types are defined in this module, not imported from execution:
+#   - ActionId, InvocationId, ToolId, EffectorId (identifiers)
+#   - ActionState, ExecutionStatus (execution states)
+#   - TaskId is re-exported from core.execution for compatibility
+#   - Priority is re-exported from core.execution for compatibility
+
 from ..execution import (
     TaskId,
     Priority,
-    ExecutionState,
-    CancellationSource,
-    CancellationToken,
-    CleanupCoordinator,
 )
 
 T = TypeVar("T")
-
 
 # =============================================================================
 # ACTION IDENTIFIERS
