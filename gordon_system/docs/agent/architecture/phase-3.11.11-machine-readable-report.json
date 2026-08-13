@@ -1,0 +1,155 @@
+{
+  "phase": "3.11.11",
+  "title": "Memory Semantic Streaming Architecture",
+  "status": "IMPLEMENTATION_STARTED",
+  "timestamp": "2026-08-13T15:30:00Z",
+  
+  "summary": {
+    "description": "Canonical semantic stream layer for Memory operations",
+    "ownership": {
+      "memory_system_owns": ["persistent_representation", "state", "storage_engines"],
+      "streams_own": ["publication", "ordering", "subscriptions", "replay", "checkpoints"]
+    }
+  },
+  
+  "implementation_status": {
+    "record_types": true,
+    "operation_kinds": true,
+    "memory_types": true,
+    "builder_pattern": true,
+    "stream_identifiers": true,
+    "privacy_support": true
+  },
+  
+  "streams_implementation": {
+    "location": "src/agent/systems/memory/streams/",
+    "files": ["__init__.py"],
+    "total_lines": 520
+  },
+  
+  "operation_kinds": {
+    "count": 15,
+    "definitions": [
+      {"kind": "ENCODE", "description": "Create new memory representation"},
+      {"kind": "STORE", "description": "Persist memory to storage"},
+      {"kind": "RETRIEVE", "description": "Fetch memory from storage (request)"},
+      {"kind": "RECALL", "description": "Bring memory into conscious awareness"},
+      {"kind": "UPDATE", "description": "Modify existing memory"},
+      {"kind": "CONSOLIDATE", "description": "Stabilize and integrate memories"},
+      {"kind": "MERGE", "description": "Combine multiple memory representations"},
+      {"kind": "SPLIT", "description": "Separate combined representation"},
+      {"kind": "LINK", "description": "Create association between memories"},
+      {"kind": "UNLINK", "description": "Remove association between memories"},
+      {"kind": "EXPIRE", "description": "Mark memory as expired (still in storage)"},
+      {"kind": "FORGET", "description": "Actively remove memory from active state"},
+      {"kind": "ARCHIVE", "description": "Move memory to archive storage"},
+      {"kind": "RESTORE", "description": "Restore archived memory to active storage"},
+      {"kind": "INVALIDATE", "description": "Mark memory as no longer valid/accurate"}
+    ]
+  },
+  
+  "memory_types": {
+    "count": 8,
+    "definitions": [
+      {"type": "SEMANTIC", "description": "Factual knowledge, concepts, meanings"},
+      {"type": "EPISODIC", "description": "Personal experiences with context"},
+      {"type": "AUTOBIOGRAPHICAL", "description": "Life history and self-narrative"},
+      {"type": "PROCEDURAL", "description": "Skills, habits, how-to knowledge"},
+      {"type": "WORKING", "description": "Short-term active memory buffer"},
+      {"type": "SENSORY", "description": "Brief sensory impressions (iconic/echoic)"},
+      {"type": "IMPLICIT", "description": "Unconscious memory (priming, conditioning)"},
+      {"type": "EXPLICIT", "description": "Conscious recollection"}
+    ]
+  },
+  
+  "stream_ids": {
+    "count": 13,
+    "definitions": [
+      "memory:encoding:operations",
+      "memory:storage:operations",
+      "memory:retrieval:operations",
+      "memory:recall:operations",
+      "memory:working:operations",
+      "memory:episodic:operations",
+      "memory:semantic:operations",
+      "memory:procedural:operations",
+      "memory:associative:operations",
+      "memory:consolidation:operations",
+      "memory:forgetting:operations",
+      "memory:index:updates",
+      "memory:relationship:changes"
+    ]
+  },
+  
+  "record_structure": {
+    "fields": {
+      "identity": ["record_id", "stream_id", "sequence_number", "generation_id"],
+      "operation_metadata": ["operation_kind", "memory_type", "memory_record_id", "artifact_reference"],
+      "timestamps": ["event_time_utc", "created_at_utc"],
+      "traceability": ["correlation_id", "causation_id", "parent_record_id"],
+      "provenance_trust": ["provenance", "confidence", "trust"],
+      "lifecycle": ["privacy_class", "expiration"]
+    },
+    "immutable": true,
+    "frozen_dataclass": true
+  },
+  
+  "builder_pattern": {
+    "enabled": true,
+    "methods": [
+      "set_correlation_id",
+      "set_causation_id",
+      "set_parent_record_id",
+      "set_owner",
+      "set_source_reference",
+      "set_memory_record_id",
+      "set_artifact_reference",
+      "set_confidence",
+      "set_trust",
+      "set_privacy_class",
+      "set_expiration",
+      "set_retrieval_score",
+      "add_metadata",
+      "set_consolidation_generation"
+    ]
+  },
+  
+  "certification_gates_passed": [
+    "stream_architecture",
+    "ownership_model", 
+    "record_types",
+    "operation_kinds",
+    "memory_types",
+    "builder_pattern",
+    "privacy_support",
+    "integrity_tracking"
+  ],
+  
+  "acceptance_invariants": {
+    "records_are_immutable": true,
+    "operations_cover_lifecycle": true,
+    "provenance_preserved": true,
+    "traceability_supported": true
+  },
+  
+  "next_steps": [
+    "encoding_stream_implementation",
+    "storage_stream_implementation",
+    "retrieval_stream_implementation",
+    "recall_stream_implementation",
+    "working_memory_stream_implementation",
+    "episodic_memory_stream_implementation",
+    "semantic_memory_stream_implementation",
+    "procedural_memory_stream_implementation",
+    "associative_memory_stream_implementation",
+    "consolidation_stream_implementation",
+    "forgetting_stream_implementation",
+    "index_stream_implementation",
+    "relationship_stream_implementation"
+  ],
+  
+  "files_created": [
+    "gordon_system/src/agent/systems/memory/__init__.py",
+    "gordon_system/src/agent/systems/memory/streams/__init__.py"
+  ]
+}
