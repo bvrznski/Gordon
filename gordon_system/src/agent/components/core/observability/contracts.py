@@ -141,13 +141,14 @@ class TimestampContract:
     to enable accurate ordering and correlation.
     """
     
-    version: str = "1.0.0"
-    
-    # Wall-clock time (UTC)
+    # Wall-clock time (UTC) - required field (no default)
     timestamp_utc: float  # Unix epoch seconds with sub-second precision
     
+    # Optional fields with defaults
+    version: str = "1.0.0"  # Contract version
+    
     # Monotonic time (for ordering within this process)
-    monotonic_time: float = field(default_factory=time.monotonic)
+    monotonic_time: float = field(default_factory=time.monotonic)  # Process monotonic timestamp
     
     # Timezone information (ISO 8601 format, e.g., "+00:00")
     timezone_offset: str = "Z"  # UTC by default
@@ -183,25 +184,17 @@ class MetadataContract:
     categorization and filtering.
     """
     
-    version: str = "1.0.0"
-    
-    # Source identification
+    # Required fields (no defaults) - must come first
     source_component: str  # Component generating the telemetry
-    source_instance: Optional[str] = None  # Specific instance ID
-    
-    # Timing (canonical timestamp contract)
-    timestamps: TimestampContract = field(default_factory=TimestampContract)
-    
-    # Context information
     runtime_id: str  # Runtime instance identifier
+    
+    # Optional fields with defaults - must come after required fields
+    version: str = "1.0.0"  # Contract version
+    source_instance: Optional[str] = None  # Specific instance ID
+    timestamps: TimestampContract = field(default_factory=TimestampContract)  # Canonical timestamp contract
     correlation_context: CorrelationContract = field(default_factory=CorrelationContract)  # Correlation IDs
-    
-    
-    # Metadata tags for filtering/grouping
-    tags: Dict[str, str] = field(default_factory=dict)
-    
-    # Version information
-    telemetry_version: TelemetryVersion = TelemetryVersion.V1_0_0
+    tags: Dict[str, str] = field(default_factory=dict)  # Tags for filtering/grouping
+    telemetry_version: TelemetryVersion = TelemetryVersion.V1_0_0  # Version info
     
     @classmethod
     def create(
@@ -246,22 +239,15 @@ class TelemetryEventContract:
     to ensure backend independence and consistent processing.
     """
     
-    version: str = "1.0.0"
-    
-    # Event identification
-    event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    # Required fields (no defaults) - must come first
     event_type: str  # e.g., "log", "metric", "span", "diagnostic"
+    timestamps: TimestampContract  # Canonical timestamp contract
+    metadata: MetadataContract  # Canonical metadata contract
+    payload: Dict[str, Any]  # Event-specific payload
     
-    # Timestamps (canonical)
-    timestamps: TimestampContract
-    
-    # Metadata (canonical)
-    metadata: MetadataContract
-    
-    # Event-specific payload
-    payload: Dict[str, Any]
-    
-    # Severity/level (for log-like events)
+    # Optional fields with defaults - must come after required fields
+    version: str = "1.0.0"  # Contract version
+    event_id: str = field(default_factory=lambda: str(uuid.uuid4()))  # Event identifier
     severity: Optional[str] = None  # e.g., "debug", "info", "warning", "error"
     
     def to_serializable(self) -> Dict[str, Any]:
@@ -349,22 +335,15 @@ class MetricContract:
     across different backend systems.
     """
     
-    version: str = "1.0.0"
-    
-    # Metric identification
+    # Required fields (no defaults) - must come first
     metric_name: str  # e.g., "http.requests.total", "cpu.usage"
     metric_type: str  # "counter", "gauge", "histogram", "summary"
-    
-    # Value(s)
     value: float  # Current/observed value
     
-    # Labels for dimensionality (prometheus-style)
-    labels: Dict[str, str] = field(default_factory=dict)
-    
-    # Timestamp
-    timestamp_utc: float = field(default_factory=time.time)
-    
-    # Optional histogram data
+    # Optional fields with defaults - must come after required fields
+    version: str = "1.0.0"  # Contract version
+    labels: Dict[str, str] = field(default_factory=dict)  # Labels for dimensionality (prometheus-style)
+    timestamp_utc: float = field(default_factory=time.time)  # Timestamp
     histogram_bucket: Optional[Dict[str, int]] = None  # For histograms
     histogram_sum: Optional[float] = None
     histogram_count: Optional[int] = None
@@ -410,33 +389,22 @@ class SpanContract:
     interoperability between different tracing backends.
     """
     
-    version: str = "1.0.0"
-    
-    # Identifiers
-    trace_id: str
-    span_id: str
-    parent_span_id: Optional[str] = None
-    
-    # Operation information
+    # Required fields (no defaults) - must come first
+    trace_id: str  # Trace identifier
+    span_id: str  # Span identifier
     name: str  # Operation name
+    
+    # Optional fields with defaults - must come after required fields
+    version: str = "1.0.0"  # Contract version
+    parent_span_id: Optional[str] = None  # Parent span identifier (optional)
     kind: str = "internal"  # "client", "server", "producer", "consumer", "internal"
-    
-    # Timing (canonical)
-    start_time_utc: float = field(default_factory=time.time)
-    end_time_utc: Optional[float] = None
-    
-    # Status
+    start_time_utc: float = field(default_factory=time.time)  # Start timestamp
+    end_time_utc: Optional[float] = None  # End timestamp (optional)
     status_code: str = "unset"  # "ok", "error", "unset"
-    status_message: Optional[str] = None
-    
-    # Attributes (key-value pairs)
-    attributes: Dict[str, Any] = field(default_factory=dict)
-    
-    # Events within the span
-    events: List[Dict[str, Any]] = field(default_factory=list)
-    
-    # Links to other spans
-    links: List[Dict[str, str]] = field(default_factory=list)
+    status_message: Optional[str] = None  # Status message (optional)
+    attributes: Dict[str, Any] = field(default_factory=dict)  # Span attributes
+    events: List[Dict[str, Any]] = field(default_factory=list)  # Events within the span
+    links: List[Dict[str, str]] = field(default_factory=list)  # Links to other spans
     
     @property
     def duration_seconds(self) -> float:
@@ -502,29 +470,20 @@ class LogContract:
     across different log aggregation systems.
     """
     
-    version: str = "1.0.0"
-    
-    # Timestamps (canonical)
-    timestamps: TimestampContract
-    
-    # Severity
+    # Required fields (no defaults) - must come first
+    timestamps: TimestampContract  # Canonical timestamp contract
     severity_text: str  # e.g., "DEBUG", "INFO", "WARNING", "ERROR"
     severity_number: int  # Numeric level for sorting
     
-    # Source information
+    # Optional fields with defaults - must come after required fields
+    version: str = "1.0.0"  # Contract version
     resource: Dict[str, Any] = field(default_factory=dict)  # Resource attributes
     scope: Dict[str, Any] = field(default_factory=dict)     # Scope attributes
-    
-    # Log body
-    body: Optional[str] = None
+    body: Optional[str] = None  # Log body content
     body_type: str = "string"  # "string", "json", etc.
-    
-    # Attributes (structured log data)
-    attributes: Dict[str, Any] = field(default_factory=dict)
-    
-    # Trace context
-    trace_id: Optional[str] = None
-    span_id: Optional[str] = None
+    attributes: Dict[str, Any] = field(default_factory=dict)  # Structured log data
+    trace_id: Optional[str] = None  # Trace context
+    span_id: Optional[str] = None   # Span context
     
     def to_structured_logging_json(self) -> Dict[str, Any]:
         """
@@ -557,28 +516,19 @@ class TelemetryPolicyContract:
     Defines rules for sampling, retention, export, and other telemetry policies.
     """
     
-    version: str = "1.0.0"
-    
-    # Policy identification
-    policy_id: str = field(default_factory=lambda: f"policy_{uuid.uuid4().hex[:8]}")
+    # Required fields (no defaults) - must come first
     name: str  # Human-readable policy name
-    
-    # Scope (which components this applies to)
     scope: str  # e.g., "runtime", "service:x", "component:y"
     
-    # Sampling configuration
+    # Optional fields with defaults - must come after required fields
+    version: str = "1.0.0"  # Contract version
+    policy_id: str = field(default_factory=lambda: f"policy_{uuid.uuid4().hex[:8]}")  # Policy identifier
     sample_rate: float = 1.0  # 0.0 - 1.0
     sampling_policy: str = "always"  # "always", "never", "probabilistic"
-    
-    # Retention
     retention_seconds: int = 3600  # Default 1 hour
-    
-    # Export configuration
     export_enabled: bool = True
     export_batch_size: int = 1000
-    export_interval_seconds: float = 5.0
-    
-    # Severity filtering
+    export_interval_seconds: float = 5.0  # Export interval in seconds
     min_severity: str = "TRACE"  # Minimum severity to collect
     
     def is_sampled(self, random_value: Optional[float] = None) -> bool:

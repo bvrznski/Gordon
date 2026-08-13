@@ -41,27 +41,19 @@ class TelemetryPolicy:
     Specifies rules for sampling, retention, export, and other behaviors.
     """
     
-    policy_id: str = field(default_factory=lambda: f"policy_{uuid.uuid4().hex[:8]}")
+    # Required fields (no defaults) - must come first
+    name: str  # Human-readable policy name
+    description: str  # Policy description
+    scope: PolicyScope  # Scope of this policy
     
-    name: str
-    description: str
-    
-    # Scope
-    scope: PolicyScope
+    # Optional fields with defaults - must come after required fields
+    policy_id: str = field(default_factory=lambda: f"policy_{uuid.uuid4().hex[:8]}")  # Policy identifier
     scope_id: Optional[str] = None  # Service or component ID if scoped
-    
-    # Sampling configuration
     sample_rate: float = 1.0  # 0.0 - 1.0
     sampling_strategy: str = "probabilistic"  # always, never, probabilistic
-    
-    # Retention
     retention_seconds: int = 3600  # Default 1 hour
-    
-    # Export configuration
     export_enabled: bool = True
     export_format: str = "json"
-    
-    # Severity filtering
     min_severity: str = "TRACE"  # TRACE, DEBUG, INFO, NOTICE, WARNING, ERROR, CRITICAL
     
     @property

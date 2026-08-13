@@ -43,20 +43,16 @@ class ProfileDefinition:
     Specifies what to profile and how long to collect.
     """
     
-    definition_id: str = field(default_factory=lambda: f"profile_{uuid.uuid4().hex[:8]}")
+    # Required fields (no defaults) - must come first
+    profile_type: ProfileType = ProfileType.CPU  # Type of profiling to perform (default CPU)
+    name: str = "unnamed_profile"                  # Human-readable name
     
-    profile_type: ProfileType
-    name: str
-    
-    # Duration
+    # Optional fields with defaults - must come after required fields
+    definition_id: str = field(default_factory=lambda: f"profile_{uuid.uuid4().hex[:8]}")  # Definition identifier
     duration_seconds: float = 60.0  # Default 1 minute
-    
-    # Sampling configuration
     sample_rate_hz: float = 100.0   # Samples per second
-    
-    # Filtering
-    process_name_filter: Optional[str] = None
-    thread_id_filter: Optional[int] = None
+    process_name_filter: Optional[str] = None  # Filter by process name
+    thread_id_filter: Optional[int] = None     # Filter by thread ID
 
 
 # =============================================================================
@@ -455,22 +451,17 @@ class BottleneckAnalysis:
     Describes the location, cause, and impact of a bottleneck.
     """
     
-    analysis_id: str = field(default_factory=lambda: f"bottleneck_{uuid.uuid4().hex[:8]}")
-    
-    # Location
+    # Location - required fields without defaults must come first
     component: str           # Which component is affected
+    measured_latency_seconds: float  # Actual measured latency (required, no default)
+    
+    # Optional fields with defaults - must come after required fields
     function_name: Optional[str] = None  # Specific function (if known)
-    
-    # Measurements
-    measured_latency_seconds: float
     expected_latency_seconds: float = 0.1  # Expected threshold
-    
-    # Impact
     severity: str = "warning"  # info, warning, critical
     affected_requests: int = 1
-    
-    # Recommendations
-    recommendations: List[str] = field(default_factory=list)
+    analysis_id: str = field(default_factory=lambda: f"bottleneck_{uuid.uuid4().hex[:8]}")  # Analysis identifier
+    recommendations: List[str] = field(default_factory=list)  # Recommendations for fixing bottleneck
 
 
 @dataclass(frozen=True)
@@ -481,17 +472,14 @@ class CapacityAnalysis:
     Evaluates current usage against limits and forecasts.
     """
     
-    analysis_id: str = field(default_factory=lambda: f"capacity_{uuid.uuid4().hex[:8]}")
-    
-    # Resource being analyzed
+    # Resource being analyzed - required fields without defaults must come first
     resource_type: str      # e.g., "cpu", "memory", "queue"
     current_usage_percent: float
     
-    # Limits
+    # Optional fields with defaults - must come after required fields
+    analysis_id: str = field(default_factory=lambda: f"capacity_{uuid.uuid4().hex[:8]}")  # Analysis identifier
     hard_limit_percent: float = 100.0
     warning_threshold_percent: float = 80.0
-    
-    # Forecast
     projected_utilization_1h: Optional[float] = None
     projected_utilization_24h: Optional[float] = None
 

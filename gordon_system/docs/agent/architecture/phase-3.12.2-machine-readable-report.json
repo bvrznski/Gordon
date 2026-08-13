@@ -1,0 +1,74 @@
+{
+  "phase": "3.12.2",
+  "title": "Core Ownership and Boundary Architecture",
+  "date": "2026-08-13",
+  "status": "CERTIFIED_WITH_OBSERVATIONS",
+  "certification_decision": "CORE_OWNERSHIP_AND_BOUNDARIES_CERTIFIED",
+  
+  "executive_summary": {
+    "canonical_ownership": "Every architectural concept has exactly one owner",
+    "core_owns": "Reusable runtime infrastructure only",
+    "semantic_layers_own": "Behavior and meaning, not infrastructure"
+  },
+  
+  "ownership_matrix": {
+    "runtime_infrastructure": [
+      {"component": "Scheduler", "owner": "Core"},
+      {"component": "Resource Manager", "owner": "Core"},
+      {"component": "Runtime Context", "owner": "Core"}
+    ],
+    "execution_machinery": [
+      {"component": "Thread Infrastructure", "owner": "Core"},
+      {"component": "Loop Infrastructure", "owner": "Core"},
+      {"component": "Cycle Infrastructure", "owner": "Core"},
+      {"component": "Stage Infrastructure", "owner": "Core"}
+    ],
+    "semantic_stream_infrastructure": [
+      {"component": "Stream Registry", "owner": "Core"},
+      {"component": "Stream Storage", "owner": "Core"},
+      {"component": "Backpressure Mechanisms", "owner": "Core"},
+      {"component": "Replay Infrastructure", "owner": "Core"},
+      {"component": "Checkpointing", "owner": "Core"}
+    ],
+    "lifecycle_infrastructure": [
+      {"component": "State Machine Definitions", "owner": "Core"},
+      {"component": "Transition Management", "owner": "Core"},
+      {"component": "Snapshot Creation", "owner": "Core"}
+    ]
+  },
+  
+  "boundary_validation": {
+    "runtime_vs_semantic": "PASS",
+    "infrastructure_vs_policy": "PASS",
+    "transport_vs_content": "PASS"
+  },
+  
+  "certification_gates_passed": [
+    "Ownership Consistency",
+    "Boundary Integrity", 
+    "Dependency Direction",
+    "Documentation Completeness",
+    "Repository Consistency"
+  ],
+  
+  "observations": [
+    {
+      "id": "OBS-001",
+      "severity": "INFO",
+      "description": "Stream lifecycle state definitions exist in both lifecycle.py and lifecycle_transitions.py"
+    },
+    {
+      "id": "OBS-002", 
+      "severity": "RECOMMENDATION",
+      "description": "Add automated dependency validation to CI pipeline"
+    }
+  ],
+  
+  "files_created": [
+    "phase-3.12.2-executive-summary.md",
+    "phase-3.12.2-core-ownership-report.md",
+    "phase-3.12.2-boundary-architecture-report.md",
+    "phase-3.12.2-execution-ownership-report.md",
+    "phase-3.12.2-stream-ownership-report.md"
+  ]
+}

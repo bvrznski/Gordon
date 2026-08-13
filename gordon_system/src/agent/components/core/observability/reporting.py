@@ -50,15 +50,15 @@ class ReportType(Enum):
 class ReportSchedule:
     """Configuration for scheduled report generation."""
     
-    schedule_id: str = field(default_factory=lambda: f"sched_{uuid.uuid4().hex[:8]}")
+    # Required fields (no defaults) - must come first
+    report_type: ReportType  # Type of report to generate
+    name: str  # Human-readable name
     
-    report_type: ReportType
-    name: str
-    
-    # Schedule configuration
+    # Optional fields with defaults - must come after required fields
+    schedule_id: str = field(default_factory=lambda: f"sched_{uuid.uuid4().hex[:8]}")  # Schedule identifier
     interval_seconds: float = 3600.0  # Default hourly
-    next_run_utc: Optional[float] = None
-    enabled: bool = True
+    next_run_utc: Optional[float] = None  # Next scheduled run time
+    enabled: bool = True  # Is this schedule active?
 
 
 # =============================================================================
@@ -114,19 +114,17 @@ class ReportOutput:
     Contains the report data in multiple formats.
     """
     
-    output_id: str = field(default_factory=lambda: f"output_{uuid.uuid4().hex[:8]}")
+    # Required fields (no defaults) - must come first
+    report_type: ReportType  # Type of report
+    generated_at_utc: float  # Timestamp when report was generated
     
-    report_type: ReportType
-    generated_at_utc: float
-    
-    # Data content
-    data: Dict[str, Any]            # Structured data
-    summary: str                    # Human-readable summary
-    
-    # Format variants
-    json_output: Optional[str] = None
-    markdown_output: Optional[str] = None
-    html_output: Optional[str] = None
+    # Optional fields with defaults - must come after required fields
+    output_id: str = field(default_factory=lambda: f"output_{uuid.uuid4().hex[:8]}")  # Output identifier
+    data: Dict[str, Any] = field(default_factory=dict)  # Structured data
+    summary: str = ""  # Human-readable summary
+    json_output: Optional[str] = None  # JSON format output
+    markdown_output: Optional[str] = None  # Markdown format output
+    html_output: Optional[str] = None  # HTML format output
 
 
 # =============================================================================
@@ -608,17 +606,15 @@ class ExportFormat(Enum):
 class ExportConfig:
     """Configuration for data export."""
     
-    config_id: str = field(default_factory=lambda: f"export_{uuid.uuid4().hex[:8]}")
+    # Required fields (no defaults) - must come first
+    format: ExportFormat  # Output format for exported data
+    destination: str      # URL, file path, or other destination
     
-    format: ExportFormat
-    destination: str        # URL, file path, or other destination
-    
-    # Filtering
+    # Optional fields with defaults - must come after required fields
+    config_id: str = field(default_factory=lambda: f"export_{uuid.uuid4().hex[:8]}")  # Config identifier
     metric_filter: Optional[List[str]] = None  # List of metrics to include
-    time_range_start_utc: Optional[float] = None
-    time_range_end_utc: Optional[float] = None
-    
-    # Compression
+    time_range_start_utc: Optional[float] = None  # Start of export time range
+    time_range_end_utc: Optional[float] = None   # End of export time range
     compression: str = "none"  # none, gzip, zstd
 
 

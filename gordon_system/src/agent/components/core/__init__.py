@@ -79,6 +79,32 @@ from .lifecycle import (
     CycleLifecycleSnapshot,
 )
 
+# Phase 3.12.3 - Stream Infrastructure Package
+from .streams import (
+    IdentityType,
+    IdentityCategory,
+    IdentityId,
+    StreamId,
+    StreamRecordId,
+    StreamGenerationId,
+    StreamCursor,
+    StreamCheckpoint,
+    StreamPosition,
+    StreamLifecycleState,
+    StreamLifecycleTransitionGraph,
+    StreamLifecycleTransition,
+    StreamLifecycleSnapshot,
+    StreamError,
+    StreamNotFoundError,
+    StreamClosedError,
+    StreamPausedError,
+    CapacityExceededError,
+    StreamGenerationClosedError,
+    validate_stream_id,
+    validate_stream_lifecycle_transition,
+    dataclass_replace,
+)
+
 from .registry import (
     RegistryEntry,
     Registry,
@@ -206,13 +232,31 @@ __all__ = [
     "contracts",
     "types", 
     "exceptions",
-     "lifecycle",
-     
-     # Lifecycle state machines
-     "ThreadLifecycleState", "CycleState", "StateTransition",
-     "ThreadLifecycleTransitionGraph", "CycleTransitionGraph",
-     "LifecycleTransitionRequest", "LifecycleTransitionResult",
-     "ThreadLifecycleSnapshot", "CycleLifecycleSnapshot",
+    
+    # Lifecycle state machines (thread/cycle)
+    "lifecycle",
+    "ThreadLifecycleState", "CycleState", "StateTransition",
+    "ThreadLifecycleTransitionGraph", "CycleTransitionGraph",
+    "LifecycleTransitionRequest", "LifecycleTransitionResult",
+    "ThreadLifecycleSnapshot", "CycleLifecycleSnapshot",
+    
+    # Phase 3.12.3 - Stream Infrastructure (canonical)
+    "streams",
+    # Stream identity types
+    "IdentityType", "IdentityCategory",
+    "IdentityId", "StreamId", "StreamRecordId", "StreamGenerationId",
+    # Stream position and checkpoint types
+    "StreamCursor", "StreamCheckpoint", "StreamPosition",
+    # Stream lifecycle types (canonical)
+    "StreamLifecycleState", "StreamLifecycleTransitionGraph",
+    "StreamLifecycleTransition", "StreamLifecycleSnapshot",
+    # Stream exceptions
+    "StreamError", "StreamNotFoundError", "StreamClosedError",
+    "StreamPausedError", "CapacityExceededError", 
+    "StreamGenerationClosedError",
+    # Stream utility functions
+    "validate_stream_id", "validate_stream_lifecycle_transition",
+    "dataclass_replace",
     
     # Phase 3.7+ - Registry
     "RegistryEntry", "Registry", "ComponentRegistry", "ServiceRegistry",
