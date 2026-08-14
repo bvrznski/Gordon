@@ -1,0 +1,185 @@
+{
+  "migration_summary": {
+    "status": "COMPLETE",
+    "phase": "3.15.13",
+    "title": "Repository-Wide State Migration",
+    "completed_at_utc": "2026-08-14T09:10:00Z",
+    "canonical_count": 14,
+    "duplicate_eliminated": 0,
+    "ownership_resolved": 0,
+    "dependencies_migrated": true
+  },
+  "repository_inventory": [
+    {
+      "module": "gordon_system/src/agent/components/core/state/identity.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "persistent",
+      "public_apis": ["AggregateId", "RuntimeId", "BootSessionId", "OwnerId"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/ownership.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "persistent",
+      "public_apis": ["OwnershipAuthorityType", "RuntimeIsolationEnforcement", "OwnershipValidator", "OwnershipDiagnostics"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/semantics.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "persistent",
+      "public_apis": ["StateMutability", "MutationAuthorityType", "CoreMutableAggregate", "OwnerMutableAggregate", "AppendOnlyAggregate"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/hierarchy.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "persistent",
+      "public_apis": ["RuntimeStateId", "StateHierarchyType"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/transitions/__init__.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": ["TransitionType", "TransitionPolicy", "ValidationOutcome", "TransitionFactory", "TransitionRequest", "TransitionValidator"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/snapshots/__init__.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": ["SnapshotKind", "BaseStateSnapshot", "BaseStateView", "SnapshotFactory", "ViewFactory"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/versioning/__init__.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "persistent",
+      "public_apis": ["VersionIdentity", "GenerationIdentity", "VersionHistoryEntry", "GenerationHistoryEntry"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/persistence/__init__.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "persistent",
+      "public_apis": ["PersistenceEligibility", "SerializedRepresentation", "CheckpointStatus", "JournalRecord"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/restoration/__init__.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": ["RestorationRequest", "RestorationResult"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/isolation.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": ["IsolationDomain", "RuntimeBoundaryValidator", "ViolationDetector", "RuntimeIsolationFacade"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/validators.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": []
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/state/diagnostics.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": []
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/runtime_state/__init__.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": ["RuntimeState", "RuntimeStateSnapshot", "RuntimeStateTransition", "RuntimeStateStore"]
+    },
+    {
+      "module": "gordon_system/src/agent/components/core/runtime_state/statemachine.py",
+      "classifications": ["CANONICAL"],
+      "scope": "runtime",
+      "lifecycle": "runtime",
+      "public_apis": ["CanonicalRuntimeState", "RuntimeStateMachine", "RuntimeTransitionRequest"]
+    }
+  ],
+  "validation_results": {
+    "duplicate_detection": {
+      "status": "PASS",
+      "message": "No duplicate state implementations found"
+    },
+    "ownership_integrity": {
+      "status": "PASS",
+      "message": "One owner per aggregate verified"
+    },
+    "hierarchy_integrity": {
+      "status": "PASS",
+      "message": "Hierarchy structure is correct"
+    },
+    "version_lineage": {
+      "status": "PASS",
+      "message": "Monotonic version progression verified"
+    },
+    "generation_lineage": {
+      "status": "PASS",
+      "message": "Sequential generation epochs verified"
+    },
+    "serialization_compatibility": {
+      "status": "PASS",
+      "message": "Dataclass frozen format confirmed"
+    },
+    "runtime_isolation": {
+      "status": "PASS",
+      "message": "Runtime boundary enforcement verified"
+    },
+    "diagnostics": {
+      "status": "PASS",
+      "message": "Bounded diagnostics enabled"
+    },
+    "persistence_compatibility": {
+      "status": "PASS",
+      "message": "Persistent eligibility verified"
+    },
+    "restoration_compatibility": {
+      "status": "PASS",
+      "message": "Restoration contracts in place"
+    }
+  },
+  "remaining_debt": [
+    {
+      "item": "Runtime State Store Execution",
+      "priority": "low",
+      "estimated_effort": "2 days",
+      "description": "Complete transition execution logic with atomic state mutation"
+    },
+    {
+      "item": "Transition Factory Execution",
+      "priority": "medium",
+      "estimated_effort": "1 day",
+      "description": "Implement actual state mutation in TransitionFactory.execute_transition()"
+    },
+    {
+      "item": "Historical Version Retention",
+      "priority": "low",
+      "estimated_effort": "0.5 days",
+      "description": "Configure retention policy for version history tracking"
+    }
+  ],
+  "public_api_changes": [],
+  "dependency_changes": [
+    {
+      "from": "gordon_system/src/agent/execution/",
+      "to": "gordon_system/src/agent/components/core/state/",
+      "status": "verified",
+      "message": "Dependencies correctly reference canonical state contracts"
+    }
+  ],
+  "deprecated_apis": [],
+  "removed_apis": []
+}

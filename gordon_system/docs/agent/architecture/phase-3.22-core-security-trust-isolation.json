@@ -1,0 +1,361 @@
+{
+  "phase": {
+    "version": "3.22.0",
+    "name": "Core Security, Trust & Isolation Architecture",
+    "status": "implemented",
+    "date": "2026-08-14"
+  },
+  "trust_domains": [
+    {
+      "domain_id": "kernel",
+      "name": "Kernel",
+      "description": "Core runtime kernel operations",
+      "isolation_mode": true,
+      "default_trust_level": 1.0,
+      "scope": ["kernel", "runtime"]
+    },
+    {
+      "domain_id": "runtime",
+      "name": "Runtime",
+      "description": "Runtime execution environment",
+      "isolation_mode": true,
+      "default_trust_level": 0.8,
+      "scope": ["runtime", "services"]
+    },
+    {
+      "domain_id": "services",
+      "name": "Services",
+      "description": "Service execution environment",
+      "isolation_mode": true,
+      "default_trust_level": 0.6,
+      "scope": ["services"]
+    },
+    {
+      "domain_id": "plugins",
+      "name": "Plugins",
+      "description": "Plugin execution environment",
+      "isolation_mode": true,
+      "default_trust_level": 0.3,
+      "scope": ["plugins"]
+    },
+    {
+      "domain_id": "providers",
+      "name": "External Providers",
+      "description": "External provider access",
+      "isolation_mode": true,
+      "default_trust_level": 0.2,
+      "scope": ["providers"]
+    },
+    {
+      "domain_id": "tools",
+      "name": "Tools",
+      "description": "Tool execution environment",
+      "isolation_mode": true,
+      "default_trust_level": 0.4,
+      "scope": ["tools"]
+    },
+    {
+      "domain_id": "user",
+      "name": "User Input",
+      "description": "User-provided input processing",
+      "isolation_mode": true,
+      "default_trust_level": 0.1,
+      "scope": ["user"]
+    }
+  ],
+  "security_boundaries": [
+    {
+      "boundary_id": "application",
+      "name": "Application Boundary",
+      "protection": "Cross-application isolation"
+    },
+    {
+      "boundary_id": "runtime",
+      "name": "Runtime Boundary",
+      "protection": "Runtime instance boundaries"
+    },
+    {
+      "boundary_id": "process",
+      "name": "Process Boundary",
+      "protection": "OS process separation"
+    },
+    {
+      "boundary_id": "component",
+      "name": "Component Boundary",
+      "protection": "Component-level isolation"
+    },
+    {
+      "boundary_id": "service",
+      "name": "Service Boundary",
+      "protection": "Inter-service boundaries"
+    },
+    {
+      "boundary_id": "capability",
+      "name": "Capability Boundary",
+      "protection": "Execution capability limits"
+    },
+    {
+      "boundary_id": "plugin",
+      "name": "Plugin Boundary",
+      "protection": "Plugin execution sandboxing"
+    },
+    {
+      "boundary_id": "external",
+      "name": "External Boundary",
+      "protection": "Untrusted external access"
+    },
+    {
+      "boundary_id": "user",
+      "name": "User Boundary",
+      "protection": "User input validation"
+    },
+    {
+      "boundary_id": "admin",
+      "name": "Administrator Boundary",
+      "protection": "Administrator privilege separation"
+    }
+  ],
+  "authentication_methods": [
+    {
+      "method_id": "local",
+      "provider": "LocalAuthenticationProvider",
+      "use_case": "User credential authentication",
+      "credentials_stored": "hashed (SHA256 with salt)"
+    },
+    {
+      "method_id": "token",
+      "provider": "TokenAuthenticationProvider",
+      "use_case": "Session token validation",
+      "credentials_stored": "token registry"
+    },
+    {
+      "method_id": "api_key",
+      "provider": "ApiKeyAuthenticationProvider",
+      "use_case": "Service API access",
+      "credentials_stored": "hashed (SHA256)"
+    },
+    {
+      "method_id": "service",
+      "provider": "ServiceAuthenticationProvider",
+      "use_case": "Inter-service communication",
+      "credentials_stored": "encrypted"
+    },
+    {
+      "method_id": "certificate",
+      "provider": "CertificateAuthenticationProvider",
+      "use_case": "TLS certificate verification",
+      "credentials_stored": "certificate registry"
+    }
+  ],
+  "authorization_model": {
+    "default_behavior": "deny",
+    "invariants": [
+      "Z-001: Default is DENY when no rules match (fail-closed)",
+      "Z-002: Authorization decisions are deterministic and auditable",
+      "Z-003: Authorization does not imply capability execution",
+      "Z-004: Ownership verification required for owner-restricted resources"
+    ],
+    "permission_categories": [
+      {
+        "category": "runtime_administration",
+        "permissions": ["start", "stop", "restart"]
+      },
+      {
+        "category": "configuration",
+        "permissions": ["read", "write", "reload"]
+      },
+      {
+        "category": "filesystem",
+        "permissions": ["read", "write", "delete", "execute", "mount", "temporary"]
+      },
+      {
+        "category": "networking",
+        "permissions": ["outbound", "inbound", "provider_access", "localhost", "remote"]
+      },
+      {
+        "category": "process_creation",
+        "permissions": ["create", "exec", "kill"]
+      },
+      {
+        "category": "plugin_execution",
+        "permissions": ["load", "unload", "invoke"]
+      },
+      {
+        "category": "tool_invocation",
+        "permissions": ["register", "invoke"]
+      },
+      {
+        "category": "model_loading",
+        "permissions": ["load", "run"]
+      },
+      {
+        "category": "shutdown_recovery",
+        "permissions": ["initiate", "activate"]
+      },
+      {
+        "category": "diagnostics",
+        "permissions": ["read", "write"]
+      },
+      {
+        "category": "persistence",
+        "permissions": ["read", "write", "delete"]
+      }
+    ]
+  },
+  "capability_model": [
+    {
+      "concept": "Capability",
+      "description": "What the runtime CAN technically perform"
+    },
+    {
+      "concept": "Grant",
+      "description": "Binding between capability and principal"
+    },
+    {
+      "concept": "Lease",
+      "description": "Time-limited capability access"
+    },
+    {
+      "concept": "Revocation",
+      "description": "Immediate capability withdrawal"
+    }
+  ],
+  "isolation_levels": [
+    {
+      "level": "execution",
+      "scope": "CPU/memory isolation for processes"
+    },
+    {
+      "level": "process",
+      "scope": "OS-level process separation"
+    },
+    {
+      "level": "runtime",
+      "scope": "Runtime instance isolation"
+    },
+    {
+      "level": "capability",
+      "scope": "Permission-based capability limits"
+    },
+    {
+      "level": "plugin",
+      "scope": "Plugin execution sandboxing"
+    },
+    {
+      "level": "connector",
+      "scope": "External connector isolation"
+    }
+  ],
+  "sandbox_types": [
+    {
+      "type": "filesystem_sandbox",
+      "description": "Restricted filesystem access"
+    },
+    {
+      "type": "network_sandbox",
+      "description": "Limited network connectivity"
+    },
+    {
+      "type": "compute_sandbox",
+      "description": "CPU/memory usage limits"
+    },
+    {
+      "type": "model_sandbox",
+      "description": "Model inference isolation"
+    }
+  ],
+  "secrets_management": [
+    {
+      "secret_type": "passwords",
+      "storage": "encrypted",
+      "rotation_days": 90
+    },
+    {
+      "secret_type": "api_keys",
+      "storage": "encrypted",
+      "rotation_days": 180
+    },
+    {
+      "secret_type": "encryption_keys",
+      "storage": "encrypted",
+      "rotation_days": 365
+    },
+    {
+      "secret_type": "certificates",
+      "storage": "encrypted",
+      "rotation_days": null
+    }
+  ],
+  "integrity_mechanisms": [
+    {
+      "mechanism": "checksums",
+      "purpose": "Artifact verification"
+    },
+    {
+      "mechanism": "hashes",
+      "purpose": "Content integrity"
+    },
+    {
+      "mechanism": "signatures",
+      "purpose": "Cryptographic authenticity"
+    },
+    {
+      "mechanism": "chain_links",
+      "purpose": "Audit trail integrity"
+    }
+  ],
+  "confidentiality_guarantees": [
+    "D-001: Encryption for stored sensitive data",
+    "D-002: Encryption in transit for all communication",
+    "D-003: Redaction in logs and diagnostics",
+    "D-004: Secure deletion when no longer needed"
+  ],
+  "availability_protection": [
+    {
+      "feature": "rate_limiting",
+      "protection": "Denial-of-service prevention"
+    },
+    {
+      "feature": "quota_enforcement",
+      "protection": "Resource exhaustion protection"
+    },
+    {
+      "feature": "admission_control",
+      "protection": "System overload prevention"
+    },
+    {
+      "feature": "graceful_degradation",
+      "protection": "Service continuity"
+    }
+  ],
+  "audit_events": [
+    {
+      "category": "authentication",
+      "events": ["auth:succeeded", "auth:failed"]
+    },
+    {
+      "category": "authorization",
+      "events": ["authz:granted", "authz:denied"]
+    },
+    {
+      "category": "capability",
+      "events": ["capability:granted", "capability:revoked"]
+    },
+    {
+      "category": "trust",
+      "events": ["trust:changed", "trust:revoked"]
+    },
+    {
+      "category": "secrets",
+      "events": ["secret:accessed", "secret:rotated"]
+    },
+    {
+      "category": "plugins",
+      "events": ["plugin:loaded", "plugin:rejected"]
+    }
+  ],
+  "files_documentation": [
+    "gordon_system/docs/agent/architecture/phase-3.22-core-security-trust-isolation.md",
+    "gordon_system/docs/agent/architecture/phase-3.22-core-security-trust-isolation.json"
+  ]
+}

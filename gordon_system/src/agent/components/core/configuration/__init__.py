@@ -93,10 +93,80 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 import time
 import hashlib
-
+import uuid
 
 # Import from types module
 from .types import SchemaConflictType
+
+# =============================================================================
+# Phase 3.18: Configuration Generations & Provenance
+# =============================================================================
+
+
+@dataclass(frozen=True)
+class ConfigurationGenerationId:
+    """Unique identifier for a configuration generation."""
+    value: str
+    
+    @classmethod
+    def generate(cls) -> "ConfigurationGenerationId":
+        return cls(value=str(uuid.uuid4()))
+    
+    @classmethod
+    def from_string(cls, s: str) -> "ConfigurationGenerationId":
+        return cls(value=s)
+    
+    def __str__(self) -> str:
+        return self.value
+
+
+@dataclass(frozen=True)
+class ConfigurationSourceRecord:
+    """Record of a source contributing to configuration."""
+    source_id: ConfigurationSourceId
+    loaded_at: float = field(default_factory=time.monotonic)
+
+
+@dataclass(frozen=True)
+class ConfigurationProvenance:
+    """
+    Complete provenance information for a configuration.
+    
+    Tracks which sources contributed values, when, and how they evolved.
+    """
+    generation_id: ConfigurationGenerationId
+    created_at: float = field(default_factory=time.monotonic)
+    sources: Tuple[ConfigurationSourceRecord, ...] = field(default_factory=tuple)
+# Import from policies module (Phase 3.18)
+from .policies import (
+    PolicyId,
+    PolicyVersion,
+    PolicyGenerationId as PolicyGenId,
+    PolicyAuthority,
+    PolicyScope,
+    PolicyOwner,
+    PolicyConstraint,
+    PolicyRule,
+    PolicyDocument,
+    PrecedenceMode as PolicyPrecedenceMode,
+    PolicyConflict as PolicyConflictRecord,
+    PolicyResolution as PolicyResolutionResult,
+    PolicyEvaluationResult as PolicyEvalResult,
+    OperationalProfile,
+    ProfilePolicies,
+)
+
+# Import from secrets module (Phase 3.18)
+from .secrets import (
+    SecretReference as ConfigurationSecretReference,
+    SecretValue,
+    SecretProviderType,
+    SecretProviderConfig,
+    SecretManager,
+    is_sensitive_field_name,
+    SensitiveField,
+    detect_sensitive_fields,
+)
 
 
 @dataclass(frozen=True)

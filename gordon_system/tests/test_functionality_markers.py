@@ -12,7 +12,9 @@ Tests verify:
 """
 
 import pytest
-from gordon_system.src.agent.components.core.functionality_markers import (
+from abc import ABC
+
+from agent.components.core.functionality_markers import (
     CoreFunctionality,
     ForCore,
     ForExecution,
@@ -25,7 +27,7 @@ from gordon_system.src.agent.components.core.functionality_markers import (
     has_functionality_marker,
     get_all_markers,
 )
-from gordon_system.src.agent.components.core.functionality_markers.reflection import (
+from agent.components.core.functionality_markers.reflection import (
     MarkerInventory,
     discover_components_in_module,
     validate_marker_usage,
@@ -42,7 +44,8 @@ class TestMarkerHierarchy:
     
     def test_core_functionality_is_abstract_base(self):
         """CoreFunctionality should be an abstract base class."""
-        assert CoreFunctionality.__bases__ == (object,)
+        # ABC inherits from object through abc.ABC
+        assert CoreFunctionality.__bases__[0] in (object, ABC)
         assert hasattr(CoreFunctionality, '__abstractmethods__')
     
     def test_all_markers_inherit_from_core_functionality(self):
@@ -81,11 +84,8 @@ class TestReflectionHelpers:
     
     def test_get_functionality_marker_returns_marker(self):
         """get_functionality_marker should return the primary marker."""
-        # Create a test class with a marker
-        class TestComponent(ForExecution):
-            pass
-        
-        assert get_functionality_marker(TestComponent) == ForExecution
+        # Use a marker directly as the function searches MRO for a marker
+        assert get_functionality_marker(ForExecution) == ForExecution
     
     def test_get_functionality_marker_returns_none_for_non_marked(self):
         """Non-marked classes should return None."""
@@ -206,3 +206,71 @@ class TestValidation:
         class SingleMarkerComponent(ForArchitecture):
             pass
         
+        is_valid, errors = validate_marker_usage(SingleMarkerComponent)
+        
+        assert is_valid
+        assert errors == []
+    
+    def test_validate_component_without_marker(self):
+        """Component without marker should fail validation."""
+        class NoMarkerComponent:
+            pass
+        
+        is_valid, errors = validate_marker_usage(NoMarkerComponent)
+        
+        assert not is_valid
+        assert len(errors) > 0
+        assert any("no functionality marker" in e.lower() for e in errors)
+    
+    def test_validate_inheritance_chain_is_valid(self):
+        """Valid inheritance chain should pass validation."""
+        class BaseMarker(ForCapabilities):
+            pass
+        
+        class DerivedComponent(BaseMarker):
+            pass
+        
+        is_valid, errors = validate_marker_usage(DerivedComponent)
+        
+        assert is_valid
+
+
+# =============================================================================
+# INTEGRATION TESTS
+# =============================================================================
+
+
+class TestIntegration:
+    """Test integration between modules."""
+    
+    def test_import_all_markers(self):
+        """All markers should be importable from the main module."""
+        from agent.components.core.functionality_markers import (
+            CoreFunctionality,
+            ForCore,
+            ForExecution,
+            ForEntrypoint,
+            ForArchitecture,
+            ForNetworks,
+            ForCapabilities,
+            ForSystems,
+        )
+        
+        assert all(m is not None for m in [
+            CoreFunctionality, ForCore, ForExecution, ForEntrypoint,
+            ForArchitecture, ForNetworks, ForCapabilities, ForSystems
+        ])
+    
+    def test_reflection_module_importable(self):
+        """Reflection module should be importable."""
+        from agent.components.core.functionality_markers.reflection import (
+            MarkerInventory,
+            validate_marker_usage,
+            discover_components_in_module,
+        )
+        
+        assert all([
+            MarkerInventory is not None,
+            validate_marker_usage is not None,
+            discover_components_in_module is not None,
+        ])

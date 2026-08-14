@@ -218,6 +218,21 @@ from .diagnostics import (
     create_critical_diagnostic,
 )
 
+# Phase 3.14.7 - Network Interaction Contracts
+from .network_interactions import (
+    NetworkParticipationRole,
+    NetworkParticipation,
+    NetworkActivationRequest,
+    ActivationDecision,
+    NetworkActivationResult,
+    NetworkActivationContext,
+    NetworkInteraction,
+    NetworkInteractionObservabilityMetadata,
+    NetworkActivationFailureType,
+    NetworkInteractionFailure,
+    dataclass_replace,
+)
+
 # Phase 3.7.22-I - Runtime State Infrastructure (canonical authorities)
 from .runtime_state import (
     RuntimeState,
@@ -315,6 +330,19 @@ __all__ = [
     "create_diagnostic_record", "create_error_diagnostic",
     "create_warning_diagnostic", "create_critical_diagnostic",
     
+    # Phase 3.14.7 - Network Interaction Contracts
+    "network_interactions",
+    "NetworkParticipationRole",
+    "NetworkParticipation",
+    "NetworkActivationRequest",
+    "ActivationDecision",
+    "NetworkActivationResult",
+    "NetworkActivationContext",
+    "NetworkInteraction",
+    "NetworkInteractionObservabilityMetadata",
+    "NetworkActivationFailureType",
+    "NetworkInteractionFailure",
+    
      # New exports for Phase 3.5
      "RuntimeEvent", "EventSeverity", "EventCategory",
      
@@ -325,6 +353,9 @@ __all__ = [
       "RuntimeState", "RuntimeStateSnapshot", "RuntimeStateTransition",
       "RuntimeStateStore", "RuntimeStateTruth",
       
-      # Phase 3.7.36-I - Continuity Infrastructure
-      "continuity",
- ]
+       # Phase 3.7.36-I - Continuity Infrastructure
+       "continuity",
+       
+       # Phase 3.14.7 - Network Interaction Contracts (canonical)
+       "network_interactions",
+  ]

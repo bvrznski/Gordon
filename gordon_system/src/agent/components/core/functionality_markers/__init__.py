@@ -60,6 +60,65 @@ CoreFunctionality (base)
 """
 
 from abc import ABC
+from typing import Optional, List
+
+# Import new Phase 3.13.4 modules
+from .metaclass import (
+    CoreFunctionalityMetadata,
+    ClassificationStatus,
+    ClassificationSource,
+    StrictnessMode,
+    Finding,
+    ClassificationFindings,
+    ExemptionKind,
+    FunctionalityExemption,
+    SecondaryRole,
+    IntegrationBoundary,
+    FunctionalityMetaclass,
+    FunctionalityAwareMetaclass,
+    integrate_with_existing_metaclass,
+)
+
+from .registry import (
+    RegistryState,
+    RegistryEntry,
+    RejectedRegistration,
+    RegistrySnapshot,
+    RegistryStatistics,
+    FunctionalityRegistry,
+    RegistrySealedError,
+    DuplicateRegistrationError,
+    get_functionality_metadata,
+    get_primary_functionality,
+    list_by_functionality,
+    snapshot_functionality_registry,
+)
+
+from .diagnostics import (
+    DiagnosticsSnapshot,
+    ClassificationEvent,
+    ObservabilityHook,
+    DiagnosticsObserver,
+    FunctionalityDiagnostics,
+)
+
+from .inventory import (
+    InventoryGroup,
+    FunctionalityInventory,
+    create_functionality_inventory,
+)
+
+# Phase 3.13.6 - Classification Policy
+from .classification_policy import (
+    ClassificationEvidence,
+    ClassificationDecision,
+    ClassificationRecord,
+    ClassificationFramework,
+    CANONICAL_RESPONSIBILITIES,
+    primary_recipient_test,
+    disappearance_test,
+    create_classification_record,
+)
 
 # =============================================================================
 # PRIMARY MARKER - Base of the hierarchy
@@ -226,12 +285,7 @@ class ForSystems(CoreFunctionality):
     __slots__ = ()
 
 
-# =============================================================================
-# REFLECTION HELPERS
-# =============================================================================
-
-
-def get_functionality_marker(cls: type) -> type | None:
+def get_functionality_marker(cls: type) -> Optional[type]:
     """
     Get the primary functionality marker for a class.
     
@@ -242,7 +296,10 @@ def get_functionality_marker(cls: type) -> type | None:
         The marker class if found, None otherwise
     """
     for base in cls.__mro__:
-        if base is not CoreFunctionality and issubclass(base, CoreFunctionality):
+        if (
+            base != CoreFunctionality 
+            and issubclass(base, CoreFunctionality)
+        ):
             return base
     return None
 
@@ -260,7 +317,7 @@ def has_functionality_marker(cls: type) -> bool:
     return get_functionality_marker(cls) is not None
 
 
-def get_all_markers() -> list[type]:
+def get_all_markers() -> List[type]:
     """Get all available marker classes."""
     return [
         ForCore,
@@ -272,6 +329,18 @@ def get_all_markers() -> list[type]:
         ForSystems,
     ]
 
+
+from .reflection import (
+    FunctionalityIdentity,
+    get_functionality_identity,
+    UniquenessValidator,
+    InheritanceValidator,
+    ArchitecturalInterpreter,
+)
+
+
+# Phase 3.13.6 - Classification Policy exports
+from .classification_policy import __all__ as classification_policy_all
 
 __all__ = [
     # Base class
@@ -286,8 +355,54 @@ __all__ = [
     "ForCapabilities",
     "ForSystems",
     
-    # Reflection helpers
+    # Reflection helpers (Phase 3.13.1 & 3.13.2 additions)
     "get_functionality_marker",
     "has_functionality_marker",
     "get_all_markers",
-]
+    "FunctionalityIdentity",
+    "get_functionality_identity",
+    "UniquenessValidator",
+    "InheritanceValidator", 
+    "ArchitecturalInterpreter",
+    
+    # Phase 3.13.4 - Metaclass & Registry
+    "CoreFunctionalityMetadata",
+    "ClassificationStatus",
+    "ClassificationSource",
+    "StrictnessMode",
+    "Finding",
+    "ClassificationFindings",
+    "ExemptionKind",
+    "FunctionalityExemption",
+    "SecondaryRole",
+    "IntegrationBoundary",
+    "FunctionalityMetaclass",
+    "FunctionalityAwareMetaclass",
+    "integrate_with_existing_metaclass",
+    "RegistryState",
+    "RegistryEntry",
+    "RejectedRegistration",
+    "RegistrySnapshot",
+    "RegistryStatistics",
+    "FunctionalityRegistry",
+    "RegistrySealedError",
+    "DuplicateRegistrationError",
+    "get_functionality_metadata",
+    "get_primary_functionality",
+    "list_by_functionality",
+    "snapshot_functionality_registry",
+    
+    # Diagnostics
+    "DiagnosticsSnapshot",
+    "ClassificationEvent",
+    "ObservabilityHook",
+    "DiagnosticsObserver",
+    "FunctionalityDiagnostics",
+    
+    # Inventory
+    "InventoryGroup",
+    "FunctionalityInventory",
+    "create_functionality_inventory",
+    
+    # Phase 3.13.6 - Classification Policy
+] + classification_policy_all

@@ -1,13 +1,13 @@
-"""Reflection Infrastructure - Core Architecture Phase 3.12.7.
+"""Reflection Infrastructure - Core Architecture Phase 3.23.
 ================================================================================
 
-Canonical Reflection, Metadata & Discovery Architecture for Gordon Core.
+Canonical Reflection, Metadata & Introspection Architecture for Gordon Core.
 
-ARCHITECTURAL PRINCIPLES:
-- Reflection is passive - it observes but never modifies
-- Metadata is immutable - once captured, it cannot change  
-- Discovery determines location without instantiation
-- Registries organize and index - they don't create
+PHILOSOPHY:
+- Reflection describes what exists (not what happens)
+- Metadata is structured, typed, and discoverable
+- One canonical system for the entire repository
+- No implementation details exposed in metadata
 
 REFLECTION RESPONSIBILITIES:
 - Architectural introspection (what exists?)
@@ -24,10 +24,8 @@ Reflection NEVER owns:
 - Component instantiation
 
 """
-
-# Core versions and metadata
 __version__ = "1.0.0"
-__phase__ = "3.12.7"
+__phase__ = "3.23"
 
 # =============================================================================
 # INVENTORY MODELS - Import from discovery (canonical source)
@@ -93,7 +91,6 @@ from .topology import (
 from .dependency_inspector import (
     CycleInfo,
     DependencyReport,
-    DependencyAnalysis,
     DependencyInspector,
     topologically_sort_dependencies,
 )
@@ -109,6 +106,90 @@ from .discovery import (
     discover_packages,
     discover_modules,
     discover_runtime_authorities,
+)
+
+# =============================================================================
+# REGISTRY & MANIFEST - Phase 3.23
+# =============================================================================
+
+from .registry import (
+    # Enumerations
+    RegistryType,
+    RegistryScope,
+    
+    # Entry models
+    RegistryEntry,
+    ManifestEntry,
+    
+    # Registry models
+    EntityMetadataRegistry,
+    CapabilityRegistry,
+    
+    # Audit models
+    AuditRecord,
+    AuditLog,
+    
+    # Builder
+    RegistryBuilder,
+    
+    # Operations
+    create_entity_metadata_registry_from_inventory,
+    create_manifest,
+)
+
+# =============================================================================
+# NEW PHASE 3.23 METADATA EXPORTS
+# =============================================================================
+
+from .metadata import (
+    # Versioning & Provenance
+    MetadataVersion,
+    Provenance,
+    
+    # Identity metadata
+    IdentityMetadata,
+    OwnerMetadata,
+    OwnershipMetadata,
+    
+    # Versioning & lifecycle
+    VersionMetadata,
+    LifecyclePhase,
+    LifecycleMetadata,
+    
+    # Capability metadata
+    CapabilityType,
+    CapabilityMetadata,
+    
+    # Interface metadata
+    InterfaceContract,
+    InterfaceMetadata,
+    
+    # Dependency metadata
+    DependencyType,
+    DependencyMetadata,
+    
+    # Security metadata
+    SecurityClassification,
+    SecurityMetadata,
+    
+    # Configuration metadata
+    ConfigOption,
+    ConfigurationMetadata,
+    
+    # Execution metadata
+    ExecutionMode,
+    ExecutionMetadata,
+    
+    # Diagnostic metadata
+    DiagnosticType,
+    DiagnosticMetadata,
+    
+    # Documentation metadata
+    DocumentationMetadata,
+    
+    # Complete metadata
+    EntityMetadata,
+    MetadataBuilder,
 )
 
 __all__ = [
@@ -150,7 +231,6 @@ __all__ = [
     # Dependency
     "CycleInfo", 
     "DependencyReport",
-    "DependencyAnalysis",
     "DependencyInspector",
     "topologically_sort_dependencies",
     
@@ -161,4 +241,56 @@ __all__ = [
     "discover_packages",
     "discover_modules",
     "discover_runtime_authorities",
+    
+    # PHASE 3.23 REGISTRY & MANIFEST EXPORTS
+    "RegistryType",
+    "RegistryScope",
+    "RegistryEntry",
+    "ManifestEntry",
+    "EntityMetadataRegistry",
+    "CapabilityRegistry",
+    "AuditRecord",
+    "AuditLog",
+    "RegistryBuilder",
+    "create_entity_metadata_registry_from_inventory",
+    "create_manifest",
+    
+    # PHASE 3.23 METADATA EXPORTS
+    # Versioning & Provenance
+    "MetadataVersion",
+    "Provenance",
+    # Identity metadata
+    "IdentityMetadata",
+    "OwnerMetadata",
+    "OwnershipMetadata",
+    # Versioning & lifecycle
+    "VersionMetadata",
+    "LifecyclePhase",
+    "LifecycleMetadata",
+    # Capability metadata
+    "CapabilityType",
+    "CapabilityMetadata",
+    # Interface metadata
+    "InterfaceContract",
+    "InterfaceMetadata",
+    # Dependency metadata
+    "DependencyType",
+    "DependencyMetadata",
+    # Security metadata
+    "SecurityClassification",
+    "SecurityMetadata",
+    # Configuration metadata
+    "ConfigOption",
+    "ConfigurationMetadata",
+    # Execution metadata
+    "ExecutionMode",
+    "ExecutionMetadata",
+    # Diagnostic metadata
+    "DiagnosticType",
+    "DiagnosticMetadata",
+    # Documentation metadata
+    "DocumentationMetadata",
+    # Complete metadata
+    "EntityMetadata",
+    "MetadataBuilder",
 ]

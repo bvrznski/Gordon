@@ -1,0 +1,132 @@
+{
+  "phase": {
+    "version": "3.19.0",
+    "name": "Core Identity, Provenance & Lineage Architecture",
+    "status": "implemented",
+    "date": "2026-08-14"
+  },
+  "identity_domains": [
+    {
+      "domain": "runtime",
+      "identities": ["ApplicationId", "RuntimeId", "ProcessId", "BootSessionId"],
+      "description": "Runtime session identities for application execution tracking"
+    },
+    {
+      "domain": "component",
+      "identities": ["ComponentId", "ServiceId", "CapabilityId", "ModuleId", "PackageId"],
+      "description": "Software component and service identities"
+    },
+    {
+      "domain": "correlation",
+      "identities": ["CorrelationId", "CausationId", "ExecutionChainId", "DependencyChainId", "TraceId", "SpanId"],
+      "description": "Traceability identities for operation grouping and causation tracking"
+    },
+    {
+      "domain": "provenance",
+      "identities": ["ProvenanceRecord", "Origin", "Creator", "SourceReference"],
+      "description": "Artifact origin tracking with creation metadata"
+    },
+    {
+      "domain": "lineage",
+      "identities": ["LineageId", "DerivationId", "TransformationId", "VersionLineageId", "RevisionLineageId"],
+      "description": "Artifact evolution and lineage tracking"
+    },
+    {
+      "domain": "serialization",
+      "identities": ["SerializationFormat", "IdentitySerializer", "IdentityDeserializer", "CompatibilityMode", "SchemaEvolutionValidator"],
+      "description": "Serialization formats and compatibility modes for identity values"
+    },
+    {
+      "domain": "validation",
+      "identities": ["CollisionDetector", "ReplayDetector", "ForgeryDetector", "IdentityIntegrityVerifier", "IdentityIntegrityRegistry"],
+      "description": "Validation utilities for integrity, collision detection, and replay protection"
+    }
+  ],
+  "canonical_identity_types": [
+    {
+      "name": "Identity",
+      "type": "abstract_base_class",
+      "description": "Base class for all identity types"
+    },
+    {
+      "name": "RuntimeId",
+      "type": "dataclass",
+      "properties": ["value", "generation", "timestamp"],
+      "invariants": ["Immutable after creation", "Globally unique"]
+    },
+    {
+      "name": "ComponentId",
+      "type": "dataclass",
+      "properties": ["name", "module_path", "package", "version"],
+      "invariants": ["Immutable after creation", "Stable across restarts"]
+    },
+    {
+      "name": "ServiceId",
+      "type": "dataclass",
+      "properties": ["name", "component", "version"],
+      "invariants": ["Immutable after creation", "Unique within component scope"]
+    },
+    {
+      "name": "CorrelationId",
+      "type": "dataclass",
+      "properties": ["value", "scope"],
+      "invariants": ["All operations share same ID in correlation group"]
+    },
+    {
+      "name": "ProvenanceRecord",
+      "type": "dataclass",
+      "properties": ["artifact_id", "origin", "creator", "timestamp_utc", "authority", "transformation_history"],
+      "invariants": ["Complete provenance trail for artifact", "Immutable after creation"]
+    },
+    {
+      "name": "LineageId",
+      "type": "dataclass",
+      "properties": ["value", "root_id", "depth"],
+      "invariants": ["DAG structure (no cycles)", "Globally unique"]
+    }
+  ],
+  "serialization_formats": [
+    {"format": "json", "description": "Human-readable JSON format"},
+    {"format": "binary", "description": "Compact binary format"},
+    {"format": "string", "description": "Plain string representation"},
+    {"format": "hex", "description": "Hexadecimal encoding"}
+  ],
+  "compatibility_modes": [
+    {"mode": "strict", "description": "Exact match required (no evolution)"},
+    {"mode": "evolution", "description": "Allow schema evolution"},
+    {"mode": "backward", "description": "Accept newer format as older"},
+    {"mode": "forward", "description": "Accept older format as newer"}
+  ],
+  "validation_features": [
+    {
+      "feature": "collision_detection",
+      "description": "Detect duplicate identity values within a domain",
+      "implementation": "Hash-based registry with O(1) lookups"
+    },
+    {
+      "feature": "replay_protection",
+      "description": "Reject stale identifiers beyond configured lifetime",
+      "implementation": "Timestamp tracking with configurable max_age_seconds"
+    },
+    {
+      "feature": "forgery_detection",
+      "description": "Validate expected format prefixes and characters",
+      "implementation": "Format validation with detailed failure reasons"
+    }
+  ],
+  "files_created": [
+    "gordon_system/src/agent/architecture/identity/__init__.py",
+    "gordon_system/src/agent/architecture/identity/core.py",
+    "gordon_system/src/agent/architecture/identity/domains/runtime.py",
+    "gordon_system/src/agent/architecture/identity/domains/component.py",
+    "gordon_system/src/agent/architecture/identity/correlation.py",
+    "gordon_system/src/agent/architecture/identity/provenance.py",
+    "gordon_system/src/agent/architecture/identity/lineage.py",
+    "gordon_system/src/agent/architecture/identity/serialization.py",
+    "gordon_system/src/agent/architecture/identity/validation.py"
+  ],
+  "files_documentation": [
+    "docs/agent/architecture/phase-3.19-core-identity-provenance-lineage.md",
+    "docs/agent/architecture/phase-3.19-core-identity-provenance-lineage.json"
+  ]
+}

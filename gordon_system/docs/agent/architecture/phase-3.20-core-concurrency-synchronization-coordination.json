@@ -1,0 +1,437 @@
+{
+  "version": "1.0",
+  "phase": "3.20",
+  "title": "Core Concurrency, Synchronization & Coordination Architecture",
+  "description": "Canonical architecture governing concurrency, execution contexts, parallelism, coordination, synchronization, structured concurrency, task groups, execution ownership, execution domains, isolation, cancellation, backpressure, work stealing, visibility, and fairness in the Gordon Core.",
+  
+  "concurrency_domains": [
+    {
+      "domain_id": "application",
+      "name": "Application Domain",
+      "description": "Application-level execution owned by application components"
+    },
+    {
+      "domain_id": "runtime",
+      "name": "Runtime Domain",
+      "description": "Runtime infrastructure execution owned by runtime manager"
+    },
+    {
+      "domain_id": "process",
+      "name": "Process Domain",
+      "description": "Process management execution owned by process manager"
+    },
+    {
+      "domain_id": "scheduler",
+      "name": "Scheduler Domain",
+      "description": "Scheduler domain execution owned by scheduler instance"
+    },
+    {
+      "domain_id": "service",
+      "name": "Service Domain",
+      "description": "Service execution owned by service owner"
+    },
+    {
+      "domain_id": "component",
+      "name": "Component Domain",
+      "description": "Component-level execution owned by component owner"
+    },
+    {
+      "domain_id": "capability",
+      "name": "Capability Domain",
+      "description": "Capability invocation execution owned by capability registry"
+    },
+    {
+      "domain_id": "worker",
+      "name": "Worker Domain",
+      "description": "Worker pool execution owned by worker pool manager"
+    },
+    {
+      "domain_id": "request",
+      "name": "Request Domain",
+      "description": "Request-scoped execution owned by request handler"
+    },
+    {
+      "domain_id": "transaction",
+      "name": "Transaction Domain",
+      "description": "Transaction-bound execution owned by transaction manager"
+    },
+    {
+      "domain_id": "stream",
+      "name": "Stream Domain",
+      "description": "Stream processing execution owned by stream processor"
+    },
+    {
+      "domain_id": "session",
+      "name": "Session Domain",
+      "description": "Session-scoped execution owned by session manager"
+    },
+    {
+      "domain_id": "task",
+      "name": "Task Domain",
+      "description": "Task-level execution owned by task executor"
+    }
+  ],
+  
+  "synchronization_primitives": [
+    {
+      "primitive_id": "mutex",
+      "type": "lock",
+      "purpose": "Mutual exclusion lock for single-thread access",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "read_write_lock",
+      "type": "lock",
+      "purpose": "Multiple readers, single writer access control",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "semaphore",
+      "type": "counter",
+      "purpose": "Count-based access control for resource pools",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "event",
+      "type": "signaling",
+      "purpose": "One-to-many signaling mechanism",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "condition",
+      "type": "conditional",
+      "purpose": "Conditional waiting based on state predicates",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "barrier",
+      "type": "rendezvous",
+      "purpose": "All-or-nothing arrival point for multiple participants",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "latch",
+      "type": "gate",
+      "purpose": "One-time gate that opens after count threshold",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "countdown_latch",
+      "type": "gate",
+      "purpose": "Count-down to zero, then opens",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "rendezvous",
+      "type": "handoff",
+      "purpose": "Two-party handoff synchronization",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "once",
+      "type": "guard",
+      "purpose": "Single-execution guarantee for initialization",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "monitor",
+      "type": "object_lock",
+      "purpose": "Object-level synchronization with condition variables",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "token",
+      "type": "resource",
+      "purpose": "Resource token passing between participants",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "lease",
+      "type": "time_limited",
+      "purpose": "Time-limited access to resources",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    },
+    {
+      "primitive_id": "permit",
+      "type": "rate_limiting",
+      "purpose": "Rate limiting and traffic control",
+      "protocols": ["wait", "signal", "release", "cancel"]
+    }
+  ],
+  
+  "coordination_primitives": [
+    {
+      "primitive_id": "coordinator",
+      "type": "centralized",
+      "purpose": "Central coordinator manages participant cooperation",
+      "patterns": ["task_assignment", "order_negotiation"]
+    },
+    {
+      "primitive_id": "orchestrator",
+      "type": "staged",
+      "purpose": "Orchestrates cooperation across multiple stages",
+      "patterns": ["stage_transition", "multi_stage_cooperation"]
+    },
+    {
+      "primitive_id": "arbiter",
+      "type": "decentralized",
+      "purpose": "Manages access control and order negotiation",
+      "patterns": ["access_control", "priority_negotiation"]
+    },
+    {
+      "primitive_id": "aggregator",
+      "type": "collective",
+      "purpose": "Aggregates results from multiple participants",
+      "patterns": ["result_collection", "aggregate_computation"]
+    },
+    {
+      "primitive_id": "dispatcher",
+      "type": "distributive",
+      "purpose": "Distributes work to participants",
+      "patterns": ["work_distribution", "load_balancing"]
+    },
+    {
+      "primitive_id": "scheduler_interface",
+      "type": "interface",
+      "purpose": "Provides scheduling interface for participants",
+      "patterns": ["priority_scheduling", "time_slice_allocation"]
+    },
+    {
+      "primitive_id": "admission_controller",
+      "type": "gatekeeper",
+      "purpose": "Controls admission of participants to coordination",
+      "patterns": ["capacity_control", "access_validation"]
+    }
+  ],
+  
+  "executor_types": [
+    {
+      "type_id": "cooperative",
+      "name": "Cooperative Executor",
+      "description": "Cooperative multitasking using async/await patterns",
+      "characteristics": ["non_preemptive", "explicit_yield_points", "single_thread_per_executor"]
+    },
+    {
+      "type_id": "dedicated",
+      "name": "Dedicated Thread Executor",
+      "description": "Dedicated threads per task with full isolation",
+      "characteristics": ["preemptive", "full_isolation", "higher_overhead"]
+    },
+    {
+      "type_id": "isolated",
+      "name": "Isolated Context Executor",
+      "description": "Fully isolated execution contexts (processes, VMs)",
+      "characteristics": ["complete_isolation", "safe_failures", "high_latency"]
+    },
+    {
+      "type_id": "shared",
+      "name": "Shared Thread Pool Executor",
+      "description": "Shared thread pool with work stealing support",
+      "characteristics": ["work_stealing", "load_balancing", "low_overhead"]
+    }
+  ],
+  
+  "worker_types": [
+    {
+      "type_id": "general_purpose",
+      "name": "General Purpose Worker",
+      "description": "Workers that can execute any type of task"
+    },
+    {
+      "type_id": "io_bound",
+      "name": "I/O-Bound Worker",
+      "description": "Workers optimized for I/O operations with blocking support"
+    },
+    {
+      "type_id": "cpu_bound",
+      "name": "CPU-Bound Worker",
+      "description": "Workers optimized for CPU-intensive computations"
+    },
+    {
+      "type_id": "network",
+      "name": "Network Worker",
+      "description": "Workers specialized for network operations"
+    }
+  ],
+  
+  "cancellation_policies": [
+    {
+      "policy_id": "cooperative",
+      "name": "Cooperative Cancellation",
+      "description": "Tasks check for cancellation tokens periodically",
+      "characteristics": ["observable", "non_blocking", "hierarchical_propagation"]
+    },
+    {
+      "policy_id": "cascade",
+      "name": "Cascading Cancellation",
+      "description": "Cancels all child scopes and tasks when parent cancels"
+    },
+    {
+      "policy_id": "selective",
+      "name": "Selective Cancellation",
+      "description": "Cancel specific tasks or scopes only"
+    },
+    {
+      "policy_id": "graceful",
+      "name": "Graceful Termination",
+      "description": "Wait for graceful termination of all tasks"
+    }
+  ],
+  
+  "visibility_guarantees": [
+    {
+      "guarantee_id": "relaxed",
+      "memory_order": "RELAXED",
+      "description": "No ordering guarantees (fastest)"
+    },
+    {
+      "guarantee_id": "acquire",
+      "memory_order": "ACQUIRE",
+      "description": "Synchronizes with release operations"
+    },
+    {
+      "guarantee_id": "release",
+      "memory_order": "RELEASE",
+      "description": "Makes writes visible to acquire operations"
+    },
+    {
+      "guarantee_id": "acq_rel",
+      "memory_order": "ACQ_REL",
+      "description": "Both acquire and release semantics"
+    },
+    {
+      "guarantee_id": "sequential_consistent",
+      "memory_order": "SEQUENTIAL_CONSISTENT",
+      "description": "Total order across all threads (slowest but safest)"
+    }
+  ],
+  
+  "fairness_policies": [
+    {
+      "policy_id": "fifo",
+      "name": "First-In-First-Out",
+      "description": "Tasks executed in arrival order"
+    },
+    {
+      "policy_id": "priority",
+      "name": "Priority-Based",
+      "description": "Higher priority tasks execute first"
+    },
+    {
+      "policy_id": "round_robin",
+      "name": "Round Robin",
+      "description": "Equal time slices among all participants"
+    },
+    {
+      "policy_id": "weighted_fair",
+      "name": "Weighted Fair Queuing",
+      "description": "Weighted allocation based on priority levels"
+    }
+  ],
+  
+  "prevention_mechanisms": [
+    {
+      "mechanism_id": "deadlock_prevention",
+      "strategies": ["timeout", "wait_die", "wound_wait", "detection"],
+      "description": "Strategies to prevent or detect deadlocks"
+    },
+    {
+      "mechanism_id": "starvation_prevention",
+      "strategies": ["fair_scheduling", "priority_inheritance", "bounded_waiting"],
+      "description": "Mechanisms to ensure no participant waits indefinitely"
+    },
+    {
+      "mechanism_id": "livelock_prevention",
+      "strategies": ["exponential_backoff", "jitter", "backpressure"],
+      "description": "Prevents participants from making progress but not advancing"
+    }
+  ],
+  
+  "migration_status": {
+    "scheduling": "pending",
+    "streams": "pending",
+    "network": "pending",
+    "persistence": "pending",
+    "cognition": "pending",
+    "diagnostics": "pending"
+  },
+  
+  "certification_status": {
+    "concurrency_correctness": false,
+    "synchronization_correctness": false,
+    "structured_concurrency": false,
+    "cancellation_model": false,
+    "fairness_policies": false,
+    "deadlock_prevention": false,
+    "starvation_prevention": false,
+    "observability": false,
+    "migration_complete": false
+  },
+  
+  "architecture_invariants": [
+    {
+      "invariant_id": "sync_never_computes",
+      "description": "Synchronization primitives never perform computation"
+    },
+    {
+      "invariant_id": "sync_never_owns_state",
+      "description": "Synchronization primitives never own runtime state"
+    },
+    {
+      "invariant_id": "coord_never_bypasses_execution",
+      "description": "Coordination never bypasses execution authority"
+    },
+    {
+      "invariant_id": "concurrency_is_architectural",
+      "description": "Concurrency is an architectural abstraction, not implementation detail"
+    }
+  ],
+  
+  "integration_points": [
+    {
+      "phase": "3.11",
+      "name": "Streams Architecture",
+      "integration": "Stream operations use concurrency scopes; backpressure integrates with stream flow control"
+    },
+    {
+      "phase": "3.12",
+      "name": "Core Architecture",
+      "integration": "Core services use canonical concurrency for internal coordination"
+    },
+    {
+      "phase": "3.14",
+      "name": "Interaction Contracts",
+      "integration": "Interactions use synchronization primitives for coordination"
+    },
+    {
+      "phase": "3.15",
+      "name": "State Management",
+      "integration": "State transactions use concurrency coordination; visibility contracts ensure consistency"
+    },
+    {
+      "phase": "3.16",
+      "name": "Time & Scheduling",
+      "integration": "Scheduling uses canonical cancellation tokens and scopes for concurrent task management"
+    },
+    {
+      "phase": "3.17",
+      "name": "Execution Semantics",
+      "integration": "Execution semantics built on top of concurrency architecture"
+    }
+  ],
+  
+  "files_created": [
+    {
+      "path": "gordon_system/src/agent/architecture/concurrency/__init__.py",
+      "description": "Canonical Concurrency Architecture implementation"
+    },
+    {
+      "path": "gordon_system/docs/agent/architecture/phase-3.20-core-concurrency-synchronization-coordination.md",
+      "description": "Architecture documentation"
+    },
+    {
+      "path": "gordon_system/docs/agent/architecture/phase-3.20-core-concurrency-synchronization-coordination.json",
+      "description": "Machine-readable architecture report"
+    }
+  ]
+}

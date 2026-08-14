@@ -12,9 +12,10 @@ No executable code - only declarations.
 
 Architectural Invariants:
 1. Package must exist at gordon.system.src.agent.architecture
-2. Must have exactly four direct children: capability_map, dependency_graph, ownership, topology
+2. Must have exactly nine direct children: inventory, topology, ownership, dependencies, boundaries, invariants, migration, certification, manifests
 3. No runtime implementation may appear in this layer
 4. All contracts are repair-safe (can be regenerated without data loss)
+5. Architecture is descriptive and normative - it does not execute, schedule, or mutate runtime state
 """
 
 from typing import Dict, List
@@ -39,17 +40,30 @@ class Node:
         }
 
 
-# Architecture layer structure
-capability_map = Node("capability_map")
-dependency_graph = Node("dependency_graph")
-ownership = Node("ownership")
+# =============================================================================
+# CANONICAL ARCHITECTURE DOMAINS
+# =============================================================================
+
+inventory = Node("inventory")
 topology = Node("topology")
+ownership = Node("ownership")
+dependencies = Node("dependencies")
+boundaries = Node("boundaries")
+invariants = Node("invariants")
+migration = Node("migration")
+certification = Node("certification")
+manifests = Node("manifests")
 
 architecture_tree = Node("architecture")
-architecture_tree.add_child(capability_map)
-architecture_tree.add_child(dependency_graph)
-architecture_tree.add_child(ownership)
+architecture_tree.add_child(inventory)
 architecture_tree.add_child(topology)
+architecture_tree.add_child(ownership)
+architecture_tree.add_child(dependencies)
+architecture_tree.add_child(boundaries)
+architecture_tree.add_child(invariants)
+architecture_tree.add_child(migration)
+architecture_tree.add_child(certification)
+architecture_tree.add_child(manifests)
 
 
 def get_structure() -> Dict[str, object]:
@@ -57,15 +71,38 @@ def get_structure() -> Dict[str, object]:
     return architecture_tree.to_dict()
 
 
-# Contract properties for validation
+# =============================================================================
+# CONTRACT PROPERTIES FOR VALIDATION
+# =============================================================================
+
 package_path = "gordon.system.src.agent.architecture"
 parent_package = "gordon.system.src.agent"
-allowed_children = ["capability_map", "dependency_graph", "ownership", "topology"]
+allowed_children = [
+    "inventory",
+    "topology", 
+    "ownership",
+    "dependencies",
+    "boundaries",
+    "invariants",
+    "migration",
+    "certification",
+    "manifests",
+]
 required_children = allowed_children.copy()
 required_files = ["__init__.py", "__meta__.py", "__tree__.py"]
-forbidden_children = []
+forbidden_children = [
+    # Runtime mechanisms must not appear in architecture layer
+    "execution",
+    "runtime",
+    "scheduler",
+    "synchronizer",
+    "coordinator",
+    "executor",
+    "engine",
+]
+
 ownership_boundary = "gordon.system.src.agent.architecture.*"
-dependency_direction = "downward"  # May depend on nothing above
+dependency_direction = "downward"  # May depend on nothing above (descriptive only)
 runtime_activation_policy = "never"
 
 
@@ -86,7 +123,9 @@ def get_contract() -> Dict[str, object]:
 
 __all__ = [
     "Node",
-    "capability_map", "dependency_graph", "ownership", "topology",
+    # Canonical children
+    "inventory", "topology", "ownership", "dependencies",
+    "boundaries", "invariants", "migration", "certification", "manifests",
     "architecture_tree", "get_structure", "get_contract",
     # Contract properties
     "package_path", "parent_package",

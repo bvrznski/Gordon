@@ -22,6 +22,39 @@ import uuid
 # The canonical definitions exist in:
 #   - lifecycle.py: StreamLifecycleState and StreamLifecycleTransitionGraph
 #   - security.py: IdentityId, StreamId, StreamRecordId, etc.
+#
+# Phase 3.14.6 Interaction Contracts (imported after stream infrastructure)
+from agent.architecture.interaction.taxonomy import (
+    Interaction,
+    Request,
+    Response,
+    Command,
+    Event,
+    Signal,
+    Notification,
+    Proposal,
+    Observation,
+    Query,
+    Publication as TaxonomyPublication,
+    Subscription as TaxonomySubscription,
+    Checkpoint,
+    Heartbeat,
+    Synchronization,
+    Transaction,
+    Recovery,
+    InteractionCategory,
+    InteractionId,
+    InteractionCorrelation,
+    InteractionTrait,
+)
+
+from agent.architecture.interaction.semantics import (
+    RequestState,
+    ResponseState,
+    CommandState,
+    Outcome,
+    DiagnosticMetadata,
+)
 
 # =============================================================================
 # IDENTITY TYPES (re-exported from security.py for convenience)
@@ -536,6 +569,23 @@ __all__ = [
     # Lifecycle types (canonical)
     "StreamLifecycleState", "StreamLifecycleTransitionGraph",
     "StreamLifecycleTransition", "StreamLifecycleSnapshot",
+    
+    # Interaction contracts (Phase 3.14.6)
+    "StreamTransportRole",
+    "StreamTransportConstraint",
+    "PublicationContract",
+    "SubscriptionContract",
+    "RoutingContract",
+    "OrderingType",
+    "OrderingGuarantees",
+    "ReplayContract",
+    "IsolationRules",
+    "OwnershipPreservation",
+    "AuthorityPreservation",
+    "StreamObservabilityMetadata",
+    "StreamFailureType",
+    "StreamTransportFailure",
+    "InteractionStreamRecord",
     
     # Exceptions
     "StreamError", "StreamNotFoundError", "StreamClosedError",

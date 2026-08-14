@@ -1,0 +1,256 @@
+{
+  "phase": {
+    "number": "3.23",
+    "title": "Core Reflection, Metadata & Introspection Architecture",
+    "status": "COMPLETE",
+    "version": "1.0.0",
+    "date": "8/14/2026"
+  },
+  "philosophy": {
+    "reflection": "Reflection describes what exists, not what happens. Reflection is passive - it observes but never modifies.",
+    "metadata": "Metadata describes, it does not execute. One canonical system shall exist throughout the repository."
+  },
+  "metadata_taxonomy": {
+    "identity_metadata": {
+      "description": "Describes WHAT an entity is",
+      "fields": [
+        {"name": "id", "type": "str", "required": true, "description": "Unique identifier (UUID or deterministic hash)"},
+        {"name": "name", "type": "str", "required": true, "description": "Human-readable name"},
+        {"name": "type_", "type": "str", "required": true, "description": "Class, Function, Module, Package, Service, etc."},
+        {"name": "location", "type": "str", "required": false, "description": "file:line or module.path"},
+        {"name": "package_name", "type": "str", "required": false, "description": "Containing package"},
+        {"name": "category", "type": "str", "required": false, "description": "e.g., core, runtime, execution"},
+        {"name": "layer", "type": "str", "required": false, "description": "Architectural layer (Phase X.Y.Z)"}
+      ]
+    },
+    "ownership_metadata": {
+      "description": "Describes WHO owns the entity",
+      "fields": [
+        {"name": "owner.name", "type": "str", "required": true, "description": "Owner name"},
+        {"name": "ownership_type", "type": "str", "required": false, "description": "primary, co-owner, stakeholder"},
+        {"name": "responsibility", "type": "str", "required": false, "description": "What the owner is responsible for"}
+      ]
+    },
+    "version_metadata": {
+      "description": "Describes WHICH VERSION",
+      "fields": [
+        {"name": "semantic_version", "type": "str", "required": true, "description": "MAJOR.MINOR.PATCH"},
+        {"name": "build_number", "type": "int", "required": false, "description": "Optional build identifier"},
+        {"name": "release_channel", "type": "str", "required": false, "description": "alpha, beta, rc, release"},
+        {"name": "generation", "type": "int", "required": false, "description": "Regeneration counter"}
+      ]
+    },
+    "lifecycle_metadata": {
+      "description": "Describes WHERE IN LIFECYCLE",
+      "phases": ["PLANNED", "DESIGNING", "IMPLEMENTING", "TESTING", "STABLE", "DEPRECATED", "OBSOLETE"],
+      "fields": [
+        {"name": "current_phase", "type": "str", "required": true, "description": "Current lifecycle phase"},
+        {"name": "phase_started_at_utc", "type": "float", "required": false, "description": "When current phase began"},
+        {"name": "next_expected_phase", "type": "str", "required": false, "description": "Expected next phase"},
+        {"name": "exit_criteria_met", "type": "bool", "required": false, "description": "Whether exit criteria satisfied"}
+      ]
+    },
+    "capability_metadata": {
+      "description": "Describes WHAT CAN IT DO",
+      "fields": [
+        {"name": "name", "type": "str", "required": true, "description": "e.g., Schedule Tasks, Store State"},
+        {"name": "type_", "type": "str", "required": true, "description": "COMPUTATION, STORAGE, COMMUNICATION, etc."},
+        {"name": "description", "type": "str", "required": true, "description": "Detailed capability description"},
+        {"name": "interface", "type": "str", "required": false, "description": "Interface class or protocol"},
+        {"name": "guarantees", "type": "list", "required": false, "description": "e.g., at-least-once delivery"}
+      ]
+    },
+    "interface_metadata": {
+      "description": "Describes HOW IT INTERFACES",
+      "fields": [
+        {"name": "interfaces", "type": "list[str]", "required": true, "description": "Fully qualified interface names"},
+        {"name": "public_api", "type": "str", "required": false, "description": "Public API surface"},
+        {"name": "contracts", "type": "str", "required": false, "description": "Interface contract details"},
+        {"name": "is_stable", "type": "bool", "required": false, "description": "Whether the interface is stable"}
+      ]
+    },
+    "dependency_metadata": {
+      "description": "Describes WHAT DOES IT NEED",
+      "fields": [
+        {"name": "entity_id", "type": "str", "required": true, "description": "The dependent entity"},
+        {"name": "depends_on", "type": "str", "required": true, "description": "What it depends on"},
+        {"name": "type_", "type": "str", "required": true, "description": "RUNTIME, CONSTRUCTION, OPTIONAL, TRANSPORT"},
+        {"name": "required", "type": "bool", "required": false, "description": "Whether required (vs optional)"}
+      ]
+    },
+    "security_metadata": {
+      "description": "Describes SECURITY PROPERTIES",
+      "classifications": ["PUBLIC", "INTERNAL", "CONFIDENTIAL", "RESTRICTED", "SECRET"],
+      "fields": [
+        {"name": "classification", "type": "str", "required": true, "description": "Security classification level"},
+        {"name": "access_control", "type": "str", "required": false, "description": "e.g., role-based"},
+        {"name": "required_roles", "type": "list", "required": false, "description": "Roles required to access"},
+        {"name": "encryption_at_rest", "type": "bool", "required": false, "description": "Encryption for stored data"},
+        {"name": "encryption_in_transit", "type": "bool", "required": false, "description": "Encryption for network data"}
+      ]
+    },
+    "configuration_metadata": {
+      "description": "Describes HOW IS IT CONFIGURED",
+      "fields": [
+        {"name": "options", "type": "dict", "required": true, "description": "Configuration option definitions"},
+        {"name": "required_options", "type": "list", "required": false, "description": "Options that must be provided"},
+        {"name": "optional_options", "type": "list", "required": false, "description": "Optional configuration options"},
+        {"name": "environment_prefix", "type": "str", "required": false, "description": "Environment variable prefix"}
+      ]
+    },
+    "execution_metadata": {
+      "description": "Describes HOW DOES IT EXECUTE",
+      "modes": ["SYNCHRONOUS", "ASYNCHRONOUS", "BACKGROUND", "ON_DEMAND"],
+      "fields": [
+        {"name": "mode", "type": "str", "required": true, "description": "Execution mode"},
+        {"name": "concurrency_model", "type": "str", "required": false, "description": "e.g., thread-pool, asyncio"},
+        {"name": "estimated_latency_ms", "type": "int", "required": false, "description": "Expected execution latency"},
+        {"name": "throughput_rps", "type": "int", "required": false, "description": "Expected throughput"}
+      ]
+    },
+    "diagnostic_metadata": {
+      "description": "Describes WHAT DIAGNOSTICS ARE AVAILABLE",
+      "types": ["HEALTH", "READINESS", "LIVENESS", "METRICS", "LOGGING"],
+      "fields": [
+        {"name": "diagnostic_types", "type": "list[str]", "required": true, "description": "Diagnostic types available"},
+        {"name": "endpoint", "type": "str", "required": false, "description": "HTTP endpoint or path"},
+        {"name": "health_check_interval_seconds", "type": "int", "required": false, "description": "Health check frequency"}
+      ]
+    },
+    "documentation_metadata": {
+      "description": "Describes WHAT IS DOCUMENTED",
+      "fields": [
+        {"name": "has_readme", "type": "bool", "required": true, "description": "README present"},
+        {"name": "has_api_docs", "type": "bool", "required": false, "description": "API documentation present"},
+        {"name": "public_api_documented", "type": "float", "required": false, "description": "Coverage (0.0-1.0)"}
+      ]
+    }
+  },
+  "registry_architecture": {
+    "entity_metadata_registry": {
+      "class_name": "EntityMetadataRegistry",
+      "entries_type": "Tuple[EntityMetadata, ...]",
+      "methods": [
+        {"name": "get_by_id", "signature": "(entity_id: str) -> Optional[EntityMetadata]", "description": "Get metadata by entity ID"},
+        {"name": "find_by_type", "signature": "(type_name: str) -> Tuple[EntityMetadata, ...]", "description": "Find all entries of a given type"},
+        {"name": "get_entities_by_category", "signature": "(category: str) -> Tuple[EntityMetadata, ...]", "description": "Get all entities in a category"}
+      ]
+    },
+    "capability_registry": {
+      "class_name": "CapabilityRegistry",
+      "entries_type": "Tuple[CapabilityMetadata, ...]",
+      "methods": [
+        {"name": "get_by_type", "signature": "(capability_type: str) -> Tuple[CapabilityMetadata, ...]", "description": "Get all capabilities of a given type"}
+      ]
+    },
+    "manifest_entry": {
+      "class_name": "ManifestEntry",
+      "properties": [
+        {"name": "manifest_id", "type": "str", "description": "Unique identifier for the manifest"},
+        {"name": "generated_at_utc", "type": "float", "description": "Timestamp when manifest was generated"},
+        {"name": "registry_type", "type": "RegistryType", "description": "Type of registry this manifest represents"},
+        {"name": "scope", "type": "RegistryScope", "description": "Scope of the entries (global, package, module)"},
+        {"name": "entries", "type": "Tuple[RegistryEntry, ...]", "description": "The entries in this manifest"},
+        {"name": "entry_count", "type": "int", "computed": true, "description": "Number of entries"}
+      ]
+    }
+  },
+  "validation_system": {
+    "principles": [
+      "Validation is read-only - never modifies data",
+      "All validations produce deterministic results",
+      "Invalid metadata fails validation with clear error messages",
+      "Validation reports are structured and machine-readable"
+    ],
+    "validators": [
+      {"name": "IdentityValidator", "description": "Validates identity metadata completeness"},
+      {"name": "OwnershipValidator", "description": "Validates ownership presence"},
+      {"name": "DependencyValidator", "description": "Validates dependency correctness"}
+    ],
+    "validation_report": {
+      "class_name": "ValidationReport",
+      "properties": [
+        {"name": "report_id", "type": "str", "description": "Unique identifier for the report"},
+        {"name": "generated_at_utc", "type": "float", "description": "Timestamp when report was generated"},
+        {"name": "total_validations", "type": "int", "description": "Total number of validations performed"},
+        {"name": "passed_count", "type": "int", "description": "Number of passed validations"},
+        {"name": "failed_count", "type": "int", "description": "Number of failed validations"},
+        {"name": "warning_count", "type": "int", "description": "Number of warnings"},
+        {"name": "results", "type": "Tuple[ValidationResult, ...]", "description": "Detailed results for each validation"},
+        {"name": "overall_passed", "type": "bool", "computed": true, "description": "True if all validations passed"}
+      ]
+    }
+  },
+  "files_created": [
+    {
+      "path": "src/agent/architecture/reflection/metadata/__init__.py",
+      "description": "Canonical metadata taxonomy - strongly typed dataclasses for all metadata types"
+    },
+    {
+      "path": "src/agent/architecture/reflection/registry.py", 
+      "description": "Registry & manifest architecture - immutable registries with builder pattern"
+    },
+    {
+      "path": "src/agent/architecture/reflection/validation.py",
+      "description": "Validation system - read-only validators with structured reports"
+    },
+    {
+      "path": "src/agent/architecture/reflection/__init__.py",
+      "description": "Updated exports - includes all Phase 3.23 components"
+    }
+  ],
+  "api_reference": {
+    "reflection_module": "gordon_system.src.agent.architecture.reflection",
+    "imports": [
+      "ArchitectureInventory, PackageMetadata, ModuleMetadata, APIItem, RuntimeAuthority",
+      "DependencyEdge, DependencyGraph, TopologyNode, TopologyEdge",
+      "OwnerInfo, PackageOwnership, ModuleOwnership, RuntimeOwnership, OwnershipGraph, OwnershipInspector",
+      "TopologyPathFinder, TopologySummary, TopologyAnalysis, TopologyReport, TopologyInspector",
+      "CycleInfo, DependencyReport, DependencyInspector, topologically_sort_dependencies",
+      "DiscoveryResult, DiscoverySession, DiscoveryService",
+      "RegistryType, RegistryScope, RegistryEntry, ManifestEntry",
+      "EntityMetadataRegistry, CapabilityRegistry, AuditRecord, AuditLog, RegistryBuilder",
+      "ValidationStatus, ValidationError, ValidationResult, ValidationReport",
+      "IdentityValidator, OwnershipValidator, DependencyValidator, CompleteValidator"
+    ]
+  },
+  "completion_criteria": {
+    "met": [
+      "One canonical reflection architecture exists",
+      "One canonical metadata system exists",
+      "Every architectural entity is self-describing (metadata model defined)",
+      "Repository-wide discovery is deterministic",
+      "Runtime introspection is comprehensive and read-only",
+      "Registries expose canonical metadata",
+      "Documentation is generated automatically from reflection metadata",
+      "Repository inventories are complete and reproducible",
+      "Reflection integrity is continuously validated",
+      "Duplicated reflection frameworks have been eliminated"
+    ],
+    "pending": [
+      "Repository-wide migration complete (future phase)",
+      "Repository-wide audit and automatic remediation (future phase)",
+      "Repository certification succeeds (future phase)"
+    ]
+  },
+  "architectural_constraints": {
+    "reflection_never_owns": [
+      "Execution scheduling",
+      "Semantic interpretation",
+      "Runtime state modification",
+      "Component instantiation"
+    ],
+    "metadata_is": {
+      "immutable": true,
+      "structured": true,
+      "discoverable": true,
+      "complete": false
+    }
+  },
+  "metadata_summary": {
+    "total_metadata_types": 12,
+    "registry_types": 8,
+    "validator_count": 4,
+    "files_included": 4
+  }
+}

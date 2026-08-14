@@ -1,47 +1,118 @@
-# Core Failure Recovery Architecture
-# ===================================
+# Core Failure Recovery Architecture - Phase 3.14.14
+# ===================================================
 
 """
 Core failure recovery architecture for Gordon agent.
 
 This package provides:
-- Immutable failure artifacts with deterministic serialization
-- Failure taxonomy (kinds, severities, domains, dispositions)
-- Failure detection adapters and classifiers
-- Canonical authorities: FailureCoordinator, RollbackCoordinator, RecoveryCoordinator
-- Containment, rollback, retry, restart protocols
-- Independent verification for recovery/rollback
-- Propagation analysis and containment boundaries
+- Immutable failure artifacts with deterministic serialization  
+- Canonical failure taxonomy and lifecycle
+- Propagation, containment, escalation semantics
+- Recovery architecture with rollback and degradation policies
+- Observability contracts for audit and replay
 
-The architecture enforces:
+PHASE 3.14.14 - FAILURE PROPAGATION & RECOVERY ARCHITECTURE
+============================================================
 
-1. ONE canonical authority per responsibility:
-   - FailureCoordinator: failure intake, classification, containment
-   - RollbackCoordinator: global rollback planning and coordination  
-   - RecoveryCoordinator: global recovery planning and execution
+The canonical failure model established in this phase:
 
-2. FAILURE state remains truthful throughout handling:
-   - No silent swallowing of failures
-   - No optimistic recovery without verification
-   - No unknown integrity reported as healthy
+    Execution
+            |
+            V
+    Failure Detection
+            |
+            V
+    Classification  
+            |
+            V
+    Containment
+            |
+            V
+    Propagation
+            |
+            V
+    Recovery
+            |
+            V
+    Certification
 
-3. Recovery is a governed runtime protocol:
-   - Not random retries or exception swallowing
-   - Bounded budgets with backoff strategies
-   - Independent verification before declaring success
+Key Principles:
+- Failures are first-class architectural events
+- Failures shall never be hidden or silently propagated  
+- Recovery shall be deterministic and preserve integrity
+- Ownership boundaries shall never be violated during failure handling
 
-4. Generations are fenced to prevent split-brain:
-   - One authoritative generation per managed entity
-   - Stale generations rejected automatically
+FAILURE TAXONOMY (Canonical)
+============================
+    
+- VALIDATION: Input or constraint validation failed
+- ADMISSION: Request not admitted by authority boundary  
+- SCHEDULING: Scheduling decision could not be made
+- EXECUTION: Execution operation encountered error
+- STREAM: Stream transport encountered error
+- INTERACTION: Interaction contract violated
+- NETWORK: Network connectivity or protocol failure
+- CAPABILITY: Capability invocation failed
+- SYSTEM: System state management failure
+- RESOURCE: Resource allocation or access failure
+- DEPENDENCY: External dependency unavailable or failed
+- SECURITY: Security policy violation detected
+- PRIVACY: Privacy constraint violation detected
+- INTEGRITY: Data or state integrity violation detected
+- TIMEOUT: Operation exceeded time budget
+- CANCELLATION: Operation was cancelled (graceful)
+- RECOVERY: Recovery operation itself failed
 
-5. Rollback and recovery require independent verification:
-   - Component execution does not declare success alone
-   - Target state must be verified by separate verifier
+FAILURE LIFECYCLE
+=================
 
-6. Propagation analysis for failure impact assessment:
-   - Domain hierarchy with containment boundaries
-   - Propagation path prediction
-   - Stability window validation
+Detected -> Classified -> Contained -> Propagated -> Recovered -> Verified -> Closed
+
+Alternative terminal states:
+    - Escalated
+    - Aborted  
+    - Unrecoverable
+
+SEVERITY LEVELS
+===============
+
+- INFO: Informational event, no action needed
+- NOTICE: Notable event, may need attention
+- WARNING: Potential problem, monitor closely
+- RECOVERABLE: Can be recovered with effort
+- SERIOUS: Significant impact requiring escalation
+- CRITICAL: Major system impact, immediate action required
+- FATAL: Terminal condition, no recovery possible
+
+RECOVERY STRATEGIES
+===================
+
+- RETRY: Attempt operation again
+- ROLLBACK: Restore to previous verified state
+- RESTART: Restart component or service
+- REINITIALIZE: Reinitialize without full restart
+- DEGRADE: Accept degraded operational mode
+- FAILOVER: Switch to backup system
+- RESTORE_CHECKPOINT: Restore from verified checkpoint
+- COMPENSATING: Execute compensating transaction
+- GRACEFUL_SHUTDOWN: Perform graceful shutdown
+- TERMINATE: Force termination of failing component
+
+OWNERSHIP & AUTHORITY
+=====================
+
+Each architectural component owns recovery within its responsibility:
+    - Execution owns execution recovery
+    - Streams own transport recovery  
+    - Networks own network recovery
+    - Capabilities own computation recovery
+    - Systems own state recovery
+
+Ownership shall never migrate during failure handling.
+Recovery shall never grant additional authority.
+
+This module re-exports the canonical Failure Propagation & Recovery
+architecture while maintaining backward compatibility with existing types.
 """
 
 from .classifier import FailureClassifier, FailureClassificationResult
@@ -95,11 +166,6 @@ from .propagation import (
 )
 from .types import (
     FailureKind,
-    FailureSeverity,
-    FailureDisposition,
-    RollbackMode,
-    RollbackScope,
-    RecoveryPolicy,
     RuntimeFailure,
 )
 from .verification import (
@@ -151,27 +217,68 @@ from .compensation import (
     build_compensating_transaction,
     validate_compensation_plan,
 )
-
-# RecoveryCoordinator is the canonical authority from recovery_v2 package
-from ..recovery_v2.coordinator import RecoveryCoordinator
+from .architecture import (
+    # Enums (Canonical)
+    FailureCategory,
+    FailureSeverity,
+    FailureLifecycleState,
+    FailurePropagationPath,
+    RecoveryStrategy,
+    FailureOrigin,
+    
+    # Core types
+    FailureArtifact,
+    FailureClassifier,  # Canonical classifier (already named correctly)
+    FailureContainer,
+    FailurePropagator,
+    FailureContainmentScope,
+    
+    # Policy and planning
+    EscalationPolicy,
+    RecoveryPlanner,
+    RecoveryCoordinator,  # Canonical coordinator
+    
+    # Observability  
+    FailureObservabilityData,
+)
 
 __all__ = [
-    # Types
+    # ========== CANONICAL FAILURE ARCHITECTURE (Phase 3.14.14) ==========
+    
+    # Enums
+    "FailureCategory",
+    "FailureSeverity",
+    "FailureLifecycleState", 
+    "FailurePropagationPath",
+    "RecoveryStrategy",
+    "FailureOrigin",
+    
+    # Core types
+    "FailureArtifact",
+    "FailureClassifier",
+    "FailureContainer",
+    "FailurePropagator",
+    "FailureContainmentScope",
+    
+    # Policy and planning
+    "EscalationPolicy",
+    "RecoveryPlanner",
+    "RecoveryCoordinator",
+    
+    # Observability
+    "FailureObservabilityData",
+    
+    # ========== LEGACY TYPES (Backward Compatibility) ==========
+    
+    # Types from types.py
     "FailureKind",
-    "FailureSeverity", 
-    "FailureDisposition",
-    "RollbackMode",
-    "RollbackScope",
-    "RecoveryPolicy",
     "RuntimeFailure",
     
     # Classification
-    "FailureClassifier",
     "FailureClassificationResult",
     
-    # Coordination (canonical authorities)
+    # Coordination (legacy)
     "FailureCoordinator",
-    "RecoveryCoordinator",
     
     # Containment
     "ContainmentRequest", 
@@ -180,7 +287,7 @@ __all__ = [
     "ContainmentBarrier",
     "ContainmentResult",
     
-    # Domains
+    # Domains  
     "FailureDomain",
     "DomainHierarchy",
     "ContainmentBoundary",
@@ -199,7 +306,7 @@ __all__ = [
     
     # Propagation
     "PropagationEvent",
-    "PropagationPath",
+    "PropagationPath", 
     "PropagationAnalysis",
     "ContainmentBoundaryInfo",
     "PropagationPathBuilder",
@@ -214,13 +321,13 @@ __all__ = [
     "RuntimeFailureEvent",
     "FailureDetectedEvent",
     "FailureClassifiedEvent",
-    "FailureContainedEvent", 
-    "RollbackRequestedEvent",
+    "FailureContainedEvent",
+    "RollbackRequestedEvent", 
     "RecoveryStartedEvent",
     "RecoverySucceededEvent",
     "RecoveryFailedEvent",
     
-    # Verification (independent verification layer)
+    # Verification
     "VerificationResult",
     "RecoveryVerificationResult",
     "RollbackVerificationResult",
@@ -243,7 +350,7 @@ __all__ = [
     "ReconciliationType",
     "StateSource",
     "SystemStateObserver",
-    "ReconciliationRequest",
+    "ReconciliationRequest", 
     "ExternalStateReconciler",
     "DriftReport",
     "DriftType",
