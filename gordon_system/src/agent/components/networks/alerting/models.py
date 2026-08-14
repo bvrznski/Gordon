@@ -309,11 +309,11 @@ class AlertingAssessment:
     # Reasons for the assessment
     reasons: Tuple[AlertingReason, ...]
     
-    # State transitions (optional)
-    state_transition: Optional[AlertingStateTransition] = None
-    
     # Provenance
     provenance: AlertingProvenance
+    
+    # State transitions (optional) - must come after required fields with defaults
+    state_transition: Optional[AlertingStateTransition] = None
 
 
 @dataclass(frozen=True, slots=True)

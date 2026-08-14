@@ -66,6 +66,25 @@ from gordon_system.src.agent.components.networks.alerting.configuration import (
 from gordon_system.src.agent.components.networks.alerting.protocol import (
     AlertingNetworkProtocol,
 )
+from gordon_system.src.agent.components.networks.alerting.demand_estimator import (
+    AlertingDemandEstimator,
+    DemandEstimatorConfig,
+    EvidenceSummary,
+    ModulationSummary,
+)
+
+# Phase 4.1.5 Pipeline Components
+from gordon_system.src.agent.components.networks.alerting.network import (
+    AlertingNetwork,
+)
+from gordon_system.src.agent.components.networks.alerting.constants import (
+    MIN_INTENSITY,
+    MAX_INTENSITY,
+    FEATURE_MIN,
+    FEATURE_MAX,
+    DEFAULT_HABITUATION_COEFFICIENT,
+    REFRACTORY_ATTENUATION_FACTOR,
+)
 from gordon_system.src.agent.components.networks.alerting.states import (
     # Signal models
     AlertingSignal,
@@ -90,6 +109,11 @@ from gordon_system.src.agent.components.networks.alerting.states import (
     validate_temporal,
     validate_network_state,
     validate_snapshot_consistency,
+)
+
+# Phase 4.1.5 Public API (Pipeline Components)
+from gordon_system.src.agent.components.networks.alerting.features.analyzers import (
+    FeatureAggregator,
 )
 
 __all__ = (
@@ -139,4 +163,19 @@ __all__ = (
     "validate_temporal",
     "validate_network_state",
     "validate_snapshot_consistency",
+    # Demand Estimator (Phase 4.1.4)
+    "AlertingDemandEstimator",
+    "DemandEstimatorConfig",
+     "EvidenceSummary",
+     "ModulationSummary",
+     # Phase 4.1.5 Pipeline Components
+     "AlertingNetwork",
+     "FeatureAggregator",
+     # Constants
+     "MIN_INTENSITY",
+     "MAX_INTENSITY",
+     "FEATURE_MIN",
+     "FEATURE_MAX",
+     "DEFAULT_HABITUATION_COEFFICIENT",
+     "REFRACTORY_ATTENUATION_FACTOR",
 )
