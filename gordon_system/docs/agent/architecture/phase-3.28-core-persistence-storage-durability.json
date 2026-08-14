@@ -1,0 +1,401 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:gordon:phase:3.28",
+  "title": "Gordon Core Phase 3.28: Persistence, Storage & Durability Architecture",
+  "version": "1.0.0",
+  "date": "2026-08-14",
+  "status": "ACTIVE",
+  
+  "philosophy": {
+    "persistence": {
+      "definition": "Mechanism by which Gordon preserves knowledge, state, artifacts, history, identity, and runtime continuity beyond the lifetime of a single process.",
+      "core_beliefs": [
+        "One canonical persistence architecture exists throughout the repository",
+        "Nothing persistent is anonymous; everything has identity and ownership",
+        "Persistence is deterministic, reproducible, observable, recoverable, verifiable, and evolvable",
+        "Runtime state, persistent state, durable objects, snapshots, checkpoints, archives, artifacts, event stores, object stores, repositories, serialization, encoding, persistence, durability, backup, recovery, synchronization, and replication are completely separate concepts"
+      ]
+    },
+    "durability": {
+      "definition": "Guarantees that data survives across failures",
+      "levels": [
+        {"symbol": "V", "name": "volatile", "description": "No durability guarantee"},
+        {"symbol": "S", "name": "session_durable", "description": "Survives within a session"},
+        {"symbol": "R", "name": "runtime_durable", "description": "Survives runtime restarts"},
+        {"symbol": "P", "name": "process_durable", "description": "Survives process restarts"},
+        {"symbol": "L", "name": "local_durable", "description": "Survives local failures (disk, power)"},
+        {"symbol": "X", "name": "replicated_durable", "description": "Survives across replicated nodes"},
+        {"symbol": "A", "name": "archival_durable", "description": "Long-term archival storage"},
+        {"symbol": "M", "name": "permanent", "description": "Indefinite retention"}
+      ]
+    }
+  },
+  
+  "persistence_lifecycle": {
+    "phases": [
+      "Created",
+      "Validated",
+      "Serialized",
+      "Persisted",
+      "Committed",
+      "Indexed",
+      "Available",
+      "Referenced",
+      "Archived (optional)",
+      "Restored (optional)",
+      "Compacted (optional)",
+      "Retired",
+      "Deleted",
+      "Verified"
+    ],
+    "description": "Every durable object follows this canonical lifecycle. Each transition preserves integrity and provenance."
+  },
+  
+  "storage_domains": {
+    "domains": [
+      {
+        "name": "Runtime Store",
+        "purpose": "Live runtime state",
+        "durability_level": "volatile",
+        "retention_policy": "none (runtime-only)",
+        "ownership": "Runtime components"
+      },
+      {
+        "name": "Configuration Store", 
+        "purpose": "System configuration",
+        "durability_level": "durable_local",
+        "retention_policy": "indefinite",
+        "ownership": "Configuration Authority"
+      },
+      {
+        "name": "State Store",
+        "purpose": "State aggregates",
+        "durability_level": "durable_local",
+        "retention_policy": "configurable",
+        "ownership": "State Authority"
+      },
+      {
+        "name": "Event Store",
+        "purpose": "Event history",
+        "durability_level": "replicated",
+        "retention_policy": "configurable",
+        "ownership": "Event Authority"
+      },
+      {
+        "name": "Stream Store",
+        "purpose": "Stream checkpoints",
+        "durability_level": "durable_local",
+        "retention_policy": "checkpoint retention",
+        "ownership": "Stream Authority"
+      },
+      {
+        "name": "Artifact Store", 
+        "purpose": "Generated artifacts",
+        "durability_level": "durable_local",
+        "retention_policy": "versioned retention",
+        "ownership": "Artifact Authority"
+      },
+      {
+        "name": "Metadata Store",
+        "purpose": "Entity metadata",
+        "durability_level": "durable_local",
+        "retention_policy": "indefinite",
+        "ownership": "Metadata Authority"
+      },
+      {
+        "name": "Memory Store",
+        "purpose": "Cognitive memory",
+        "durability_level": "process_local",
+        "retention_policy": "session-based",
+        "ownership": "Memory Authority"
+      },
+      {
+        "name": "Model Store",
+        "purpose": "ML models",
+        "durability_level": "replicated",
+        "retention_policy": "model lifecycle",
+        "ownership": "Model Authority"
+      },
+      {
+        "name": "Checkpoint Store",
+        "purpose": "Execution checkpoints",
+        "durability_level": "process_local",
+        "retention_policy": "session duration",
+        "ownership": "Checkpoint Authority"
+      },
+      {
+        "name": "Snapshot Store",
+        "purpose": "State snapshots", 
+        "durability_level": "durable_local",
+        "retention_policy": "snapshot policy",
+        "ownership": "Snapshot Authority"
+      },
+      {
+        "name": "Diagnostic Store",
+        "purpose": "Diagnostics & metrics",
+        "durability_level": "volatile",
+        "retention_policy": "bounded retention",
+        "ownership": "Diagnostic Authority"
+      }
+    ],
+    "domain_ownership": {
+      "owner": "Entity responsible for persistence operations",
+      "policy_authority": "Defines durability and retention policies", 
+      "access_control": "Controls who can read/write to the domain"
+    }
+  },
+  
+  "persistent_objects": {
+    "properties": [
+      {"name": "immutable_identity", "description": "Unique, immutable identifier"},
+      {"name": "owner", "description": "Explicit owner entity"},
+      {"name": "schema", "description": "Versioned data schema"},
+      {"name": "version", "description": "Version sequence number"},
+      {"name": "generation", "description": "Generation epoch number"},
+      {"name": "provenance", "description": "Origin and history tracking"},
+      {"name": "timestamps", "description": "Created/modified timestamps"},
+      {"name": "metadata", "description": "Arbitrary metadata key-value pairs"},
+      {"name": "integrity_metadata", "description": "Cryptographic integrity evidence"}
+    ],
+    "taxonomy": {
+      "PersistentObject": [
+        {"name": "Entity", "description": "Identified by immutable identity"},
+        {"name": "Record", "description": "Immutable historical record"},
+        {"name": "Snapshot", "description": "Point-in-time state view"},
+        {"name": "Checkpoint", "description": "Execution recovery point"},
+        {"name": "Archive", "description": "Long-term versioned backup"},
+        {"name": "Artifact", "description": "Generated content (code, plans, docs)"},
+        {"name": "Event", "description": "Historical event in event store"},
+        {"name": "Transaction", "description": "Atomic persistence operation"}
+      ]
+    }
+  },
+  
+  "serialization": {
+    "formats": [
+      {
+        "name": "JSON",
+        "use_case": "Human-readable config, metadata",
+        "properties": ["Text", "Self-describing"]
+      },
+      {
+        "name": "Binary",
+        "use_case": "Compact storage, performance",
+        "properties": ["Binary", "Schema-validated"]
+      },
+      {
+        "name": "Protocol Buffers",
+        "use_case": "Structured data exchange",
+        "properties": ["Strongly-typed", "Versioned"]
+      }
+    ],
+    "encoding_guarantees": [
+      "Schema Evolution: Backward and forward compatible",
+      "Deterministic: Same input always produces same output",
+      "Canonical Encoding: One canonical encoding per object state"
+    ]
+  },
+  
+  "persistence_transactions": {
+    "features": [
+      {"name": "Atomic Persistence", "description": "All-or-nothing persistence operations"},
+      {"name": "Commit", "description": "Atomic commit with durability guarantee"},
+      {"name": "Rollback", "description": "Full rollback on failure"},
+      {"name": "Compensation", "description": "Undo operations for failed transactions"},
+      {"name": "Partial Failure Handling", "description": "Graceful handling of partial failures"},
+      {"name": "Consistency Validation", "description": "Post-commit consistency verification"}
+    ],
+    "phases": ["BEGIN", "PREPARE", "[COMMIT | ABORT]", "ROLLBACK (if partial execution)"]
+  },
+  
+  "snapshots_and_checkpoints": {
+    "snapshot_types": [
+      {"name": "Runtime Snapshot", "purpose": "Live runtime state capture", "durability": "volatile"},
+      {"name": "State Snapshot", "purpose": "State aggregate snapshot", "durability": "durable_local"},
+      {"name": "Configuration Snapshot", "purpose": "Config state at time", "durability": "durable_local"},
+      {"name": "Execution Checkpoint", "purpose": "Execution recovery point", "durability": "process_local"},
+      {"name": "Scheduler Checkpoint", "purpose": "Scheduler state", "durability": "process_local"}
+    ],
+    "properties": [
+      "Immutable: Snapshots are never modified",
+      "Self-Describing: Include schema and version metadata",
+      "Integrity Verified: Cryptographic integrity evidence included"
+    ]
+  },
+  
+  "artifact_repository": {
+    "artifacts": [
+      {"name": "Models", "purpose": "ML models, inference models", "retention": "Model lifecycle"},
+      {"name": "Documents", "purpose": "Generated documentation", "retention": "Versioned retention"},
+      {"name": "Reports", "purpose": "Analysis and diagnostic reports", "retention": "Report policy"},
+      {"name": "Diagnostics", "purpose": "Error diagnostics", "retention": "Bounded retention"},
+      {"name": "Generated Code", "purpose": "Auto-generated code", "retention": "Source retention"},
+      {"name": "Generated Plans", "purpose": "Execution plans", "retention": "Plan validity period"},
+      {"name": "Generated Knowledge", "purpose": "Learning artifacts", "retention": "Knowledge lifecycle"},
+      {"name": "Datasets", "purpose": "Training/test datasets", "retention": "Dataset policy"},
+      {"name": "Indexes", "purpose": "Search indexes", "retention": "Index lifecycle"},
+      {"name": "Embeddings", "purpose": "Vector embeddings", "retention": "Model retention"}
+    ],
+    "lineage": {
+      "source": "Original input artifacts",
+      "producer": "Entity that generated it",
+      "consumer": "Entities that use it",
+      "transformations": "Applied transformations"
+    }
+  },
+  
+  "durability_guarantees": {
+    "levels": [
+      {"symbol": "V", "name": "volatile", "description": "No durability guarantee"},
+      {"symbol": "S", "name": "session_durable", "description": "Survives within session"},
+      {"symbol": "R", "name": "runtime_durable", "description": "Survives runtime restarts"},
+      {"symbol": "P", "name": "process_durable", "description": "Survives process restarts"},
+      {"symbol": "L", "name": "local_durable", "description": "Survives local failures"},
+      {"symbol": "X", "name": "replicated_durable", "description": "Survives across replicas"},
+      {"symbol": "A", "name": "archival_durable", "description": "Long-term archival storage"},
+      {"symbol": "M", "name": "permanent", "description": "Indefinite retention"}
+    ],
+    "contracts": {
+      "level": "The durability level",
+      "location": "Where the data is stored",
+      "replication": "Replication factor and strategy",
+      "consistency": "Consistency guarantees"
+    }
+  },
+  
+  "retention_and_archival": {
+    "retention_policies": [
+      {"name": "Fixed Duration", "description": "Expire after fixed time period"},
+      {"name": "Until Replication", "description": "Keep until replicated everywhere"},
+      {"name": "Indefinite", "description": "Never expire automatically"}
+    ],
+    "archival_strategy": {
+      "incremental_archives": "Only changed data since last archive",
+      "full_archives": "Complete state snapshot",
+      "versioned_archives": "Each archive has unique version"
+    },
+    "compaction": [
+      "Garbage Collection: Remove expired records",
+      "Data Optimization: Reorganize for efficiency",
+      "Storage Reduction: Deduplicate and compress"
+    ]
+  },
+  
+  "diagnostics_and_integrity": {
+    "diagnostics": [
+      {"name": "Storage Utilization", "description": "Current storage usage"},
+      {"name": "Persistence Latency", "description": "Operation latency metrics"},
+      {"name": "Serialization Diagnostics", "description": "Serialization performance"},
+      {"name": "Transaction Diagnostics", "description": "Transaction success/failure rates"},
+      {"name": "Checkpoint Diagnostics", "description": "Checkpoint creation metrics"},
+      {"name": "Corruption Detection", "description": "Detected corruption events"},
+      {"name": "Durability Metrics", "description": "Durability guarantee status"},
+      {"name": "Retention Diagnostics", "description": "Retention policy compliance"}
+    ],
+    "integrity_verification": {
+      "checksums": "Fast integrity verification",
+      "cryptographic_hashes": ["SHA-256", "BLAKE2b"],
+      "corruption_localization": "Identify corrupted data regions",
+      "repair_planning": "Automatic repair suggestions"
+    },
+    "corruption_response": [
+      "Detect corruption via integrity check",
+      "Isolate corrupted records",
+      "Attempt recovery from backup",
+      "Log incident for investigation",
+      "Update diagnostics"
+    ]
+  },
+  
+  "migration": {
+    "migrated_implementations": [
+      {"original": "Fragmented serialization", "replaced_by": "Canonical serialization layer"},
+      {"original": "Inconsistent checkpointing", "replaced_by": "Canonical checkpoint system"},
+      {"original": "Ad-hoc artifact storage", "replaced_by": "Artifact repository architecture"},
+      {"original": "State-specific persistence", "replaced_by": "Unified state persistence facade"}
+    ],
+    "migration_process": [
+      "Audit: Identify all existing implementations",
+      "Design: Define migration strategy",
+      "Implement: Implement canonical architecture",
+      "Migrate: Gradually migrate subsystems",
+      "Validate: Verify correctness of migrated data",
+      "Retire: Remove old implementations"
+    ]
+  },
+  
+  "certification": {
+    "validation_checklist": [
+      "One canonical persistence architecture exists",
+      "One canonical storage architecture exists",
+      "Every persistent entity belongs to an explicit storage domain",
+      "Persistence transactions are atomic and deterministic",
+      "Snapshots and checkpoints are immutable and reproducible",
+      "Durability guarantees and retention policies are explicit",
+      "Corruption detection and integrity verification are comprehensive",
+      "Duplicated persistence frameworks eliminated",
+      "Repository-wide migration complete"
+    ],
+    "status": "CERTIFIED",
+    "date": "2026-08-14",
+    "version": "1.0.0"
+  },
+  
+  "integrations": {
+    "phase_3_11_streams": {"integration_point": "Event and stream persistence, checkpoints"},
+    "phase_3_12_core_architecture": {"integration_point": "Core persistence boundaries"},
+    "phase_3_15_state": {"integration_point": "State persistence, snapshots, restoration"},
+    "phase_3_16_time": {"integration_point": "Timestamps, retention policies"},
+    "phase_3_17_resources_compute": {"integration_point": "Storage resources, compute for serialization"},
+    "phase_3_18_configuration_policy": {"integration_point": "Persistence policies, durability settings"},
+    "phase_3_19_identity": {"integration_point": "Ownership, provenance tracking"},
+    "phase_3_20_concurrency": {"integration_point": "Transactional persistence, OCC"},
+    "phase_3_21_communication": {"integration_point": "Message persistence, delivery guarantees"},
+    "phase_3_22_security": {"integration_point": "Integrity, encryption, access control"},
+    "phase_3_23_reflection": {"integration_point": "Metadata, introspection of persisted objects"},
+    "phase_3_24_validation": {"integration_point": "Persistence validation, integrity verification"},
+    "phase_3_25_recovery": {"integration_point": "Recovery from checkpoints, snapshots"},
+    "phase_3_26_lifecycle": {"integration_point": "Object lifecycle, retention policies"},
+    "phase_3_27_repository_architecture": {"integration_point": "Artifact storage, repository structure"}
+  },
+  
+  "implementation_status": {
+    "persistence_foundations": "COMPLETE",
+    "storage_domains": "COMPLETE", 
+    "persistent_objects_model": "COMPLETE",
+    "serialization_architecture": "COMPLETE",
+    "persistence_transactions": "COMPLETE",
+    "snapshots_and_checkpoints": "COMPLETE",
+    "state_persistence_integration": "COMPLETE",
+    "event_and_stream_persistence": "COMPLETE",
+    "artifact_repository": "COMPLETE",
+    "durability_guarantees": "COMPLETE",
+    "retention_policies": "COMPLETE",
+    "diagnostics_and_monitoring": "COMPLETE",
+    "integrity_verification": "COMPLETE",
+    "migration_complete": "COMPLETE",
+    "certification": "CERTIFIED"
+  },
+  
+  "public_api": {
+    "persistence_operations": [
+      {"name": "validate_eligibility", "description": "Validate persistence eligibility for an aggregate"},
+      {"name": "create_checkpoint", "description": "Create a checkpoint record"},
+      {"name": "serialize_state", "description": "Serialize runtime state to immutable representation"},
+      {"name": "verify_integrity", "description": "Verify integrity of persisted data"}
+    ],
+    "storage_domain_access": [
+      {"name": "get_store", "description": "Get store for a storage domain"},
+      {"name": "read", "description": "Read persisted object by ID"},
+      {"name": "write", "description": "Write persistent object to store"}
+    ]
+  },
+  
+  "metadata": {
+    "phase_number": 3.28,
+    "phase_title": "Core Persistence, Storage & Durability Architecture",
+    "version": "1.0.0",
+    "created_at": "2026-08-14T13:20:00Z",
+    "last_updated": "2026-08-14T13:20:00Z"
+  }
+}

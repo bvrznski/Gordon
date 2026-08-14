@@ -1,0 +1,961 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "phase": "3.27",
+    "date": "2026-08-14",
+    "status": "CANONICAL ARCHITECTURE",
+    "title": "Core Repository, Package & Modular Architecture"
+  },
+  "repository_topology": {
+    "root_directory": "/home/bvrznski/Gordon",
+    "zones": [
+      {
+        "name": "gordon_system",
+        "purpose": "Primary implementation workspace",
+        "subzones": [
+          {"name": "docs", "purpose": "Documentation (public API)"},
+          {"name": "src", "purpose": "Source code implementation zone"},
+          {"name": "tests", "purpose": "Test implementations"}
+        ]
+      },
+      {
+        "name": "gordon-environment",
+        "purpose": "Environment zone (optional)",
+        "subzones": []
+      },
+      {
+        "name": "gordon-improver",
+        "purpose": "Improver zone (optional)",
+        "subzones": []
+      },
+      {
+        "name": "gordon-legacy",
+        "purpose": "Legacy code zone (migrating)",
+        "subzones": []
+      },
+      {
+        "name": "gordon-modules",
+        "purpose": "Module zone (extensibility)",
+        "subzones": []
+      },
+      {
+        "name": "gordon-researcher",
+        "purpose": "Research zone (experimental)",
+        "subzones": []
+      }
+    ],
+    "invariants": [
+      "Every file in src/ belongs to exactly one package",
+      "No cyclic dependencies between packages at same layer",
+      "Dependencies only flow downward through architectural layers",
+      "Public APIs are exported from package __init__.py",
+      "Internal APIs never leak across package boundaries"
+    ]
+  },
+  "architectural_layers": {
+    "foundation": {
+      "priority": 7,
+      "responsibility": "Core primitives, types, utilities",
+      "packages": ["types", "errors", "utilities"]
+    },
+    "core": {
+      "priority": 6,
+      "responsibility": "Runtime infrastructure, lifecycle",
+      "packages": ["core", "runtime", "lifecycle"]
+    },
+    "infrastructure": {
+      "priority": 5,
+      "responsibility": "Platform services, storage, network",
+      "packages": []
+    },
+    "runtime": {
+      "priority": 4,
+      "responsibility": "Execution runtime, scheduling",
+      "packages": ["execution", "runtime"]
+    },
+    "capability": {
+      "priority": 3,
+      "responsibility": "Business capabilities, features",
+      "packages": ["capabilities"]
+    },
+    "cognitive": {
+      "priority": 2,
+      "responsibility": "Reasoning, planning, memory",
+      "packages": ["cognition", "memory"]
+    },
+    "application": {
+      "priority": 1,
+      "responsibility": "High-level applications",
+      "packages": []
+    }
+  },
+  "package_categories": {
+    "implementation": {
+      "description": "Concrete functionality",
+      "examples": ["state", "execution"],
+      "rules": ["One primary responsibility per package"]
+    },
+    "interface": {
+      "description": "Abstract contracts",
+      "examples": ["interfaces", "communication"],
+      "rules": ["Pure interface definitions, no implementations"]
+    },
+    "protocol": {
+      "description": "Wire-level specifications",
+      "examples": [],
+      "rules": []
+    },
+    "model": {
+      "description": "Data models and types",
+      "examples": ["types", "models"],
+      "rules": ["Immutable by default, serializable"]
+    },
+    "registry": {
+      "description": "Entity registries",
+      "examples": ["registry"],
+      "rules": ["Singleton or registry patterns"]
+    },
+    "facade": {
+      "description": "Simplified access layers",
+      "examples": [],
+      "rules": ["Delegates to implementations, minimal logic"]
+    },
+    "utility": {
+      "description": "Shared utilities",
+      "examples": ["utils", "helpers"],
+      "rules": ["Stateless where possible"]
+    },
+    "adapter": {
+      "description": "Integration adapters",
+      "examples": [],
+      "rules": ["Translate external interfaces to internal contracts"]
+    }
+  },
+  "package_inventory": {
+    "gordon_system/src/agent/architecture": {
+      "name": "architecture",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": [
+        "__init__.py",
+        "__meta__.py",
+        "__tree__.py"
+      ]
+    },
+    "gordon_system/src/agent/architecture/topology": {
+      "name": "topology",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection": {
+      "name": "reflection",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": ["discovery", "inventory"],
+      "public_api": [
+        "__init__.py"
+      ]
+    },
+    "gordon_system/src/agent/architecture/reflection/metadata": {
+      "name": "reflection.metadata",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/discovery": {
+      "name": "reflection.discovery",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/interfaces": {
+      "name": "reflection.interfaces",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "interface",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/ownership": {
+      "name": "reflection.ownership",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/topology": {
+      "name": "reflection.topology",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/dependency_inspector": {
+      "name": "reflection.dependency_inspector",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/validation": {
+      "name": "reflection.validation",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/reflection/registry": {
+      "name": "reflection.registry",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery": {
+      "name": "discovery",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/dependency_manager": {
+      "name": "discovery.dependency_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/import_graph": {
+      "name": "discovery.import_graph",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/inventory": {
+      "name": "discovery.inventory",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/metrics_manager": {
+      "name": "discovery.metrics_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/module_manager": {
+      "name": "discovery.module_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/package_manager": {
+      "name": "discovery.package_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/report_manager": {
+      "name": "discovery.report_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/topology_manager": {
+      "name": "discovery.topology_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/discovery/authority_manager": {
+      "name": "discovery.authority_manager",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/duplicate_detection": {
+      "name": "duplicate_detection",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity": {
+      "name": "identity",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/core": {
+      "name": "identity.core",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/domains/runtime": {
+      "name": "identity.domains.runtime",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/domains/component": {
+      "name": "identity.domains.component",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/correlation": {
+      "name": "identity.correlation",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/lineage": {
+      "name": "identity.lineage",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/provenance": {
+      "name": "identity.provenance",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/serialization": {
+      "name": "identity.serialization",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/identity/validation": {
+      "name": "identity.validation",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/interaction": {
+      "name": "interaction",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/interaction/taxonomy": {
+      "name": "interaction.taxonomy",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "interface",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/interaction/observability": {
+      "name": "interaction.observability",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/interaction/semantics": {
+      "name": "interaction.semantics",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time": {
+      "name": "time",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time/foundations": {
+      "name": "time.foundations",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time/clocks": {
+      "name": "time.clocks",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time/clocks/provider": {
+      "name": "time.clocks.provider",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time/types": {
+      "name": "time.types",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time/core": {
+      "name": "time.core",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/time/core/timer": {
+      "name": "time.core.timer",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/concurrency": {
+      "name": "concurrency",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/coordination": {
+      "name": "coordination",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/scheduling_admission": {
+      "name": "scheduling_admission",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/scheduling_admission/ready_queue": {
+      "name": "scheduling_admission.ready_queue",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/scheduling_admission/observability": {
+      "name": "scheduling_admission.observability",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/sync_coord_integration": {
+      "name": "sync_coord_integration",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/synchronization": {
+      "name": "synchronization",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation": {
+      "name": "validation",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/core": {
+      "name": "validation.core",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/invariants": {
+      "name": "validation.invariants",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/verification": {
+      "name": "validation.verification",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/remediation": {
+      "name": "validation.remediation",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/certification": {
+      "name": "validation.certification",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/observability": {
+      "name": "validation.observability",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/validation/scorecards": {
+      "name": "validation.scorecards",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/transaction": {
+      "name": "transaction",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication": {
+      "name": "communication",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/foundations": {
+      "name": "communication.foundations",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/endpoints": {
+      "name": "communication.endpoints",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/messages": {
+      "name": "communication.messages",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/routing": {
+      "name": "communication.routing",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/subscription": {
+      "name": "communication.subscription",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/delivery_guarantees": {
+      "name": "communication.delivery_guarantees",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/reliability": {
+      "name": "communication.reliability",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/policies": {
+      "name": "communication.policies",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/observability": {
+      "name": "communication.observability",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/communication/cross_runtime": {
+      "name": "communication.cross_runtime",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/cross_domain_interaction_contracts": {
+      "name": "cross_domain_interaction_contracts",
+      "owner": "architecture-team",
+      "layer": "runtime",
+      "category": "interface",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/boundaries": {
+      "name": "boundaries",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/capability_map": {
+      "name": "capability_map",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/certification": {
+      "name": "certification",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/snapshot": {
+      "name": "snapshot",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/migration": {
+      "name": "migration",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/ownership": {
+      "name": "ownership",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/authority": {
+      "name": "authority",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/inventory": {
+      "name": "inventory",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/manifests": {
+      "name": "manifests",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/dependencies": {
+      "name": "dependencies",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    },
+    "gordon_system/src/agent/architecture/dependency_graph": {
+      "name": "dependency_graph",
+      "owner": "architecture-team",
+      "layer": "core",
+      "category": "implementation",
+      "version": "1.0.0",
+      "dependencies": [],
+      "public_api": []
+    }
+  },
+  "module_inventory": {
+    "total_modules": 167,
+    "by_category": {
+      "implementation": 145,
+      "interface": 8,
+      "protocol": 0,
+      "model": 0,
+      "registry": 0,
+      "facade": 0,
+      "utility": 7,
+      "adapter": 0
+    }
+  },
+  "dependency_graph": {
+    "nodes": ["architecture", "topology", "reflection", "discovery", "identity", "interaction", "time", "concurrency", "coordination", "scheduling_admission", "validation", "transaction", "communication", "boundaries", "capability_map", "certification"],
+    "edges": [],
+    "invariants": [
+      "No cycles within same layer",
+      "Dependencies flow downward through architectural layers",
+      "All dependencies must be declared"
+    ]
+  },
+  "layer_graph": {
+    "foundation": ["core"],
+    "core": ["runtime", "infrastructure"],
+    "infrastructure": [],
+    "runtime": ["capability"],
+    "capability": ["cognitive"],
+    "cognitive": ["application"],
+    "application": []
+  },
+  "api_inventory": {
+    "public_apis": [],
+    "internal_apis": [],
+    "versioning_strategy": "semantic_versioning"
+  },
+  "ownership_matrix": {
+    "architecture-team": [
+      "architecture",
+      "topology",
+      "reflection",
+      "discovery",
+      "identity",
+      "interaction",
+      "time",
+      "concurrency",
+      "coordination",
+      "scheduling_admission",
+      "validation",
+      "transaction",
+      "communication",
+      "boundaries",
+      "capability_map",
+      "certification",
+      "snapshot",
+      "migration",
+      "ownership",
+      "authority",
+      "inventory",
+      "manifests",
+      "dependencies",
+      "dependency_graph"
+    ]
+  },
+  "migrated_implementations": [],
+  "audit_results": {
+    "status": "pending",
+    "findings": []
+  },
+  "validation_results": {
+    "topology": "pending",
+    "package_ownership": "pending",
+    "module_ownership": "pending",
+    "dependency_correctness": "pending",
+    "layering": "pending",
+    "api_exposure": "pending",
+    "modularity": "pending"
+  },
+  "certification_results": {
+    "status": "pending",
+    "repository_correctness": false,
+    "modularity": false,
+    "package_architecture": false,
+    "dependency_architecture": false,
+    "api_architecture": false,
+    "layering": false,
+    "migration_completeness": false,
+    "documentation": false,
+    "testing": false
+  }
+}

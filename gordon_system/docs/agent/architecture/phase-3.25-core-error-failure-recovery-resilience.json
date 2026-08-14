@@ -1,0 +1,332 @@
+{
+  "version": "1.0",
+  "phase": 3.25,
+  "title": "Core Error, Failure, Recovery & Resilience Architecture",
+  "status": "IMPLEMENTED",
+  "generated_at": "2026-08-14T12:40:00Z",
+
+  "failure_taxonomy": {
+    "error_kinds": [
+      {
+        "name": "PROGRAMMING",
+        "description": "Code bugs, logic errors (non-recoverable)",
+        "recoverable": false
+      },
+      {
+        "name": "LOGIC_ERROR",
+        "description": "Logic violation",
+        "recoverable": false
+      },
+      {
+        "name": "RUNTIME",
+        "description": "Runtime conditions (often recoverable)",
+        "recoverable": true
+      },
+      {
+        "name": "RESOURCE_EXHAUSTION",
+        "description": "Memory, disk, connection exhaustion",
+        "recoverable": false
+      },
+      {
+        "name": "CONFIGURATION",
+        "description": "Invalid configuration",
+        "recoverable": false
+      },
+      {
+        "name": "DEPENDENCY",
+        "description": "External service unavailable",
+        "recoverable": true
+      },
+      {
+        "name": "NETWORK",
+        "description": "Network/protocol failures",
+        "recoverable": true
+      },
+      {
+        "name": "DATA_CORRUPTION",
+        "description": "Data integrity violation",
+        "recoverable": false
+      },
+      {
+        "name": "STATE_CORRUPTION",
+        "description": "State corruption",
+        "recoverable": false
+      },
+      {
+        "name": "SECURITY",
+        "description": "Security violations",
+        "recoverable": true
+      },
+      {
+        "name": "FATAL",
+        "description": "Terminal condition",
+        "recoverable": false
+      },
+      {
+        "name": "PANIC",
+        "description": "Emergency shutdown required",
+        "recoverable": false
+      }
+    ],
+    "failure_categories": [
+      {
+        "name": "VALIDATION",
+        "description": "Input validation or constraint satisfaction failure"
+      },
+      {
+        "name": "ADMISSION",
+        "description": "Request not admitted by authority boundary"
+      },
+      {
+        "name": "EXECUTION",
+        "description": "Execution operation encountered error"
+      },
+      {
+        "name": "SCHEDULING",
+        "description": "Scheduling decision could not be made"
+      },
+      {
+        "name": "CONCURRENCY",
+        "description": "Race conditions, deadlocks"
+      },
+      {
+        "name": "RESOURCE",
+        "description": "Resource allocation or access failure"
+      },
+      {
+        "name": "MEMORY",
+        "description": "Memory exhaustion"
+      },
+      {
+        "name": "STORAGE",
+        "description": "Storage operation failure"
+      },
+      {
+        "name": "NETWORK",
+        "description": "Network connectivity or protocol failure"
+      },
+      {
+        "name": "DEPENDENCY",
+        "description": "External dependency unavailable or failed"
+      },
+      {
+        "name": "STATE_CORRUPTION",
+        "description": "State corruption detected"
+      },
+      {
+        "name": "PERSISTENCE",
+        "description": "Storage write/read failures"
+      },
+      {
+        "name": "COMMUNICATION",
+        "description": "Communication contract violation"
+      },
+      {
+        "name": "TIMEOUT",
+        "description": "Operation exceeded time budget"
+      },
+      {
+        "name": "SECURITY",
+        "description": "Security policy violation detected"
+      },
+      {
+        "name": "PRIVACY",
+        "description": "Privacy constraint violation detected"
+      },
+      {
+        "name": "EXTERNAL",
+        "description": "Third-party service outages"
+      },
+      {
+        "name": "RECOVERY",
+        "description": "Recovery operation encountered error"
+      }
+    ],
+    "severity_levels": [
+      {"level": "INFO", "impact": "Informational, no action needed"},
+      {"level": "NOTICE", "impact": "Notable event, may need attention"},
+      {"level": "WARNING", "impact": "Potential problem, monitor closely"},
+      {"level": "ERROR", "impact": "System impact, recovery may be possible"},
+      {"level": "CRITICAL", "impact": "Major system impact, immediate escalation required"},
+      {"level": "FATAL", "impact": "Terminal condition, no recovery possible"},
+      {"level": "PANIC", "impact": "Emergency shutdown required"}
+    ]
+  },
+
+  "fault_domains": [
+    {
+      "name": "Component Fault Domain",
+      "scope": "Single component",
+      "owner": "Component owner",
+      "recovery_capabilities": ["Restart", "Reinitialize"]
+    },
+    {
+      "name": "Service Fault Domain",
+      "scope": "Entire service",
+      "owner": "Service owner",
+      "recovery_capabilities": ["Restart", "Rollback"]
+    },
+    {
+      "name": "Runtime Fault Domain",
+      "scope": "Runtime instance",
+      "owner": "Runtime team",
+      "recovery_capabilities": ["Full restart"]
+    },
+    {
+      "name": "Capability Fault Domain",
+      "scope": "Specific capability",
+      "owner": "Capability owner",
+      "recovery_capabilities": ["Reinvoke with new state"]
+    }
+  ],
+
+  "recovery_strategies": [
+    {
+      "name": "RETRY",
+      "description": "Attempt operation again (with backoff)",
+      "appropriate_for": "Transient failures, idempotent operations"
+    },
+    {
+      "name": "RESTART",
+      "description": "Restart component or service",
+      "appropriate_for": "Component-level failures"
+    },
+    {
+      "name": "ROLLBACK",
+      "description": "Restore to prior verified state",
+      "appropriate_for": "State corruption detected"
+    },
+    {
+      "name": "DEGRADE",
+      "description": "Accept degraded operational mode",
+      "appropriate_for": "Partial failure acceptable"
+    },
+    {
+      "name": "FAILOVER",
+      "description": "Switch to backup system or provider",
+      "appropriate_for": "Primary unavailable, backup ready"
+    }
+  ],
+
+  "backoff_strategies": [
+    {
+      "name": "CONSTANT",
+      "description": "Fixed delay between retries",
+      "formula": "delay = min(initial_delay, maximum_delay)"
+    },
+    {
+      "name": "LINEAR",
+      "description": "Delay increases linearly with each attempt",
+      "formula": "delay = initial_delay * (attempt + 1), capped at maximum_delay"
+    },
+    {
+      "name": "EXPONENTIAL",
+      "description": "Delay doubles each retry (recommended default)",
+      "formula": "delay = initial_delay * multiplier^attempt, capped at maximum_delay"
+    },
+    {
+      "name": "JITTERED_EXPONENTIAL",
+      "description": "Exponential with randomization to prevent thundering herd",
+      "formula": "base_delay + random_jitter where jitter_range is ±10% of base_delay"
+    },
+    {
+      "name": "BOUNCED_BACKOFF",
+      "description": "Alternate between minimum and maximum delays",
+      "formula": "if attempt % 2 == 0: min_delay else: max_delay"
+    }
+  ],
+
+  "policies": {
+    "retry_policy": {
+      "max_attempts_default": 3,
+      "configurable_parameters": [
+        "max_attempts",
+        "timeout_per_retry",
+        "backoff_strategy",
+        "backoff_config.initial_delay",
+        "backoff_config.maximum_delay",
+        "backoff_config.multiplier",
+        "retryable_exceptions"
+      ]
+    },
+    "circuit_breaker_policy": {
+      "failure_threshold_default": 5,
+      "recovery_timeout_default": 30.0,
+      "states": ["CLOSED", "OPEN", "HALF_OPEN"]
+    },
+    "degradation_policy": {
+      "enabled_default": true,
+      "max_degradation_level_default": 3
+    }
+  },
+
+  "exception_hierarchy": {
+    "base_class": "GordonError",
+    "subclasses": [
+      "RecoverableError",
+      "NonRecoverableError",
+      "TransientError",
+      "PermanentError"
+    ],
+    "properties": ["error_kind", "severity", "recoverable", "diagnostics"]
+  },
+
+  "lifecycle": {
+    "states": [
+      "Fault Occurrence",
+      "Detection",
+      "Classification",
+      "Isolation",
+      "Diagnostics",
+      "Policy Evaluation",
+      "Recovery Selection",
+      "Recovery Execution",
+      "Validation",
+      "Resolution",
+      "Certification",
+      "Archival"
+    ],
+    "alternative_terminals": ["Escalated", "Aborted", "Unrecoverable"]
+  },
+
+  "diagnostics": {
+    "failure_timeline_events": [
+      "detection_timestamp",
+      "classification_result",
+      "recovery_attempts_with_timing",
+      "verification_status",
+      "resolution_outcome"
+    ],
+    "metrics": [
+      {"name": "MTTR", "unit": "seconds", "description": "Mean Time To Recovery"},
+      {"name": "retry_success_rate", "unit": "percentage", "description": "Percentage of successful retries"},
+      {"name": "recovery_success_rate", "unit": "percentage", "description": "Percentage of successful recoveries"}
+    ]
+  },
+
+  "certification": {
+    "checklist": [
+      {"item": "One canonical failure architecture exists", "status": true},
+      {"item": "One canonical recovery architecture exists", "status": true},
+      {"item": "Failure classification is deterministic", "status": true},
+      {"item": "Fault domains prevent uncontrolled propagation", "status": true},
+      {"item": "Retries are bounded (max attempts enforced)", "status": true},
+      {"item": "Backoff strategies implemented and tested", "status": true},
+      {"item": "Circuit breaker pattern integrated", "status": true},
+      {"item": "Degradation policy defined", "status": true},
+      {"item": "Timeline events recorded for all failures", "status": true},
+      {"item": "Metrics collection operational", "status": true}
+    ]
+  },
+
+  "files": {
+    "core_architecture": [
+      "gordon_system/src/agent/components/core/failure/__init__.py",
+      "gordon_system/src/agent/components/core/failure/types.py",
+      "gordon_system/src/agent/components/core/failure/architecture.py"
+    ],
+    "documentation": [
+      "gordon_system/docs/agent/architecture/phase-3.25-core-error-failure-recovery-resilience.md"
+    ]
+  }
+}

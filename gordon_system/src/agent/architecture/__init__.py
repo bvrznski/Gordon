@@ -4,16 +4,25 @@ Phase 3.7.1: Architecture Discovery Framework
 =============================================
 
 Phase 3.7.2: Authority, Dependency, Package, Import, Ownership
-===============================================================
+=======================================================================
 
 Phase 3.14.12: Synchronization & Coordination Architecture
 ==========================================================
 
 Phase 3.20: Concurrency, Synchronization & Coordination Architecture
-===================================================================
+====================================================================
 
-This package provides deterministic, repository-driven architecture discovery
-and immutable architecture modeling capabilities for Gordon Core.
+Phase 3.27: Core Repository, Package & Modular Architecture
+============================================================
+
+This package provides deterministic, repository-driven architecture discovery,
+canonical repository structure, and immutable architecture modeling capabilities
+for Gordon Core.
+
+CANONICAL ARCHITECTURE COMPONENTS:
+- repository.py - Repository topology and zones
+- package.py - Package ownership and categories  
+- module.py - Module types and patterns
 """
 
 from typing import TYPE_CHECKING
@@ -167,11 +176,22 @@ if TYPE_CHECKING:
     )
 
 __all__ = [
+    # Discovery (Phase 3.7)
     "discovery",
+    
+    # Authority (Phase 3.7.2)
     "authority",
+    
+    # Duplicate Detection
     "duplicate_detection",
+    
+    # Snapshot (Phase 3.14.12)
     "snapshot",
+    
+    # Synchronization & Coordination (Phase 3.14.12, 3.20)
     "synchronization",
     "coordination",
+    
+    # Concurrency (Phase 3.20)
     "concurrency",
 ]

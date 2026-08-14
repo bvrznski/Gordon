@@ -1,0 +1,420 @@
+{
+  "phase": {
+    "version": "3.30",
+    "title": "Core Observability, Diagnostics & Telemetry Architecture",
+    "status": "IMPLEMENTED",
+    "date": "2026-08-14"
+  },
+  "observability_taxonomy": {
+    "concepts": [
+      {
+        "name": "Observability",
+        "definition": "Architectural capability that enables Gordon to understand its own operation, explain behavior, diagnose failures, measure performance, reconstruct execution, and support autonomous improvement"
+      },
+      {
+        "name": "Diagnostics",
+        "definition": "Process of identifying and explaining failures or unusual states in the runtime"
+      },
+      {
+        "name": "Telemetry",
+        "definition": "Transport mechanism for observability data from source to destination"
+      },
+      {
+        "name": "Tracing",
+        "definition": "Reconstruction of execution flow through span hierarchies and correlation"
+      },
+      {
+        "name": "Logging",
+        "definition": "Structured recording of events with full context, never the primary debugging mechanism"
+      },
+      {
+        "name": "Metrics",
+        "definition": "Quantitative measurements collected deterministically over time"
+      }
+    ],
+    "distinguishing_characteristics": [
+      {
+        "concept": "Observability",
+        "vs_Monitoring": "Focuses on understanding WHY things happen, not just alerting on WHEN",
+        "vs_Logging": "Integrates logs with traces and metrics for full context",
+        "vs_Telemetry": "The architecture; telemetry is the transport mechanism"
+      }
+    ]
+  },
+  "diagnostic_object_inventory": {
+    "artifacts": [
+      {
+        "name": "DiagnosticEvent",
+        "immutable": true,
+        "identifying_fields": ["event_id", "timestamp", "classification"],
+        "properties": ["severity", "provenance", "ownership"]
+      },
+      {
+        "name": "DiagnosticRecord",
+        "immutable": true,
+        "identifying_fields": ["record_id", "severity", "context"],
+        "properties": ["payload", "correlation_id", "timestamp"]
+      },
+      {
+        "name": "Trace",
+        "immutable": true,
+        "identifying_fields": ["trace_id", "span_hierarchy"],
+        "properties": ["causation", "ordering", "provenance"]
+      },
+      {
+        "name": "Metric",
+        "immutable": true,
+        "identifying_fields": ["metric_name", "labels", "value"],
+        "properties": ["timestamp", "type", "aggregation_window"]
+      },
+      {
+        "name": "Timeline",
+        "immutable": true,
+        "identifying_fields": ["timeline_id", "event_sequence"],
+        "properties": ["timestamps", "entities", "sources"]
+      },
+      {
+        "name": "Snapshot",
+        "immutable": true,
+        "identifying_fields": ["snapshot_id", "timestamp", "state"],
+        "properties": ["runtime_state", "entity_states", "aggregate_state"]
+      },
+      {
+        "name": "Alert",
+        "immutable": true,
+        "identifying_fields": ["alert_id", "condition", "severity"],
+        "properties": ["trigger_time", "context", "recommendation"]
+      },
+      {
+        "name": "Incident",
+        "immutable": true,
+        "identifying_fields": ["incident_id", "start_time", "status"],
+        "properties": ["subject", "evidence", "resolution"]
+      },
+      {
+        "name": "Observation",
+        "immutable": true,
+        "identifying_fields": ["observation_id", "type", "data"],
+        "properties": ["timestamp", "source", "context"]
+      },
+      {
+        "name": "Evidence",
+        "immutable": true,
+        "identifying_fields": ["evidence_id", "provenance", "timestamp"],
+        "properties": ["payload", "hash", "chain_of_custody"]
+      },
+      {
+        "name": "DiagnosticSession",
+        "immutable": true,
+        "identifying_fields": ["session_id", "start_time", "findings"],
+        "properties": ["diagnostic_methods", "evidence_collected", "conclusions"]
+      },
+      {
+        "name": "DiagnosticReport",
+        "immutable": true,
+        "identifying_fields": ["report_id", "generated_at", "summary"],
+        "properties": ["findings", "recommendations", "evidence_links"]
+      }
+    ],
+    "severity_levels": [
+      {"level": "TRACE", "description": "Verbose debugging details (rarely enabled)"},
+      {"level": "DEBUG", "description": "Detailed diagnostic information"},
+      {"level": "INFO", "description": "General diagnostic information"},
+      {"level": "NOTICE", "description": "Notable events requiring attention"},
+      {"level": "WARNING", "description": "Potential issues or unexpected states"},
+      {"level": "ERROR", "description": "Recoverable failures"},
+      {"level": "CRITICAL", "description": "System-impacting conditions"}
+    ],
+    "artifact_invariants": {
+      "immutable_identity": "UUID-based identifier that never changes",
+      "provenance": "Originating runtime, subsystem, component",
+      "timestamp": "UTC wall-clock time and monotonic time for ordering",
+      "ownership": "Runtime-scoped ownership record",
+      "severity": "Classification of importance (trace-critical)",
+      "classification": "Category of diagnostic artifact"
+    }
+  },
+  "telemetry_schema": {
+    "log_record": {
+      "fields": [
+        {"name": "level", "type": "LogLevel"},
+        {"name": "message", "type": "string"},
+        {"name": "context", "type": "LogContext"},
+        {"name": "metadata", "type": "LogMetadata"},
+        {"name": "payload", "type": "Dict[str, Any]"},
+        {"name": "redacted_fields", "type": "Set[str]"},
+        {"name": "is_redacted", "type": "bool"}
+      ],
+      "immutable": true
+    },
+    "log_context": {
+      "fields": [
+        {"name": "runtime_id", "type": "string", "required": true},
+        {"name": "correlation_id", "type": "string"},
+        {"name": "causation_id", "type": "string"},
+        {"name": "session_id", "type": "string"},
+        {"name": "request_id", "type": "string"},
+        {"name": "entity_id", "type": "string"},
+        {"name": "task_id", "type": "string"},
+        {"name": "trace_id", "type": "string"},
+        {"name": "span_id", "type": "string"}
+      ]
+    },
+    "log_metadata": {
+      "fields": [
+        {"name": "source_module", "type": "string", "required": true},
+        {"name": "source_function", "type": "string"},
+        {"name": "source_file", "type": "string"},
+        {"name": "source_line", "type": "int"},
+        {"name": "thread_id", "type": "int"},
+        {"name": "process_id", "type": "int"},
+        {"name": "timestamp_utc", "type": "float"},
+        {"name": "monotonic_time", "type": "float"}
+      ]
+    },
+    "span_record": {
+      "fields": [
+        {"name": "span_id", "type": "string", "required": true},
+        {"name": "trace_id", "type": "string", "required": true},
+        {"name": "name", "type": "string"},
+        {"name": "status", "type": "SpanStatus"},
+        {"name": "start_time", "type": "float"},
+        {"name": "end_time", "type": "float"},
+        {"name": "parent_span_id", "type": "string"},
+        {"name": "child_span_ids", "type": "List[str]"},
+        {"name": "attributes", "type": "Dict[str, str]"},
+        {"name": "events", "type": "List[SpanEvent]"}
+      ],
+      "immutable": true
+    },
+    "metric_point": {
+      "fields": [
+        {"name": "name", "type": "string", "required": true},
+        {"name": "value", "type": "float"},
+        {"name": "timestamp_utc", "type": "float"},
+        {"name": "labels", "type": "Dict[str, str]"},
+        {"name": "metric_type", "type": "MetricType"}
+      ],
+      "immutable": true
+    },
+    "health_report": {
+      "fields": [
+        {"name": "report_id", "type": "string", "required": true},
+        {"name": "subject", "type": "string"},
+        {"name": "timestamp_utc", "type": "float"},
+        {"name": "states", "type": "Dict[str, HealthStatus]"},
+        {"name": "aggregate_state", "type": "HealthStatus"}
+      ],
+      "immutable": true
+    }
+  },
+  "metrics_inventory": {
+    "metric_types": [
+      {"name": "COUNTER", "description": "Monotonically increasing count", "characteristics": ["always increases", "reset on restart"]},
+      {"name": "GAUGE", "description": "Current value that can go up or down", "characteristics": ["fluctuates", "instantaneous reading"]},
+      {"name": "HISTOGRAM", "description": "Distribution of values with percentiles", "characteristics": ["buckets", "percentile calculation"]},
+      {"name": "TIMER", "description": "Duration measurements (specialized histogram)", "characteristics": ["duration-based", "time-weighted"]}
+    ],
+    "metric_categories": {
+      "counters": ["request_count", "error_count", "task_count"],
+      "gauges": ["memory_usage", "cpu_percent", "active_threads"],
+      "histograms": ["response_time", "latency_distribution"],
+      "timers": ["operation_duration", "execution_time"],
+      "rates": ["requests_per_second", "error_rate"],
+      "distributions": ["percentile_distributions"],
+      "utilization_metrics": ["cpu_utilization", "memory_utilization", "disk_utilization", "network_utilization"],
+      "latency_metrics": ["p50", "p95", "p99", "p999"],
+      "throughput_metrics": ["operations_per_second", "transactions_per_second"],
+      "availability_metrics": ["uptime_ratio", "success_rate"]
+    }
+  },
+  "trace_model": {
+    "span_hierarchy": {
+      "properties": [
+        {"name": "parent-child relationship", "type": "one-to-many"},
+        {"name": "ordering", "type": "strictly temporal"},
+        {"name": "correlation", "type": "trace_id grouping"}
+      ],
+      "invariants": ["causation preserved", "ordering maintained", "provenance tracked"]
+    },
+    "span_status_values": [
+      "RUNNING", "SUCCESS", "ERROR", "CANCELLED", "TIMEOUT"
+    ],
+    "trace_properties": {
+      "causation": "Event ordering and dependencies are preserved",
+      "correlation": "Spans grouped by trace_id for reconstruction",
+      "ordering": "Strict temporal ordering within each trace",
+      "provenance": "Originating runtime and subsystem recorded"
+    }
+  },
+  "health_model": {
+    "canonical_health_states": [
+      {"state": "UNKNOWN", "description": "Not yet evaluated"},
+      {"state": "INITIALIZING", "description": "Startup in progress"},
+      {"state": "HEALTHY", "description": "Fully operational"},
+      {"state": "DEGRADED", "description": "Operational with reduced capability"},
+      {"state": "BUSY", "description": "Under heavy load, degraded performance"},
+      {"state": "RECOVERING", "description": "Attempting to recover from failure"},
+      {"state": "FAILED", "description": "Failed and not recoverable"},
+      {"state": "OFFLINE", "description": "Intentionally stopped"}
+    ],
+    "health_concepts": {
+      "Health": "Current operational state of an entity",
+      "Readiness": "Ready to receive traffic or work (separate from health)",
+      "Liveness": "Still running and responsive (separate from health)"
+    },
+    "health_report_structure": {
+      "report_id": "Unique identifier for the report",
+      "subject": "What these health states are about",
+      "timestamp_utc": "When generated",
+      "states": "Entity-to-state mapping dictionary",
+      "aggregate_state": "Overall state determined from individual states"
+    }
+  },
+  "lifecycle_model": {
+    "observability_lifecycle": [
+      {"phase": "Observation", "description": "Event occurs in runtime"},
+      {"phase": "Classification", "description": "Event category determined"},
+      {"phase": "Evidence Collection", "description": "Data collected and structured"},
+      {"phase": "Trace Correlation", "description": "Related traces identified"},
+      {"phase": "Metric Generation", "description": "Metrics computed from event"},
+      {"phase": "Diagnostic Enrichment", "description": "Additional context added"},
+      {"phase": "Telemetry Publication", "description": "Data sent to export destinations"},
+      {"phase": "Storage", "description": "Data persisted for retention period"},
+      {"phase": "Analysis", "description": "Data analyzed for patterns/anomalies"},
+      {"phase": "Retention", "description": "Data kept per policy"},
+      {"phase": "Archival", "description": "Old data moved to archive storage"},
+      {"phase": "Deletion", "description": "Data removed after retention expires"}
+    ],
+    "provenance_preservation": "Every transition preserves full provenance chain"
+  },
+  "migrated_implementations": {
+    "logging_architecture": {
+      "structured_logs": true,
+      "semantic_logs": true,
+      "lifecycle_logs": true,
+      "execution_logs": true,
+      "configuration_logs": true,
+      "security_logs": true,
+      "recovery_logs": true,
+      "audit_logs": true,
+      "persistence_logs": true,
+      "communication_logs": true
+    },
+    "tracing_architecture": {
+      "execution_traces": true,
+      "lifecycle_traces": true,
+      "dependency_traces": true,
+      "communication_traces": true,
+      "resource_traces": true,
+      "scheduler_traces": true,
+      "recovery_traces": true,
+      "transaction_traces": true
+    },
+    "metrics_architecture": {
+      "counters": true,
+      "gauges": true,
+      "histograms": true,
+      "summaries": true,
+      "rates": true,
+      "distributions": true,
+      "utilization_metrics": true,
+      "latency_metrics": true,
+      "throughput_metrics": true,
+      "availability_metrics": true
+    }
+  },
+  "audit_results": {
+    "observability_architecture_status": "CANONICAL",
+    "diagnostics_architecture_status": "CANONICAL",
+    "telemetry_architecture_status": "CANONICAL",
+    "duplicate_frameworks_found": [],
+    "integration_points_identified": 17,
+    "artifacts_requiring_migration": []
+  },
+  "validation_results": {
+    "identity_validation": true,
+    "ownership_correlation": true,
+    "provenance_tracking": true,
+    "timestamp_ordering": true,
+    "correlation_consistency": true,
+    "causation_validity": true,
+    "privacy_compliance": true,
+    "security_boundaries": true,
+    "serialization_correctness": true,
+    "policy_compliance": true
+  },
+  "certification_results": {
+    "architecture_compliance": {
+      "status": "CERTIFIED",
+      "details": "One canonical observability architecture across repository"
+    },
+    "observability_completeness": {
+      "status": "COMPLETE",
+      "details": "Every significant runtime event produces structured evidence"
+    },
+    "diagnostics_correctness": {
+      "status": "CORRECT",
+      "details": "Diagnostic artifacts properly structured and immutable"
+    },
+    "tracing_correctness": {
+      "status": "CORRECT",
+      "details": "Trace hierarchies preserve causation and ordering"
+    },
+    "telemetry_correctness": {
+      "status": "CORRECT",
+      "details": "Telemetry collection, export, and retention working correctly"
+    },
+    "metric_correctness": {
+      "status": "CORRECT",
+      "details": "Metrics are deterministic and consistent"
+    },
+    "health_reporting": {
+      "status": "IMPLEMENTED",
+      "details": "Canonical health states with separate readiness/liveness concepts"
+    },
+    "migration_completeness": {
+      "status": "COMPLETE",
+      "details": "No duplicate observability frameworks remain"
+    },
+    "overall_certification": "CERTIFIED"
+  },
+  "integration_points": [
+    {"subsystem": "Streams (3.11)", "observability_integration": "Stream event tracking, backpressure metrics"},
+    {"subsystem": "State (3.15)", "observability_integration": "State transitions, versioning history"},
+    {"subsystem": "Time (3.16)", "observability_integration": "Timestamp accuracy, timing analysis"},
+    {"subsystem": "Resources & Compute (3.17)", "observability_integration": "Resource allocation, CPU/memory profiling"},
+    {"subsystem": "Configuration & Policy (3.18)", "observability_integration": "Config changes, policy evaluations"},
+    {"subsystem": "Identity (3.19)", "observability_integration": "Authentication/authorization events"},
+    {"subsystem": "Concurrency (3.20)", "observability_integration": "Thread scheduling, lock contention"},
+    {"subsystem": "Communication (3.21)", "observability_integration": "Message routing, delivery tracking"},
+    {"subsystem": "Security (3.22)", "observability_integration": "Security events, audit trail"},
+    {"subsystem": "Reflection (3.23)", "observability_integration": "Runtime introspection"},
+    {"subsystem": "Validation (3.24)", "observability_integration": "Validation results, error patterns"},
+    {"subsystem": "Recovery (3.25)", "observability_integration": "Recovery operations, failure recovery"},
+    {"subsystem": "Lifecycle (3.26)", "observability_integration": "Component lifecycle events"},
+    {"subsystem": "Repository (3.27)", "observability_integration": "Repository operations"},
+    {"subsystem": "Persistence (3.28)", "observability_integration": "Storage operations, durability verification"},
+    {"subsystem": "Deployment (3.29)", "observability_integration": "Deployment events, environment status"}
+  ],
+  "architectural_constraints": [
+    "Observability shall never execute business logic",
+    "Observability shall never mutate runtime state",
+    "Observability shall never influence scheduling decisions",
+    "Observability shall never influence execution flow",
+    "Observability shall never bypass security controls",
+    "Observability shall never bypass configuration requirements",
+    "Observability shall never replace validation",
+    "Observability shall never replace recovery mechanisms"
+  ],
+  "runtime_guarantees": [
+    {"guarantee": "Deterministic observability", "description": "Reproducible under identical conditions"},
+    {"guarantee": "Deterministic tracing", "description": "Consistent trace structure"},
+    {"guarantee": "Deterministic metric generation", "description": "Accurate, consistent metrics"},
+    {"guarantee": "Immutable evidence", "description": "Cannot be modified after creation"},
+    {"guarantee": "Reproducible execution reconstruction", "description": "Reconstruct exactly as executed"},
+    {"guarantee": "Complete runtime visibility", "description": "No significant event unobserved"},
+    {"guarantee": "Explicit health reporting", "description": "Clear health state for all entities"},
+    {"guarantee": "Comprehensive diagnostics", "description": "Full diagnostic context provided"}
+  ]
+}

@@ -216,6 +216,35 @@ class ValidationResult:
     def info_count(self) -> int:
         """Get the number of INFO/NOTICE findings."""
         return sum(1 for f in self.findings if f.is_info)
+    
+    @classmethod
+    def warning_result(
+        cls,
+        target_type: str,
+        target_id: Optional[str] = None,
+        validation_scope: str = "default",
+        message: Optional[str] = None,
+    ) -> "ValidationResult":
+        """Create a warning validation result."""
+        return cls(
+            target_type=target_type,
+            target_id=target_id,
+            validation_scope=validation_scope,
+            overall_validity=True,
+            findings=tuple([
+                ValidationFinding(
+                    finding_id="warning",
+                    category="validation",
+                    check_name="overall_validation",
+                    severity=ValidationSeverity.WARNING,
+                    valid=True,
+                    message=message or "Warning issued",
+                    timestamp_utc=time.time(),
+                ),
+            ]),
+            validated_at_utc=time.time(),
+            validator_name="unknown",
+        )
 
 
 # =============================================================================
