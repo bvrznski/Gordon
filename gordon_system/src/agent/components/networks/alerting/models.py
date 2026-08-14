@@ -17,8 +17,8 @@ from dataclasses import dataclass, field
 from typing import Mapping, Optional, Tuple, Any
 from datetime import datetime
 
-# Import enums
-from .enums import (
+# Import enums (absolute import for package-level imports)
+from gordon_system.src.agent.components.networks.alerting.enums import (
     AlertingModality,
     AlertingSource,
     AlertingLevel,
@@ -277,9 +277,6 @@ class AlertingAssessment:
     
     The assessment must never contain:
         - Thread commands
-    
-    The assessment must never contain:
-        - Thread commands
         - Loop decisions
         - Executive authority
         - Action requests
@@ -317,3 +314,81 @@ class AlertingAssessment:
     
     # Provenance
     provenance: AlertingProvenance
+
+
+@dataclass(frozen=True, slots=True)
+class AlertingNetworkStateSnapshot:
+    """
+    Immutable snapshot of the AlertingNetwork's internal state.
+
+    This captures only bounded computational state. It does NOT include
+    cognitive goals, active task state, or global history.
+    """
+
+    # Temporal baseline statistics (bounded)
+    recent_baseline_mean: Optional[float] = None  # Recent intensity mean
+    recent_baseline_std: Optional[float] = None  # Recent intensity std dev
+
+    # Recent signal summary (bounded)
+    recent_signals_count: int = 0
+    last_signal_timestamp: Optional[datetime] = None
+
+    # Habituation state (bounded)
+    habituation_level: float = 0.0  # 0.0 to 1.0
+
+    # Refractory state (bounded)
+    refractory_remaining: float = 0.0  # Time remaining in refractory period
+
+    # Diagnostic counters
+    assessment_count: int = 0
+    total_demand_score: float = 0.0
+
+
+class AlertingResetRequest:
+    """
+    Request for state reset.
+
+    This is an immutable specification of what should be reset. It does NOT
+    perform the reset itself - the network interprets this request.
+    """
+
+    def __init__(
+        self,
+        full_reset: bool = False,
+        reset_habituation: bool = False,
+        reset_refractory: bool = False,
+        reset_baseline: bool = False,
+    ):
+        """
+        Initialize a reset request.
+
+        Args:
+            full_reset: If True, reset all state. Other flags are ignored.
+            reset_habituation: Reset habituation state only.
+            reset_refractory: Reset refractory state only.
+            reset_baseline: Reset baseline statistics only.
+        """
+        self._full_reset = full_reset
+        self._reset_habituation = reset_habituation
+        self._reset_refractory = reset_refractory
+        self._reset_baseline = reset_baseline
+
+    @property
+    def is_full_reset(self) -> bool:
+        """Return True if full state reset was requested."""
+        return self._full_reset
+
+    @property
+    def should_reset_habituation(self) -> bool:
+        """Return True if habituation reset was requested."""
+        return self._reset_habituation or self._full_reset
+
+    @property
+    def should_reset_refractory(self) -> bool:
+        """Return True if refractory reset was requested."""
+        return self._reset_refractory or self._full_reset
+
+    @property
+    def should_reset_baseline(self) -> bool:
+        """Return True if baseline reset was requested."""
+        return self._reset_baseline or self._full_reset

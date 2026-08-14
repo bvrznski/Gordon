@@ -33,10 +33,11 @@ class AlertingModality(Enum):
     # Generic / unknown modalities
     GENERIC = "generic"
     UNKNOWN = "unknown"
-    
+
     def is_known(self) -> bool:
         """Return True if modality is not UNKNOWN or GENERIC."""
         return self not in (AlertingModality.UNKNOWN, AlertingModality.GENERIC)
+
 
 
 class AlertingSource(Enum):
@@ -124,6 +125,10 @@ class AlertingLevel(Enum):
         """Return True if this level warrants attention review."""
         return self in (AlertingLevel.LOW, AlertingLevel.MODERATE, 
                        AlertingLevel.HIGH, AlertingLevel.CRITICAL)
+
+
+# Type alias for source classification
+AlertingSourceKind = AlertingSource
 
 
 class AlertingRecommendation(Enum):
