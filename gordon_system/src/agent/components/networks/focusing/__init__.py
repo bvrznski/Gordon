@@ -77,7 +77,22 @@ NO BEHAVIOR:
         • assessment generation
 """
 
-from gordon_system.src.agent.components.networks.focusing.__meta__ import __version__
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    Mapping,
+    Optional,
+    Tuple,
+)
+from datetime import datetime
+import uuid
+
+# Import enums for type references only (no behavior)
 from gordon_system.src.agent.components.networks.focusing.enums import (
     FocusModality,
     FocusSource,
@@ -86,6 +101,228 @@ from gordon_system.src.agent.components.networks.focusing.enums import (
     PersistenceMode,
     BiasModality,
 )
+
+if TYPE_CHECKING:
+    from gordon_system.src.agent.components.networks.focusing.models import (
+        FocusTargetId,
+        CandidateId,
+        AssessmentId,
+        TransitionId,
+        SnapshotId,
+        ProvenanceRecord,
+        FocusTarget,
+        FocusCandidate,
+        FocusAssessmentReference,
+        PriorityDescriptor,
+        RelevanceDescriptor,
+        SuppressionDescriptor,
+        PrecisionDescriptor,
+        PersistenceDescriptor,
+        AllocationDescriptor,
+        BiasDescriptor,
+        FocusState,
+        PriorityState,
+        RelevanceState,
+        SuppressionState,
+        PersistenceState,
+        PrecisionState,
+        AllocationState,
+        BiasState,
+        HistoryState,
+        DiagnosticsState,
+        FocusingNetworkState,
+        StateTransition,
+        FocusSnapshot,
+        ValidationResult,
+    )
+
+
+# =============================================================================
+# SEMANTIC TYPE TREE NORMALIZATION
+# =============================================================================
+#
+# The following flattened families have been identified and normalized into
+# nested semantic ownership structures. Each owner has a clear semantic role:
+#
+#   ExecutiveDecisionCoordination → Coordination purpose, kind, request, id, builder
+#   ExecutiveConflict → Conflict model, subject, source, evidence, severity
+#   ExecutiveState → State snapshot, adapter, delta, reference, model
+#   ExecutiveProgram → Program model, state, revision, transition, history, snapshot
+#   ExecutiveStrategy → Strategy model, reference, id, revision, subject
+#   ExecutiveDemand → Demand analysis, urgency, profile, assessment, level
+#   ExecutiveControl → Control allocation (request, scope, plan, product)
+#   DefaultNetwork → Network state, request, result, path, output
+#
+# =============================================================================
+
+
+# =============================================================================
+# NESTED OWNER: EXECUTIVE DECISION COORDINATION
+# =============================================================================
+
+class ExecutiveDecisionCoordination:
+    """
+    Semantic owner for Executive Decision Coordination types.
+    
+    This nested namespace groups all types related to coordinating
+    executive decisions across subsystems while preserving subsystem ownership.
+    """
+
+    @dataclass(frozen=True)
+    class RequestId:
+        """Unique identifier for an executive decision coordination request."""
+        value: str = field(default_factory=lambda: f"exec_dec_coord_req_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.RequestId":
+            return cls(value=f"exec_dec_coord_req_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class ProjectionId:
+        """Unique identifier for a decision projection."""
+        value: str = field(default_factory=lambda: f"exec_dec_proj_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.ProjectionId":
+            return cls(value=f"exec_dec_proj_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class ResponseId:
+        """Unique identifier for a coordination response."""
+        value: str = field(default_factory=lambda: f"exec_dec_coord_resp_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.ResponseId":
+            return cls(value=f"exec_dec_coord_resp_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class OutcomeId:
+        """Unique identifier for a coordination outcome."""
+        value: str = field(default_factory=lambda: f"exec_dec_coord_outcome_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.OutcomeId":
+            return cls(value=f"exec_dec_coord_outcome_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class StateId:
+        """Unique identifier for decision state."""
+        value: str = field(default_factory=lambda: f"exec_dec_state_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.StateId":
+            return cls(value=f"exec_dec_state_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class HistoryEntryId:
+        """Unique identifier for a history entry."""
+        value: str = field(default_factory=lambda: f"exec_dec_history_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.HistoryEntryId":
+            return cls(value=f"exec_dec_history_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class TransitionId:
+        """Unique identifier for a decision transition."""
+        value: str = field(default_factory=lambda: f"exec_dec_trans_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.TransitionId":
+            return cls(value=f"exec_dec_trans_{uuid.uuid4().hex[:16]}")
+
+    @dataclass(frozen=True)
+    class ContinuationId:
+        """Unique identifier for a decision continuation."""
+        value: str = field(default_factory=lambda: f"exec_dec_cont_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "ExecutiveDecisionCoordination.ContinuationId":
+            return cls(value=f"exec_dec_cont_{uuid.uuid4().hex[:16]}")
+
+
+# =============================================================================
+# NESTED OWNER: EXECUTIVE CONFLICT
+# =============================================================================
+
+class ExecutiveConflict:
+    """
+    Semantic owner for Executive Conflict types.
+    
+    Groups all conflict-related types including models, subjects, sources,
+    evidence, severity assessments, and resolution tracking.
+    """
+
+    @dataclass(frozen=True)
+    class Kind(Enum):
+        """Kinds of semantic conflicts."""
+        GOAL_CONFLICT = "goal_conflict"
+        COMMITMENT_CONFLICT = "commitment_conflict"
+        STRATEGY_CONFLICT = "strategy_conflict"
+        PRIORITY_CONFLICT = "priority_conflict"
+        RULE_CONFLICT = "rule_conflict"
+        CONSTRAINT_CONFLICT = "constraint_conflict"
+        EVIDENCE_CONFLICT = "evidence_conflict"
+        COGNITIVE_OVERLOAD = "cognitive_overload"
+        AMBIGUITY = "ambiguity"
+
+
+# =============================================================================
+# NESTED OWNER: EXECUTIVE STATE
+# =============================================================================
+
+class ExecutiveState:
+    """
+    Semantic owner for Executive State types.
+    
+    Groups all state-related types including snapshots, adapters, deltas,
+    references, models, transitions, history, and validation.
+    """
+
+    @dataclass(frozen=True)
+    class Snapshot:
+        """Immutable snapshot of executive state at a point in time."""
+        pass
+
+    @dataclass(frozen=True)
+    class Delta:
+        """Declarative semantic difference between states."""
+        pass
+
+    @dataclass(frozen=True)
+    class Reference:
+        """Immutable reference to an executive state."""
+        pass
+
+
+# =============================================================================
+# NESTED OWNER: DEFAULT NETWORK
+# =============================================================================
+
+class DefaultNetwork:
+    """
+    Semantic owner for Default Network types.
+    
+    Groups all DefaultNetwork-related types including requests, results,
+    states, paths, and outputs.
+    """
+
+    @dataclass(frozen=True)
+    class Id:
+        """Unique identifier for a Default Network instance."""
+        value: str = field(default_factory=lambda: f"def_net_{uuid.uuid4().hex[:16]}")
+
+        @classmethod
+        def generate(cls) -> "DefaultNetwork.Id":
+            return cls(value=f"def_net_{uuid.uuid4().hex[:16]}")
+
+
+# =============================================================================
+# EXPORTS - Maintains backward compatibility with flattened structure
+# =============================================================================
+
+# Keep existing exports for backward compatibility
+from gordon_system.src.agent.components.networks.focusing.__meta__ import __version__
 from gordon_system.src.agent.components.networks.focusing.constants import (
     SUPPRESSION_THRESHOLD,
     COMPETITION_THRESHOLD,
