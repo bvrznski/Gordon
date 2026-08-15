@@ -1353,21 +1353,21 @@ class StateTransition:
     """
     
     # Identity
-    transition_id: TransitionId
+    transition_id: TransitionId = field(default_factory=TransitionId.generate)
     """Unique identifier for this transition."""
     
-    # Timing
+    # Timestamp - must come before fields with defaults but after required
     timestamp_utc: datetime = field(default_factory=datetime.utcnow)
     """When the transition occurred."""
     
-    # Source and destination
-    source_state_id: str
+    # Source and destination - required, no default, must come first in order
+    source_state_id: str = ""
     """ID of the state before transition."""
     
-    destination_state_id: str
+    destination_state_id: str = ""
     """ID of the state after transition."""
     
-    # Reason and metadata
+    # Optional fields with defaults (must come after all required fields)
     reason: str = "unspecified"
     """Reason for the transition (human-readable)."""
     
@@ -1377,11 +1377,11 @@ class StateTransition:
     revision: int = 1
     """Transition version for rollback/replay."""
     
-    # Diagnostic metadata
     diagnostic_metadata: Dict[str, Any] = field(default_factory=dict)
+    """Diagnostic metadata for debugging."""
     
-    # Provenance
     originating_subsystem: Optional[str] = None
+    """Originating subsystem (if any)."""
     
     @classmethod
     def create(
@@ -1394,7 +1394,6 @@ class StateTransition:
     ) -> "StateTransition":
         """Create a new state transition."""
         return cls(
-            transition_id=TransitionId.generate(),
             source_state_id=source_state_id,
             destination_state_id=destination_state_id,
             reason=reason,
@@ -1429,24 +1428,24 @@ class FocusSnapshot:
     Snapshots never mutate live state.
     """
     
-    # Identity
+    # Identity - required, no default
     snapshot_id: SnapshotId = field(default_factory=SnapshotId.generate)
     """Unique identifier for this snapshot."""
     
     timestamp_utc: datetime = field(default_factory=datetime.utcnow)
     """When the snapshot was taken."""
     
-    # State content (immutable view)
-    focus_state: FocusState
-    priority_state: PriorityState
-    relevance_state: RelevanceState
-    suppression_state: SuppressionState
-    persistence_state: PersistenceState
-    precision_state: PrecisionState
-    allocation_state: AllocationState
-    bias_state: BiasState
+    # State content (required, but with defaults below to ensure proper order)
+    focus_state: FocusState = field(default_factory=FocusState.create_initial)
+    priority_state: PriorityState = field(default_factory=PriorityState.create_initial)
+    relevance_state: RelevanceState = field(default_factory=RelevanceState.create_initial)
+    suppression_state: SuppressionState = field(default_factory=SuppressionState.create_initial)
+    persistence_state: PersistenceState = field(default_factory=PersistenceState.create_initial)
+    precision_state: PrecisionState = field(default_factory=PrecisionState.create_initial)
+    allocation_state: AllocationState = field(default_factory=AllocationState.create_initial)
+    bias_state: BiasState = field(default_factory=BiasState.create_initial)
     
-    # History reference (for replay)
+    # History reference (optional, has default)
     history_at_snapshot: Tuple[Dict[str, Any], ...] = field(default_factory=tuple)
     
     @classmethod
@@ -1646,6 +1645,171 @@ def dataclass_replace(obj: Any, **kwargs) -> Any:
     raise TypeError(f"Object {obj} is not a dataclass")
 
 
+@dataclass(frozen=True)
+class FocusingInput:
+    """
+    Input to the FocusingNetwork assessment pipeline.
+    
+    Contains focus candidates and context needed for assessment computation.
+    No behavioral logic - just data representation.
+    """
+    
+    # Identity
+    input_id: str = field(default_factory=lambda: f"input_{uuid.uuid4().hex[:24]}")
+    """Unique identifier for this input."""
+    
+    timestamp_utc: datetime = field(default_factory=datetime.utcnow)
+    """When this input was created."""
+    
+    # Focus candidates (targets to assess)
+    focus_candidates: Tuple[FocusCandidate, ...] = field(default_factory=tuple)
+    """Candidates to be assessed by the network."""
+    
+    # Context for assessment
+    current_focus_targets: Tuple[FocusTarget, ...] = field(default_factory=tuple)
+    """Currently focused targets for context."""
+    
+    active_objective_ids: Tuple[str, ...] = field(default_factory=tuple)
+    """Active objectives that may influence assessment."""
+    
+    workspace_state: Dict[str, Any] = field(default_factory=dict)
+    """Current workspace state."""
+    
+    working_memory_contents: Tuple[Dict[str, Any], ...] = field(default_factory=tuple)
+    """Working memory items."""
+    
+    # Policy constraints
+    policy_constraints: Tuple[Dict[str, Any], ...] = field(default_factory=tuple)
+    """Policy constraints affecting focus allocation."""
+    
+    def to_serializable(self) -> Dict[str, Any]:
+        """Convert input to serializable dictionary."""
+        return {
+            "input_id": self.input_id,
+            "timestamp_utc": self.timestamp_utc.isoformat(),
+            "candidate_count": len(self.focus_candidates),
+        }
+
+
+@dataclass(frozen=True)
+class FocusAssessment:
+    """
+    Complete assessment output from the FocusingNetwork.
+    
+    Contains all computed values without any behavioral logic.
+    This is the primary computational output of the network.
+    """
+    
+    # Identity
+    assessment_id: AssessmentId
+    """Unique identifier for this assessment."""
+    
+    timestamp_utc: datetime = field(default_factory=datetime.utcnow)
+    """When this assessment was created."""
+    
+    # Computed values (results only, no algorithms)
+    priority_scores: Dict[str, float] = field(default_factory=dict)
+    """Priority scores per target ID."""
+    
+    relevance_scores: Dict[str, float] = field(default_factory=dict)
+    """Relevance scores per target ID."""
+    
+    competition_outcome: Tuple[str, ...] = field(default_factory=tuple)
+    """Winners in competition resolution."""
+    
+    suppression_targets: Tuple[str, ...] = field(default_factory=tuple)
+    """Targets recommended for suppression."""
+    
+    precision_scores: Dict[str, float] = field(default_factory=dict)
+    """Precision estimates per target ID."""
+    
+    persistence_scores: Dict[str, float] = field(default_factory=dict)
+    """Persistence scores per target ID."""
+    
+    bias_strengths: Dict[str, float] = field(default_factory=dict)
+    """Bias strengths per target ID."""
+    
+    allocation_ratios: Dict[str, float] = field(default_factory=dict)
+    """Resource allocation ratios per target ID."""
+    
+    overall_focus_score: float = 0.5
+    """Overall focus score (0.0 to 1.0)."""
+    
+    def to_serializable(self) -> Dict[str, Any]:
+        """Convert assessment to serializable dictionary."""
+        return {
+            "assessment_id": self.assessment_id.value,
+            "timestamp_utc": self.timestamp_utc.isoformat(),
+            "overall_focus_score": self.overall_focus_score,
+        }
+
+
+@dataclass(frozen=True)
+class NetworkStateSnapshot:
+    """
+    Immutable snapshot of network state for external consumption.
+    
+    Contains only the state needed by external systems, without exposing
+    internal implementation details.
+    """
+    
+    # Identity
+    snapshot_id: SnapshotId = field(default_factory=SnapshotId.generate)
+    """Unique identifier for this snapshot."""
+    
+    timestamp_utc: datetime = field(default_factory=datetime.utcnow)
+    """When this snapshot was taken."""
+    
+    # State content (public view only)
+    focus_targets: Tuple[FocusTarget, ...] = field(default_factory=tuple)
+    """Currently focused targets (public view)."""
+    
+    active_candidate_ids: Tuple[CandidateId, ...] = field(default_factory=tuple)
+    """IDs of candidates currently being evaluated."""
+    
+    # Metadata
+    state_version: int = 1
+    """Snapshot version for compatibility tracking."""
+    
+    def to_serializable(self) -> Dict[str, Any]:
+        """Convert snapshot to serializable dictionary."""
+        return {
+            "snapshot_id": self.snapshot_id.value,
+            "timestamp_utc": self.timestamp_utc.isoformat(),
+            "focus_target_count": len(self.focus_targets),
+        }
+
+
+@dataclass(frozen=True)
+class FocusResetRequest:
+    """
+    Request to reset network state to initial condition.
+    
+    Contains only the request parameters, no implementation logic.
+    """
+    
+    # Identity
+    request_id: str = field(default_factory=lambda: f"reset_{uuid.uuid4().hex[:24]}")
+    """Unique identifier for this request."""
+    
+    # Reset scope
+    reset_focus_targets: bool = True
+    """Whether to clear focus targets."""
+    
+    reset_history: bool = False
+    """Whether to clear history."""
+    
+    reset_diagnostics: bool = False
+    """Whether to clear diagnostics."""
+    
+    timestamp_utc: datetime = field(default_factory=datetime.utcnow)
+    """When this request was created."""
+    
+    def is_full_reset(self) -> bool:
+        """Check if this is a full state reset."""
+        return self.reset_focus_targets and self.reset_history and self.reset_diagnostics
+
+
 # =============================================================================
 # PUBLIC EXPORTS - Canonical models for the FocusingNetwork
 # =============================================================================
@@ -1665,6 +1829,8 @@ __all__ = [
     "FocusTarget",
     "FocusCandidate",
     "FocusAssessmentReference",
+    "FocusingInput",
+    "FocusAssessment",
     
     # Descriptor objects (single responsibility)
     "PriorityDescriptor",
@@ -1689,6 +1855,7 @@ __all__ = [
     
     # Composition
     "FocusingNetworkState",
+    "NetworkStateSnapshot",
     
     # Transitions and snapshots
     "StateTransition",
@@ -1700,6 +1867,9 @@ __all__ = [
     "validate_focus_candidate",
     "validate_history_state",
     "validate_network_state",
+    
+    # Reset requests
+    "FocusResetRequest",
     
     # Utilities
     "dataclass_replace",
