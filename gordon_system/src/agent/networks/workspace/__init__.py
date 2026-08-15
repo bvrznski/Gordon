@@ -226,6 +226,166 @@ from .broadcast import (
 )
 
 # =============================================================================
+# BROADCAST DISTRIBUTION (Phase 4.6.7)
+# =============================================================================
+
+from .distribution import (
+    # Distribution identities and references
+    WorkspaceBroadcastDistributionIdentity,
+    WorkspaceBroadcastDistributionRevision,
+    WorkspaceBroadcastDistributionReference,
+    
+    # Distribution Request
+    WorkspaceBroadcastDistributionPurpose,
+    WorkspaceBroadcastDistributionScope,
+    WorkspaceDistributionAuthorityRequirement,
+    WorkspaceDistributionAuthority,
+    WorkspaceBroadcastDistributionRequest,
+    
+    # Target semantics
+    WorkspaceBroadcastTargetKind,
+    WorkspaceBroadcastTargetEligibilityStatus,
+    WorkspaceBroadcastTargetAvailabilityStatus,
+    WorkspaceBroadcastTargetEligibility,
+    WorkspaceBroadcastTargetAvailability,
+    WorkspaceBroadcastTargetCapabilityProjection,
+    
+    # Disclosure policy
+    WorkspaceDistributionDisclosureLevel,
+    WorkspaceDistributionFieldRule,
+    WorkspaceDistributionDisclosurePolicy,
+    
+    # Projections
+    WorkspaceBroadcastTargetProjectionKind,
+    WorkspaceBroadcastTargetProjectionIdentity,
+    WorkspaceBroadcastTargetProjectionReference,
+    WorkspaceBroadcastTargetProjection,
+    
+    # Working Memory projections
+    WorkspaceWorkingMemoryProjection,
+    WorkspaceWorkingMemoryAdmissionProjection,
+    WorkspaceWorkingMemoryAcknowledgement,
+    
+    # Memory encoding projections
+    WorkspaceMemoryEncodingEligibilityProjection,
+    WorkspaceMemoryEncodingAcknowledgement,
+    
+    # Network-specific projections (Executive, Decision, etc.)
+    WorkspaceExecutiveBroadcastProjection,
+    WorkspaceExecutiveBroadcastAcknowledgement,
+    WorkspaceDecisionBroadcastProjection,
+    WorkspaceDecisionBroadcastAcknowledgement,
+    WorkspaceAttentionBroadcastProjection,
+    WorkspaceAttentionBroadcastAcknowledgement,
+    WorkspaceAlertingBroadcastProjection,
+    WorkspaceAlertingBroadcastAcknowledgement,
+    WorkspaceFocusingBroadcastProjection,
+    WorkspaceFocusingBroadcastAcknowledgement,
+    WorkspaceDefaultNetworkBroadcastProjection,
+    WorkspaceDefaultNetworkBroadcastAcknowledgement,
+    WorkspaceMotivationBroadcastProjection,
+    WorkspaceMotivationBroadcastAcknowledgement,
+    WorkspaceReasoningBroadcastProjection,
+    WorkspaceReasoningBroadcastAcknowledgement,
+    WorkspacePlanningBroadcastProjection,
+    WorkspacePlanningBroadcastAcknowledgement,
+    WorkspacePerceptionBroadcastProjection,
+    WorkspacePerceptionBroadcastAcknowledgement,
+    WorkspaceLearningBroadcastProjection,
+    WorkspaceLearningBroadcastAcknowledgement,
+    WorkspacePredictionBroadcastProjection,
+    WorkspacePredictionBroadcastAcknowledgement,
+    WorkspaceWorldModelBroadcastProjection,
+    WorkspaceWorldModelBroadcastAcknowledgement,
+    WorkspaceMonitoringBroadcastProjection,
+    WorkspaceMonitoringBroadcastAcknowledgement,
+    WorkspaceRecoveryBroadcastProjection,
+    WorkspaceRecoveryBroadcastAcknowledgement,
+    
+    # Delivery Projections
+    WorkspaceDistributionRequirement,
+    WorkspaceDistributionRequirementKind,
+    WorkspaceDistributionConstraint,
+    WorkspaceDistributionConstraintKind,
+    WorkspaceBroadcastDeliveryProjectionIdentity,
+    WorkspaceBroadcastDeliveryProjectionReference,
+    WorkspaceBroadcastDeliveryProjection,
+    
+    # Acknowledgements
+    WorkspaceAcknowledgementPolicy,
+    WorkspaceBroadcastAcknowledgementKind,
+    WorkspaceBroadcastAcknowledgementIdentity,
+    WorkspaceBroadcastAcknowledgementReference,
+    WorkspaceBroadcastAcknowledgement,
+    
+    # Rejections and deferrals
+    WorkspaceBroadcastDistributionRejection,
+    WorkspaceBroadcastDistributionRejectionReason,
+    WorkspaceBroadcastDistributionDeferral,
+    
+    # Partial delivery
+    WorkspaceBroadcastPartialDelivery,
+    
+    # Duplicate handling
+    WorkspaceBroadcastDuplicateDeliveryAssessment,
+    
+    # Stale target handling
+    WorkspaceBroadcastStaleTargetAssessment,
+    WorkspaceBroadcastStaleTargetReason,
+    
+    # Conflicts
+    WorkspaceBroadcastDeliveryConflict,
+    WorkspaceBroadcastDeliveryConflictKind,
+    
+    # Correlation and causation
+    WorkspaceDistributionCorrelationId,
+    WorkspaceDistributionCorrelationReference,
+    WorkspaceDistributionCorrelationContext,
+    WorkspaceDistributionCausationReference,
+    WorkspaceDistributionCausationRelation,
+    
+    # Dispositions and outcomes
+    WorkspaceBroadcastDistributionDisposition,
+    WorkspaceBroadcastDistributionOutcomeIdentity,
+    WorkspaceBroadcastDistributionOutcomeReference,
+    WorkspaceBroadcastDistributionOutcome,
+    WorkspaceBroadcastDistributionCompleteness,
+    WorkspaceBroadcastDistributionValidity,
+    
+    # Bounds
+    WorkspaceDistributionFanOutBounds,
+    WorkspaceDistributionFanInBounds,
+    
+    # Target ordering
+    WorkspaceDistributionTargetOrder,
+    
+    # History and lineage
+    WorkspaceBroadcastDistributionHistoryEntry,
+    WorkspaceBroadcastDistributionHistory,
+    WorkspaceBroadcastDistributionLineageRelation,
+    WorkspaceBroadcastDistributionLineage,
+    
+    # Invalidation and continuation
+    WorkspaceBroadcastDistributionInvalidation,
+    WorkspaceBroadcastDistributionInvalidationReason,
+    WorkspaceBroadcastDistributionContinuation,
+    WorkspaceBroadcastDistributionContinuationKind,
+    
+    # State integration
+    WorkspaceDistributionStateDeltaProposal,
+    
+    # Validation
+    WorkspaceBroadcastDistributionValidationResult,
+    
+    # Privacy and provenance
+    WorkspacePrivacy,
+    WorkspaceDistributionProvenance,
+    
+    # Architectural laws
+    ARCHITECTURAL_LAWS,
+)
+
+# =============================================================================
 # PUBLIC API (Phase 4.6.x - Complete Workspace Semantics)
 # =============================================================================
 
@@ -323,4 +483,158 @@ __all__ = [
     "WorkspaceBroadcastContinuationKind",
     "WorkspaceBroadcastContinuation",
     "WorkspaceBroadcast",
+    
+    # Distribution identities and references (Phase 4.6.7)
+    "WorkspaceBroadcastDistributionIdentity",
+    "WorkspaceBroadcastDistributionRevision",
+    "WorkspaceBroadcastDistributionReference",
+    
+    # Distribution Request
+    "WorkspaceBroadcastDistributionPurpose",
+    "WorkspaceBroadcastDistributionScope",
+    "WorkspaceDistributionAuthorityRequirement",
+    "WorkspaceDistributionAuthority",
+    "WorkspaceBroadcastDistributionRequest",
+    
+    # Target semantics
+    "WorkspaceBroadcastTargetKind",
+    "WorkspaceBroadcastTargetEligibilityStatus",
+    "WorkspaceBroadcastTargetAvailabilityStatus",
+    "WorkspaceBroadcastTargetEligibility",
+    "WorkspaceBroadcastTargetAvailability",
+    "WorkspaceBroadcastTargetCapabilityProjection",
+    
+    # Disclosure policy
+    "WorkspaceDistributionDisclosureLevel",
+    "WorkspaceDistributionFieldRule",
+    "WorkspaceDistributionDisclosurePolicy",
+    
+    # Projections
+    "WorkspaceBroadcastTargetProjectionKind",
+    "WorkspaceBroadcastTargetProjectionIdentity",
+    "WorkspaceBroadcastTargetProjectionReference",
+    "WorkspaceBroadcastTargetProjection",
+    
+    # Working Memory projections
+    "WorkspaceWorkingMemoryProjection",
+    "WorkspaceWorkingMemoryAdmissionProjection",
+    "WorkspaceWorkingMemoryAcknowledgement",
+    
+    # Memory encoding projections
+    "WorkspaceMemoryEncodingEligibilityProjection",
+    "WorkspaceMemoryEncodingAcknowledgement",
+    
+    # Network-specific projections (Executive, Decision, etc.)
+    "WorkspaceExecutiveBroadcastProjection",
+    "WorkspaceExecutiveBroadcastAcknowledgement",
+    "WorkspaceDecisionBroadcastProjection",
+    "WorkspaceDecisionBroadcastAcknowledgement",
+    "WorkspaceAttentionBroadcastProjection",
+    "WorkspaceAttentionBroadcastAcknowledgement",
+    "WorkspaceAlertingBroadcastProjection",
+    "WorkspaceAlertingBroadcastAcknowledgement",
+    "WorkspaceFocusingBroadcastProjection",
+    "WorkspaceFocusingBroadcastAcknowledgement",
+    "WorkspaceDefaultNetworkBroadcastProjection",
+    "WorkspaceDefaultNetworkBroadcastAcknowledgement",
+    "WorkspaceMotivationBroadcastProjection",
+    "WorkspaceMotivationBroadcastAcknowledgement",
+    "WorkspaceReasoningBroadcastProjection",
+    "WorkspaceReasoningBroadcastAcknowledgement",
+    "WorkspacePlanningBroadcastProjection",
+    "WorkspacePlanningBroadcastAcknowledgement",
+    "WorkspacePerceptionBroadcastProjection",
+    "WorkspacePerceptionBroadcastAcknowledgement",
+    "WorkspaceLearningBroadcastProjection",
+    "WorkspaceLearningBroadcastAcknowledgement",
+    "WorkspacePredictionBroadcastProjection",
+    "WorkspacePredictionBroadcastAcknowledgement",
+    "WorkspaceWorldModelBroadcastProjection",
+    "WorkspaceWorldModelBroadcastAcknowledgement",
+    "WorkspaceMonitoringBroadcastProjection",
+    "WorkspaceMonitoringBroadcastAcknowledgement",
+    "WorkspaceRecoveryBroadcastProjection",
+    "WorkspaceRecoveryBroadcastAcknowledgement",
+    
+    # Delivery Projections
+    "WorkspaceDistributionRequirement",
+    "WorkspaceDistributionRequirementKind",
+    "WorkspaceDistributionConstraint",
+    "WorkspaceDistributionConstraintKind",
+    "WorkspaceBroadcastDeliveryProjectionIdentity",
+    "WorkspaceBroadcastDeliveryProjectionReference",
+    "WorkspaceBroadcastDeliveryProjection",
+    
+    # Acknowledgements
+    "WorkspaceAcknowledgementPolicy",
+    "WorkspaceBroadcastAcknowledgementKind",
+    "WorkspaceBroadcastAcknowledgementIdentity",
+    "WorkspaceBroadcastAcknowledgementReference",
+    "WorkspaceBroadcastAcknowledgement",
+    
+    # Rejections and deferrals
+    "WorkspaceBroadcastDistributionRejection",
+    "WorkspaceBroadcastDistributionRejectionReason",
+    "WorkspaceBroadcastDistributionDeferral",
+    
+    # Partial delivery
+    "WorkspaceBroadcastPartialDelivery",
+    
+    # Duplicate handling
+    "WorkspaceBroadcastDuplicateDeliveryAssessment",
+    
+    # Stale target handling
+    "WorkspaceBroadcastStaleTargetAssessment",
+    "WorkspaceBroadcastStaleTargetReason",
+    
+    # Conflicts
+    "WorkspaceBroadcastDeliveryConflict",
+    "WorkspaceBroadcastDeliveryConflictKind",
+    
+    # Correlation and causation
+    "WorkspaceDistributionCorrelationId",
+    "WorkspaceDistributionCorrelationReference",
+    "WorkspaceDistributionCorrelationContext",
+    "WorkspaceDistributionCausationReference",
+    "WorkspaceDistributionCausationRelation",
+    
+    # Dispositions and outcomes
+    "WorkspaceBroadcastDistributionDisposition",
+    "WorkspaceBroadcastDistributionOutcomeIdentity",
+    "WorkspaceBroadcastDistributionOutcomeReference",
+    "WorkspaceBroadcastDistributionOutcome",
+    "WorkspaceBroadcastDistributionCompleteness",
+    "WorkspaceBroadcastDistributionValidity",
+    
+    # Bounds
+    "WorkspaceDistributionFanOutBounds",
+    "WorkspaceDistributionFanInBounds",
+    
+    # Target ordering
+    "WorkspaceDistributionTargetOrder",
+    
+    # History and lineage
+    "WorkspaceBroadcastDistributionHistoryEntry",
+    "WorkspaceBroadcastDistributionHistory",
+    "WorkspaceBroadcastDistributionLineageRelation",
+    "WorkspaceBroadcastDistributionLineage",
+    
+    # Invalidation and continuation
+    "WorkspaceBroadcastDistributionInvalidation",
+    "WorkspaceBroadcastDistributionInvalidationReason",
+    "WorkspaceBroadcastDistributionContinuation",
+    "WorkspaceBroadcastDistributionContinuationKind",
+    
+    # State integration
+    "WorkspaceDistributionStateDeltaProposal",
+    
+    # Validation
+    "WorkspaceBroadcastDistributionValidationResult",
+    
+    # Privacy and provenance
+    "WorkspacePrivacy",
+    "WorkspaceDistributionProvenance",
+    
+    # Architectural laws
+    "ARCHITECTURAL_LAWS",
 ]
