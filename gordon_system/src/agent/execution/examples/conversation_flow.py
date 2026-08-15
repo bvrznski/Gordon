@@ -154,7 +154,7 @@ class ConversationPolicy:
         )
 
 
-def run_conversation_example() -> List[Dict[str, Any]]:
+async def run_conversation_example() -> List[Dict[str, Any]]:
     """
     Run a conversation flow example and return the advancement results.
     
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     
     async def main():
         print("=" * 60)
-        print("CONVERSATION FLOW EXAMPLE")
+        print("CONVERSATION FLOW EXAMPLE - Loop Advancement")
         print("=" * 60)
         
         results = await run_conversation_example()

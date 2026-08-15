@@ -124,7 +124,7 @@ class TaskPolicy:
         )
 
 
-def run_task_example() -> List[Dict[str, Any]]:
+async def run_task_example() -> List[Dict[str, Any]]:
     """
     Run a task flow example demonstrating loop switching.
     
