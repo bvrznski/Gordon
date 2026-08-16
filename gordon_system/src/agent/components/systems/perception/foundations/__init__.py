@@ -1,19 +1,19 @@
-# Perception System - Phase 5.2 Foundational Cognitive Subsystem
-# ===============================================================
+# Perception Foundations - Phase 5.2 Canonical Semantic Substrate
+# ================================================================
 
 """
-Perception: The foundational cognitive subsystem for Gordon.
+Perception Foundations: The semantic substrate for Gordon's perceptual system.
 
 This module implements the foundation layer of the Perception System as specified in
 Phase 5.2 of the Gordon Cognitive Architecture.
 
 Architecture Summary:
     ┌────────────────────────────────────────────────────────────────────┐
-    │                    PERCEPTION SYSTEM                               │
+    │                    PERCEPTION FOUNDATIONS                          │
     ├────────────────────────────────────────────────────────────────────┤
     │                                                                    │
     │   owns                                                             │
-    │   ├── Perception Foundations (semantic substrate)                 │
+    │   ├── Perceptual Entities (semantic substrate)                   │
     │   │   ├── Observations (raw evidence)                             │
     │   │   ├── Signals (sensor output)                                 │
     │   │   ├── Features (structured properties)                        │
@@ -22,11 +22,13 @@ Architecture Summary:
     │   │   └── Events (meaningful transitions)                         │
     │   │                                                              │
     │   │   ├── Confidence (belief measures)                            │
+    │   │   ├── Uncertainty (unknowns)                                  │
     │   │   └── Provenance (origin tracking)                            │
     │   │                                                              │
-    │   └── Perception Streams (sensor adapters)                       │
-    │       ├── Vision Stream                                           │
-    │       └── Future modalities                                      │
+    │   │   ├── Identity (stable identifiers)                           │
+    │   │   └── Revision (versioned evolution)                          │
+    │   │                                                              │
+    │   └── Perception Validation (quality assurance)                  │
     │                                                                    │
     │   exposes                                                         │
     │        └── None (foundational substrate only)                    │
@@ -42,43 +44,45 @@ Core Principles:
 """
 
 # =============================================================================
-# FOUNDATION LAYER EXPORTS (lazy imports to avoid circular deps)
+# FOUNDATION LAYER EXPORTS
 # =============================================================================
 
-from .foundations.identity import (
+from .identity import (
     PerceptionIdentity,
     PerceptionIdentityKind,
     PerceptionIdentityBuilder,
 )
 
-from .foundations.provenance import (
+from .provenance import (
     PerceptionProvenance,
     PerceptionProvenanceSource,
     PerceptionProvenanceBuilder,
 )
 
-from .foundations.confidence import (
+from .confidence import (
     PerceptionConfidence,
     ConfidenceBasis,
 )
 
-from .foundations.uncertainty import PerceptionUncertainty
+from .uncertainty import PerceptionUncertainty
 
-from .foundations.entity import (
+from .entity import (
     PerceptualEntity,
     EntityKind,
+    EntityRevision,
+    validate_entity,
 )
 
 # Ontology foundations
-from .foundations.observation import Observation, ObservationBuilder
-from .foundations.signal import Signal, SignalBuilder
-from .foundations.feature import Feature, FeatureBuilder
-from .foundations.percept import Percept, PerceptBuilder
-from .foundations.scene import Scene, SceneBuilder
-from .foundations.event import Event, EventBuilder
+from .observation import Observation, ObservationBuilder
+from .signal import Signal, SignalBuilder
+from .feature import Feature, FeatureBuilder
+from .percept import Percept, PerceptBuilder
+from .scene import Scene, SceneBuilder
+from .event import Event, EventBuilder
 
-# Shared contracts
-from .foundations.ontology import (
+# Shared contracts and laws
+from .ontology import (
     PERCEPTUAL_FOUNDATION_LAWS,
     OBSERVATION_LAWS,
     SIGNAL_LAWS,
@@ -106,6 +110,8 @@ __all__ = [
     # Entity system
     "PerceptualEntity",
     "EntityKind",
+    "EntityRevision",
+    "validate_entity",
     # Ontology - Observations
     "Observation",
     "ObservationBuilder",
@@ -124,7 +130,7 @@ __all__ = [
     # Ontology - Events
     "Event",
     "EventBuilder",
-    # Shared contracts
+    # Shared contracts and laws
     "PERCEPTUAL_FOUNDATION_LAWS",
     "OBSERVATION_LAWS",
     "SIGNAL_LAWS",
