@@ -560,14 +560,14 @@ class NormalizedCapability:
     identity: str
     """Unique identifier for this normalized capability."""
     
-    source_capabilities: tuple[str, ...] = field(default_factory=tuple)
-    """Source capability references that were merged."""
-    
     capability_kind: str
     """Canonical kind of capability (e.g., "PredictiveModel")."""
     
     provider_network: str
     """Network identity providing this capability."""
+    
+    source_capabilities: tuple[str, ...] = field(default_factory=tuple)
+    """Source capability references that were merged."""
     
     output_contract: Optional[str] = None
     """Output contract specification."""
@@ -858,14 +858,14 @@ class NormalizedCoordinationDependency:
     identity: str
     """Unique identifier for this normalized dependency."""
     
-    source_dependencies: tuple[str, ...] = field(default_factory=tuple)
-    """Source dependency references that were merged."""
-    
     dependent_reference: str
     """Reference to the component with the dependency."""
     
     prerequisite_reference: str
     """Reference to what is required."""
+    
+    source_dependencies: tuple[str, ...] = field(default_factory=tuple)
+    """Source dependency references that were merged."""
     
     dependency_kind: CoordinationDependencyKind = CoordinationDependencyKind.UNKNOWN
     """Kind of this dependency."""

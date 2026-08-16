@@ -259,6 +259,154 @@ __all__ = [
     "BarrierValidator",
     "ConvergenceValidator",
     "StateValidator",
+    
+    # =============================================================================
+    # COGNITIVE COORDINATION PROTOCOL (CCP) - Phase 4.11.5
+    # =============================================================================
+    
+    # CCP Enums
+    "CCPMessageKind",
+    "CCPPayloadKind",
+    "CCPMessageVisibility",
+    "CCPPublicationStatus",
+    "CCPAcknowledgementKind",
+    "CCPMessageAcceptanceStatus",
+    "CCPRejectionKind",
+    "CCPDeferralReason",
+    "CCPNegotiationResponseStatus",
+    "CCPSynchronizationStatus",
+    "CCPTransitionStatus",
+    "CCPLifecycleState",
+    "CCPRevisionKind",
+    "CCPCompatibilityStatus",
+    
+    # CCP Core Models
+    "CCPProtocolIdentity",
+    "CCPVersion",
+    "CCPMessage",
+    "CCPPublisherReference",
+    "CCPConsumerReference",
+    "CCPPublication",
+    "CCPSubscription",
+    "CCPAcknowledgement",
+    "CCPMessageAcceptance",
+    "CCPMessageRejection",
+    "CCPMessageDeferral",
+    "CCPCapabilityAdvertisement",
+    "CCPRequirementDeclaration",
+    "CCPNegotiationRequest",
+    "CCPNegotiationResponse",
+    "CCPNegotiationResult",
+    "CCPSynchronizationRequest",
+    "CCPSyncStatus",  # renamed to avoid conflict
+    "CCPBarrierStatus",
+    "CCPTransitionIntention",
+    "CCPTransitionStatus",
+    "CCPConflictReport",
+    "CCPFailureReport",
+    "CCPRecoveryRequest",
+    "CCPRecoveryProposal",
+    "CCPRecoveryResult",
+    "CCPLifecycleNotice",
+    "CCPHeartbeatProjection",
+    
+    # CCP Protocol
+    "CCPProtocol",
+    "CCPProcessingRequest",
+    "CCPProcessingResult",
+    "CCPMessageValidator",
+    "CCPPublicationValidator",
+    "CCPSubscriptionMatcher",
+    "CCPCompatibilityChecker",
+    
+    # CCP Serialization
+    "CCPSerializer",
+    "CCPMessageSerializer",
+    "CCPSerializationValidator",
+    
+    # =============================================================================
+    # COGNITIVE EVENT MODEL (CEM) - Phase 4.11.6
+    # =============================================================================
+    
+    # Event Enumerations
+    "CognitiveEventKind",
+    "CognitiveEventStatus",
+    "EventImportance",
+    "EventDurationKind",
+    
+    # Identity Models
+    "SemanticTimeReference",
+    "CognitiveEventIdentity",
+    "CognitiveEventRevisionIdentity",
+    "CognitiveEventStreamIdentity",
+    "CognitiveTimelineIdentity",
+    "CognitiveEpisodeIdentity",
+    "EventAggregationIdentity",
+    "EventCorrelationIdentity",
+    
+    # Revision Models
+    "RevisionKind",
+    "CognitiveEventRevision",
+    
+    # Duration Models  
+    "EventDuration",
+    "EventIntervalReference",
+    
+    # Event Model
+    "CognitiveEvent",
+    
+    # Stream Models
+    "CognitiveEventStream",
+    "GlobalCognitiveEventStream",
+    
+    # Timeline Models
+    "CognitiveTimelineScope",
+    "CognitiveTimelineIdentity",
+    "CognitiveTimeline",
+    
+    # Episode Models
+    "CognitiveEpisodeKind",
+    "CognitiveEpisodeIdentity",
+    "CognitiveEpisode",
+    
+    # Aggregation Models
+    "EventAggregationIdentity",
+    "EventAggregation",
+    
+    # Correlation/Causation Models
+    "EventCorrelationIdentity",
+    "EventCorrelation",
+    "EventCausation",
+    
+    # Lineage Models
+    "EventLineage",
+    
+    # Index Types
+    "EventIndexKey",
+    
+    # Replay Models
+    "ReplayScope",
+    "CognitiveReplayRequest",
+    "CognitiveReplayResult",
+    
+    # Query Models
+    "CognitiveEventQueryKind",
+    "CognitiveEventQuery",
+    "CognitiveEventQueryResult",
+    
+    # Validation Models
+    "ValidationFindingCode",
+    "ValidationFinding",
+    "ValidationResult",
+    "CognitiveEventValidationEngine",
+    
+    # Serialization Models
+    "CognitiveEventSerializer",
+    
+    # Engine Models
+    "CognitiveEventEngine",
+    "CognitiveEventRequest",
+    "CognitiveEventResult",
 ]
 
 # Core enums - defined first to enable cross-references
@@ -502,6 +650,225 @@ from .temporal.consumer import (
     CoordinationStateViewBuilder,
 )
 
+# =============================================================================
+# COGNITIVE COORDINATION PROTOCOL (CCP) - Phase 4.11.5
+# =============================================================================
+
+from .protocol import (
+    CCPProtocolIdentity,
+    CCPVersion,
+    CCPMessage,
+    CCPPublisherReference,
+    CCPConsumerReference,
+    CCPMessageVisibility,  # visibility scope model
+    CCPPublication,
+    CCPSubscription,
+    CCPAcknowledgement,
+    CCPMessageAcceptance,
+    CCPMessageRejection,
+    CCPMessageDeferral,
+    CCPCapabilityAdvertisement,
+    CCPRequirementDeclaration,
+    CCPNegotiationRequest,
+    CCPNegotiationResponse,
+    CCPNegotiationResult,
+    CCPSynchronizationRequest,
+    CCPSyncStatus,  # renamed to avoid conflict
+    CCPBarrierStatus,
+    CCPTransitionIntention,
+    CCPTransitionStatus,
+    CCPConflictReport,
+    CCPFailureReport,
+    CCPRecoveryRequest,
+    CCPRecoveryProposal,
+    CCPRecoveryResult,
+    CCPLifecycleNotice,
+    CCPHeartbeatProjection,
+    CCPProtocol,
+    CCPProcessingRequest,
+    CCPProcessingResult,
+    CCPMessageValidator,
+    CCPPublicationValidator,
+    CCPSubscriptionMatcher,
+    CCPCompatibilityChecker,
+)
+
+from .protocol import (
+    CCPMessageKind,
+    CCPPayloadKind,
+    CCPMessageVisibility,
+    CCPPublicationStatus,
+    CCPAcknowledgementKind,
+    CCPMessageAcceptanceStatus,
+    CCPRejectionKind,
+    CCPDeferralReason,
+    CCPNegotiationResponseStatus,
+    CCPSynchronizationStatus,
+    CCPTransitionStatus,
+    CCPLifecycleState,
+    CCPRevisionKind,
+    CCPCompatibilityStatus,
+)
+
+from .protocol.serialization import (
+    CCPSerializer,
+    CCPMessageSerializer,
+    CCPSerializationValidator,
+)
+
+# =============================================================================
+# COGNITIVE EVENT MODEL (CEM) - Phase 4.11.6
+# =============================================================================
+
+# =============================================================================
+# COGNITIVE ORCHESTRATION ENGINE (COE) - Phase 4.11.7
+# =============================================================================
+
+from .orchestration import (
+    # Enums
+    CycleKind,
+    StageKind,
+    ParticipantRole,
+    OrchestrationDependencyKind,
+    SynchronizationPolicy,
+    ResourceBudgetPolicy,
+    CompletionPolicy,
+    ExecutionPolicy,
+    Status,
+    
+    # Identity
+    OrchestrationIdentity,
+    CycleIdentity,
+    StageIdentity,
+    ParticipantIdentity,
+    
+    # Core models
+    CognitiveCycle,
+    CycleParticipant,
+    ParticipantStatus,
+    CognitiveExecutionStage,
+    StageStatus,
+    ExecutionDependencyGraph,
+    DependencyEdge,
+    ParallelExecutionGroup,
+    SynchronizationBarrier,
+    ResourceAllocation,
+    
+    # Degraded mode and recovery
+    DegradedOrchestrationMode,
+    RecoveryStrategy,
+    RecoveryCoordination,
+    
+    # Policies
+    ExecutionPolicy as OrchestrationExecutionPolicy,
+    CompletionPolicySpec,
+    
+    # Plan and request/result
+    CognitiveOrchestrationPlan,
+    PlanStatus,
+    CognitiveOrchestrationRequest,
+    CognitiveOrchestrationResult,
+    
+    # Validation
+    OrchestrationValidator,
+    ValidationFinding,
+    ValidationResult,
+    
+    # Query
+    OrchestrationQuery,
+    QueryKind,
+    
+    # Serialization
+    OrchestrationSerializer,
+    PlanSerializer,
+)
+
+# =============================================================================
+# COGNITIVE EVENT MODEL (CEM) - Phase 4.11.6
+# =============================================================================
+
+from .events import (
+    # Enumerations
+    CognitiveEventKind,
+    CognitiveEventStatus,
+    EventImportance,
+    EventDurationKind,
+    
+    # Identity Models
+    SemanticTimeReference,
+    CognitiveEventIdentity,
+    CognitiveEventRevisionIdentity,
+    CognitiveEventStreamIdentity,
+    CognitiveTimelineIdentity,
+    CognitiveEpisodeIdentity,
+    EventAggregationIdentity,
+    EventCorrelationIdentity,
+    
+    # Revision Models
+    RevisionKind,
+    CognitiveEventRevision,
+    
+    # Duration Models
+    EventDuration,
+    EventIntervalReference,
+    
+    # Event Model
+    CognitiveEvent,
+    
+    # Stream Models
+    CognitiveEventStream,
+    GlobalCognitiveEventStream,
+    
+    # Timeline Models
+    CognitiveTimelineScope,
+    CognitiveTimelineIdentity,
+    CognitiveTimeline,
+    
+    # Episode Models
+    CognitiveEpisodeKind,
+    CognitiveEpisodeIdentity,
+    CognitiveEpisode,
+    
+    # Aggregation Models
+    EventAggregationIdentity,
+    EventAggregation,
+    
+    # Correlation/Causation Models
+    EventCorrelationIdentity,
+    EventCorrelation,
+    EventCausation,
+    
+    # Lineage Models
+    EventLineage,
+    
+    # Index Types
+    EventIndexKey,
+    
+    # Replay Models
+    ReplayScope,
+    CognitiveReplayRequest,
+    CognitiveReplayResult,
+    
+    # Query Models
+    CognitiveEventQueryKind,
+    CognitiveEventQuery,
+    CognitiveEventQueryResult,
+    
+    # Validation Models
+    ValidationFindingCode,
+    ValidationFinding,
+    ValidationResult,
+    CognitiveEventValidationEngine,
+    
+    # Serialization Models
+    CognitiveEventSerializer,
+    
+    # Engine Models
+    CognitiveEventEngine,
+    CognitiveEventRequest,
+    CognitiveEventResult,
+)
+
 # Validation models
 from .temporal.validation import (
     ValidationFinding,
@@ -512,4 +879,38 @@ from .temporal.validation import (
     BarrierValidator,
     ConvergenceValidator,
     StateValidator,
+)
+
+# =============================================================================
+# GLOBAL COORDINATION GRAPH - Phase 4.11.4
+# =============================================================================
+
+from .global_graph import (
+    # Enums
+    CoordinationGraphNodeKind,
+    CoordinationGraphEdgeKind,
+    CoordinationNodeStatus,
+    CoordinationEdgeStatus,
+    GraphRevisionKind,
+    ComponentKind,
+    GraphPartitionKind,
+    GraphDomainKind,
+    SemanticScope,
+    GraphConstructionPolicy,
+    
+    # Core models
+    GlobalCoordinationGraphIdentity,
+    GlobalCoordinationGraphRevisionIdentity,
+    GlobalCoordinationGraph,
+    CoordinationGraphNode,
+    CoordinationGraphEdge,
+    CoordinationGraphPartition,
+    CoordinationGraphDomain,
+    CoordinationGraphComponent,
+    GlobalCoordinationGraphIndexes,
+    
+    # Delta models
+    GlobalCoordinationGraphDelta,
+    GraphRevisionBuildResult,
+    IndexBuildResult,
 )

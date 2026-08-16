@@ -166,8 +166,8 @@ __all__ = [
     "VersionEquivalence",
     "VersionProjection",
     
-    # Validation types (validation/__init__.py)
-    "ValidationResult",
+    # Validation types - TODO: create validation module if needed
+    # "ValidationResult",
 ]
 
 # Exports for Phase 4.5.2 - Action Identity Architecture
@@ -204,4 +204,4 @@ from .versions import (
     VersionProjection,
 )
 
-from .validation import ValidationResult
+# from .validation import ValidationResult  # TODO: Create validation module if needed
