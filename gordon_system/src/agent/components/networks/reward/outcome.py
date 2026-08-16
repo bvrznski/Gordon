@@ -143,12 +143,9 @@ class Outcome:
         • Scheduling further processing
     """
     
-    # Identity and reference
+    # Identity and reference (no defaults first)
     outcome_id: OutcomeId
     """Unique identifier for this outcome."""
-    
-    revision: int = 0
-    """Revision number for versioning."""
     
     category: OutcomeCategory
     """Semantic category of this outcome."""
@@ -156,9 +153,12 @@ class Outcome:
     source_subsystem: OutcomeSourceSubsystem
     """Origin subsystem that produced or triggered this outcome."""
     
-    # Semantic content (bounded)
     semantic_object: str
     """The object, state, or event being evaluated."""
+    
+    # Fields with defaults (after no-default fields)
+    revision: int = 0
+    """Revision number for versioning."""
     
     context: Tuple[str, ...] = field(default_factory=tuple)
     """Semantic context for evaluation (e.g., goal_id, task_id)."""

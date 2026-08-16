@@ -20,7 +20,7 @@ INTERFACE FAMILIES:
 lifecycle.py     - Component lifecycle state transitions
 component.py     - Base component contract for all runtime entities
 service.py       - Service abstraction (long-running background processes)
-daemon.py        - Daemon abstraction ( autonomous background workers)
+daemon.py        - Daemon abstraction (autonomous background workers)
 execution.py     - Task execution contracts
 scheduling.py    - Scheduling and timing contracts
 communication.py - Inter-component communication protocols
@@ -145,11 +145,79 @@ from .registry import (
     EntityNotFoundError,
 )
 
+# Execution interfaces
+from .execution import (
+    ExecutionId,
+    ExecutionContext,
+    ExecutionMode,
+    ExecutionResult,
+    IExecutor,
+    IExecutable,
+    ExecutorError,
+    ExecutionTimeoutError,
+    ExecutionCancelledError,
+)
+
+# Communication interfaces
+from .communication import (
+    DeliveryMode,
+    MessageId,
+    CorrelationChain,
+    MessageEnvelope,
+    SubscriptionDescriptor,
+    IMessageSender,
+    IMessageReceiver,
+    IMessageRegistry,
+    IMessageBus,
+    MessageError,
+    DeliveryFailedError,
+)
+
+# State interfaces
+from .state import (
+    StateId,
+    StateVersion,
+    StateEntry,
+    IStateStore,
+    IStateRepository,
+    StateError,
+    StateNotFoundError,
+    OptimisticLockError,
+)
+
+# Providers interfaces
+from .providers import (
+    ProviderId,
+    ProviderState,
+    ProviderInfo,
+    IProvider,
+    IProviderRegistry,
+    IProviderSelector,
+    ProviderError,
+    ProviderNotAvailableError,
+    NoSuitableProviderError,
+)
+
+# Plugins interfaces
+from .plugins import (
+    PluginId,
+    PluginState,
+    PluginInfo,
+    PluginMetadata,
+    IPlugin,
+    IPluginLoader,
+    IPluginRegistry,
+    IPluginManager,
+    PluginError,
+    PluginLoadError,
+    PluginDependencyError,
+)
+
 __all__ = [
     # Version info
     "VERSION",
     "__version__",
-    
+
     # Lifecycle
     "LifecycleState",
     "LifecycleEvent",
@@ -157,7 +225,7 @@ __all__ = [
     "IComponentLifecycle",
     "LifecycleTransitionError",
     "_VALID_TRANSITIONS",
-    
+
     # Component
     "ComponentId",
     "ComponentMetadata",
@@ -166,7 +234,7 @@ __all__ = [
     "IManagedComponent",
     "IComponentFactory",
     "ComponentCreationError",
-    
+
     # Events
     "DeliveryMode",
     "TopicExpression",
@@ -176,7 +244,7 @@ __all__ = [
     "IEventSubscriber",
     "IEventRegistry",
     "IEventBus",
-    
+
     # Configuration
     "ConfigValueType",
     "ConfigEntry",
@@ -184,7 +252,7 @@ __all__ = [
     "IConfigurationProvider",
     "ConfigurationError",
     "MissingConfigurationError",
-    
+
     # Persistence
     "RecordId",
     "PersistenceOperation",
@@ -194,7 +262,7 @@ __all__ = [
     "PersistenceError",
     "RecordNotFoundError",
     "OptimisticLockError",
-    
+
     # Scheduling
     "ScheduleType",
     "Schedule",
@@ -204,7 +272,7 @@ __all__ = [
     "SchedulingError",
     "DuplicateScheduleError",
     "UnknownScheduleError",
-    
+
     # Health
     "HealthStatus",
     "HealthCheckResult",
@@ -213,7 +281,7 @@ __all__ = [
     "IHealthObserver",
     "HealthCheckError",
     "ComponentUnhealthyError",
-    
+
     # Integrity
     "IntegrityAlgorithm",
     "IntegrityResult",
@@ -223,11 +291,69 @@ __all__ = [
     "IIntegrityObserver",
     "IntegrityError",
     "HashMismatchError",
-    
+
     # Registry
     "EntityRecord",
     "IRegistry",
     "IRegistryObserver",
     "RegistryError",
     "EntityNotFoundError",
+
+    # Execution
+    "ExecutionId",
+    "ExecutionContext",
+    "ExecutionMode",
+    "ExecutionResult",
+    "IExecutor",
+    "IExecutable",
+    "ExecutorError",
+    "ExecutionTimeoutError",
+    "ExecutionCancelledError",
+
+    # Communication
+    "DeliveryMode",
+    "MessageId",
+    "CorrelationChain",
+    "MessageEnvelope",
+    "SubscriptionDescriptor",
+    "IMessageSender",
+    "IMessageReceiver",
+    "IMessageRegistry",
+    "IMessageBus",
+    "MessageError",
+    "DeliveryFailedError",
+
+    # State
+    "StateId",
+    "StateVersion",
+    "StateEntry",
+    "IStateStore",
+    "IStateRepository",
+    "StateError",
+    "StateNotFoundError",
+    "OptimisticLockError",
+
+    # Providers
+    "ProviderId",
+    "ProviderState",
+    "ProviderInfo",
+    "IProvider",
+    "IProviderRegistry",
+    "IProviderSelector",
+    "ProviderError",
+    "ProviderNotAvailableError",
+    "NoSuitableProviderError",
+
+    # Plugins
+    "PluginId",
+    "PluginState",
+    "PluginInfo",
+    "PluginMetadata",
+    "IPlugin",
+    "IPluginLoader",
+    "IPluginRegistry",
+    "IPluginManager",
+    "PluginError",
+    "PluginLoadError",
+    "PluginDependencyError",
 ]
