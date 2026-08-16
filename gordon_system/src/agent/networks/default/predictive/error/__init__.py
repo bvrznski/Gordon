@@ -1,244 +1,153 @@
-# Prediction Error Network - Canonical Implementation
-# =====================================================
+# Canonical Prediction Error Network Phase 4.9.3
+# ==============================================
 """
-Phase 4.9.2: Prediction Error Representation
+Prediction Error Processing Engine - The comparator architecture.
 
-The Prediction Error layer compares predictions against observations.
+PHASE 4.9.3: PREDICTION ERROR PROCESSING ENGINE
+-----------------------------------------------
+This module provides the complete prediction error processing pipeline:
 
-It does NOT:
-    - Revise beliefs (Phase 4.9.5)
-    - Compute Precision weights (Phase 4.9.3)
-    - Perform Active Inference (Phase 4.9.6)
-    - Allocate attention or execute actions
-    - Update the World Model
+    - Comparator Registry: Maps semantic types to comparison algorithms
+    - Comparators: Pure, deterministic comparison implementations
+    - Residual Builder: Constructs immutable mismatch representations  
+    - Hierarchy Processor: Builds hierarchical residual graphs
+    - Aggregation Engine: Groups and aggregates residuals across timescales
+    - Error Landscape Builder: Constructs aggregate error state
+    - PredictionErrorProcessor: Single orchestrator for all comparisons
 
-Canonical Output:
-    Immutable PredictionError, PredictionErrorState, and comparison results.
+ARCHITECTURAL PRINCIPLES:
+------------------------
+    * Pure functions only (no side effects)
+    * Deterministic ordering (stable output regardless of thread scheduling)
+    * Immutable outputs (frozen dataclasses throughout)
+    * Stateless comparators (no internal state between calls)
+    * No interpretation (only computation, no belief revision)
 
-Package Structure:
-    enums/            - Mismatch kind enums
-    __base__.py       - Identity, provenance, revision types
-    request.py        - Comparison request (immutable input)
-    result.py         - Comparison result (immutable output)
-    policy.py         - Comparison policy configuration
-    prediction_error.py  - Canonical Error model
-    mismatch.py       - Mismatch representation
-    residual.py       - Residual representation
-    magnitude.py      - Error magnitude enum
-    direction.py      - Error direction enum
-    taxonomy.py       - Error taxonomy definitions
-    hierarchy.py      - Hierarchical error handling
-    temporal.py       - Temporal error handling
-    spatial.py        - Spatial error handling  
-    causal.py         - Causal error handling
-    structural.py     - Structural error handling
-    latent.py         - Latent comparison contracts
-    multimodal.py     - Multimodal comparison
-    confidence.py     - Error confidence estimation
-    uncertainty.py    - Error uncertainty decomposition
-    trace.py          - Structural trace codes
-    state.py          - PredictionErrorState aggregate
-    validation.py     - Validation functions
+NO BELIEF REVISION
+NO PRECISION ESTIMATION  
+NO ACTIVE INFERENCE
+NO ACTION EXECUTION
 
-Import Rules:
-    All imports must be from canonical modules.
-    No runtime dependencies allowed in semantic layer.
-    Deep immutability enforced through frozen dataclasses.
+Those belong to subsequent phases.
+
+IMPORT STRUCTURE:
+----------------
+The processor entry point is:
+
+    from gordon_system.src.agent.networks.default.predictive.error import (
+        PredictionErrorProcessor,
+    )
+
+Usage:
+
+    processor = PredictionErrorProcessor()
+    result = processor.process(request)
+
+OUTPUT:
+------
+PredictionErrorState - Immutable aggregate state containing all prediction errors.
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+# Core processing components
+from gordon_system.src.agent.networks.default.predictive.error.processor import (
+    PredictionErrorProcessor,
+)
 
-if TYPE_CHECKING:
-    # Enums (type definitions)
-    from .enums import (
-        MismatchKind,
-        ErrorMagnitude,
-        ErrorDirection,
-        ComparisonStrategy,
-        LatentMetric,
-        ConfidenceLevel,
-        UncertaintyLevel,
-        TraceCode,
-        FindingsCode,
-        LimitationsKind,
-    )
+# Input types
+from gordon_system.src.agent.networks.default.predictive.error.request import (
+    PredictionComparisonRequest,
+    ObservationProjection,
+    PredictionReference,
+    ComparisonProvenance,
+)
 
-    # Base types
-    from .__base__ import (
-        SemanticIdentity,
-        RequestIdentity,
-        PredictionErrorIdentity,
-        ObservationReference,
-        ErrorProvenance,
-        Revision,
-        SchemaVersion,
-        SerializationEnvelope,
-    )
+# Output types
+from gordon_system.src.agent.networks.default.predictive.error.result import (
+    PredictionErrorState,
+    PredictionComparisonResult,
+    PredictionError,
+    Mismatch,
+    Residual,
+    HierarchicalPredictionError,
+    ErrorMagnitude,
+    ErrorDirection,
+    ErrorConfidence,
+    ErrorUncertainty,
+    PredictionErrorTrace,
+    TemporalMismatch,
+    SpatialMismatch,
+    CausalMismatch,
+    StructuralMismatch,
+    LatentMismatch,
+    MultimodalMismatch,
+)
 
-    # Comparison request and result
-    from .request import (
-        PredictionComparisonRequest,
-        ObservationProjection,
-    )
+# Enum types
+from gordon_system.src.agent.networks.default.predictive.error.enums import (
+    MismatchKind,
+    ErrorMagnitude as ErrorMagnitudeEnum,
+    ErrorDirection as ErrorDirectionEnum,
+    ComparisonStrategy,
+    LatentMetric,
+    TraceCode,
+    FindingsCode,
+    LimitationsKind,
+    ConfidenceLevel,
+    UncertaintyLevel,
+    CrossLevelRelationKind,
+    Modality,
+    ErrorHierarchyLevel,
+    TimespanKind,
+)
+
+__all__ = [
+    # Processors
+    "PredictionErrorProcessor",
     
-    from .result import (
-        PredictionComparisonResult,
-        PredictionErrorState,
-    )
-
-    # Policy
-    from .policy import (
-        ComparisonPolicy,
-        ValueComparisonStrategy,
-        CategoricalComparisonStrategy,
-        StructuredComparisonStrategy,
-    )
-
-    # Error models
-    from .prediction_error import (
-        PredictionError,
-        Mismatch,
-        Residual,
-    )
-
-    # Components
-    from .magnitude import ErrorMagnitude
-    from .direction import ErrorDirection
-    from .taxonomy import ErrorTaxonomy
-    from .hierarchy import HierarchicalPredictionError, CrossLevelRelationKind
-
-    # Domain-specific errors
-    from .temporal import TemporalMismatch, TemporalResidual
-    from .spatial import SpatialMismatch, SpatialResidual
-    from .causal import CausalMismatch, CausalResidual
-    from .structural import StructuralMismatch, StructuralResidual
-    from .latent import LatentMismatch, LatentResidual, LatentComparisonContract
-    from .multimodal import MultimodalMismatch, MultimodalResidual
-
-    # Confidence and uncertainty
-    from .confidence import ErrorConfidence, ErrorConfidenceDecomposition
-    from .uncertainty import ErrorUncertainty, UncertaintyDecomposition
-
-    # Trace and state
-    from .trace import PredictionErrorTrace
-    from .state import PredictionErrorState
-
-
-# =============================================================================
-# CANONICAL EXPORTS (Phase 4.9.2)
-# =============================================================================
-
-__all__: list[str] = [
-    # Enums
-    "MismatchKind",
-    "ErrorMagnitude", 
-    "ErrorDirection",
-    "ComparisonStrategy",
-    "LatentMetric",
-    "ConfidenceLevel",
-    "UncertaintyLevel",
-    "TraceCode",
-    "FindingsCode",
-    "LimitationsKind",
-    # Base types
-    "SemanticIdentity",
-    "RequestIdentity",
-    "PredictionErrorIdentity",
-    "ObservationReference",
-    "ErrorProvenance",
-    "Revision",
-    "SchemaVersion",
-    "SerializationEnvelope",
-    # Request and Result
+    # Request types
     "PredictionComparisonRequest",
-    "ObservationProjection",
-    "PredictionComparisonResult",
+    "ObservationProjection", 
+    "PredictionReference",
+    "ComparisonProvenance",
+    
+    # Result types
     "PredictionErrorState",
-    # Policy
-    "ComparisonPolicy",
-    "ValueComparisonStrategy",
-    "CategoricalComparisonStrategy", 
-    "StructuredComparisonStrategy",
-    # Error models
+    "PredictionComparisonResult",
     "PredictionError",
     "Mismatch",
     "Residual",
-    # Components
+    "HierarchicalPredictionError",
     "ErrorMagnitude",
     "ErrorDirection",
-    "ErrorTaxonomy",
-    "HierarchicalPredictionError",
-    "CrossLevelRelationKind",
-    # Domain-specific
-    "TemporalMismatch", 
-    "TemporalResidual",
-    "SpatialMismatch",
-    "SpatialResidual",
-    "CausalMismatch",
-    "CausalResidual",
-    "StructuralMismatch",
-    "StructuralResidual",
-    "LatentMismatch",
-    "LatentResidual",
-    "LatentComparisonContract",
-    "MultimodalMismatch",
-    "MultimodalResidual",
-    # Confidence and uncertainty
-    "ErrorConfidence",
-    "ErrorConfidenceDecomposition",
-    "ErrorUncertainty", 
-    "UncertaintyDecomposition",
-    # Trace and state
+    "ErrorConfidence", 
+    "ErrorUncertainty",
     "PredictionErrorTrace",
-    "PredictionErrorState",
+    "TemporalMismatch",
+    "SpatialMismatch",
+    "CausalMismatch",
+    "StructuralMismatch",
+    "LatentMismatch",
+    "MultimodalMismatch",
+    
+    # Enum types
+    "MismatchKind",
+    "ErrorMagnitudeEnum",
+    "ErrorDirectionEnum", 
+    "ComparisonStrategy",
+    "LatentMetric",
+    "TraceCode",
+    "FindingsCode",
+    "LimitationsKind",
+    "ConfidenceLevel",
+    "UncertaintyLevel",
+    "CrossLevelRelationKind",
+    "Modality",
+    "ErrorHierarchyLevel",
+    "TimespanKind",
 ]
 
-
-# =============================================================================
-# PHASE CONSTANTS
-# =============================================================================
-
-PHASE_VERSION: str = "4.9.2"
-PHASE_STATUS: str = "DEVELOPMENT"
-
-CANONICAL_ERROR_SCHEMA: str = "gordon.prediction_error.state.v1"
-DEFAULT_HIERARCHY_LEVELS: tuple[str, ...] = ("sensory", "contextual", "abstract")
-DEFAULT_TIMESTEPSCALES: tuple[str, ...] = (
-    "immediate",
-    "short_term", 
-    "medium_term",
-    "long_term",
-)
-
-
-# =============================================================================
-# MODULE DOCUMENTATION
-# =============================================================================
-
-__doc__ = """
-Prediction Error Network - Phase 4.9.2
-
-The Prediction Error layer compares predictions against observations.
-
-Core Principle:
-    Intelligence is predictive, not reactive.
-    
-    PPN compares: What was expected? vs What actually occurred?
-    
-This Phase (4.9.2):
-    - Represents prediction errors
-    - Classifies mismatch types  
-    - Preserves hierarchical structure
-    - Maintains traceability
-    
-NOT in this Phase:
-    - Belief revision
-    - Precision weighting
-    - Active inference
-    - Attention allocation
-    - Action execution
-
-For complete documentation, see: docs/agent/architecture/predictive-network/
-"""
+__version__ = "4.9.3"
+__phase__ = "4.9.3"
+__name__ = "prediction_error_processing"
