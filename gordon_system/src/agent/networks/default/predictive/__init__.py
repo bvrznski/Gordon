@@ -1,212 +1,228 @@
-# Default Network - Predictive Integration Package
-# ================================================
-
+# Predictive Processing Network - Canonical Implementation
+# ==========================================================
 """
-Predictive Integration coordination layer for the Default Network.
+Phase 4.9.1: Predictive Generation Only
 
-This package implements bounded, immutable coordination of internally generated
-predictive cognition. It provides:
+The Predictive Processing Network generates expectations about future states.
 
-    • Immutable request models (PredictiveIntegrationRequest, scope, purpose, subject)
-    • Episode specialization (PredictiveIntegrationEpisode reusing InternalEpisode)
-    • Planning support (declarative plan steps)
-    • Capability contracts (request/result boundaries)
-    • Prediction structures with uncertainty and confidence
-    • Expectation models and expectation-violation detection
-    • Prediction-error representation and attribution
-    • Revision proposals and monitoring proposals
-    • Outcomes and continuation recommendations
-    • Recurrence safeguards
-    • State tracking with bounded history
+It does NOT:
+    - Compute prediction errors (Phase 4.9.2)
+    - Update beliefs (Phase 4.9.5)
+    - Perform active inference (Phase 4.9.6)
+    - Allocate attention or execute actions
 
-ARCHITECTURAL PRINCIPLES:
-    1. Predictive Integration is distinct from predictive computation
-    2. All contracts are deeply immutable
-    3. No runtime references in domain models
-    4. All bounds are explicit and bounded
-    5. State transitions are semantic records, not runtime actions
+Canonical Output:
+    Immutable predictions, forecasts, counterfactual projections,
+    and Predictive Network State.
 
-ARCHITECTURAL BOUNDARIES:
-    • Does NOT implement prediction algorithms (outsourced to capabilities)
-    • Does NOT mutate Memory, Identity, Narrative, or Executive state
-    • Does NOT schedule execution or allocate resources
-    • Does NOT own runtime progression (ExecutionLoop does that)
-    • Does NOT directly invoke World Models or predictive models
+Package Structure:
+    enums/          - Enum types (PredictionLevel, PredictionTimescale, etc.)
+    __base__.py     - Identity, revision, provenance, serialization
+    content/        - Confidence, Uncertainty, Assumptions, Constraints
+    state/          - BeliefProjection, WorldModelProjection, HierarchicalPrediction
+    generation/     - Prediction, Request, Result, Policy
 
-PREDICTIVE INTEGRATION RESPONSIBILITIES:
-    • Coordinating prediction projections and expectations
-    • Integrating prediction errors and expectation violations
-    • Comparing competing predictions and hypotheses
-    • Assessing model applicability and limitations
-    • Generating revision proposals and monitoring proposals
-    • Composing predictive products and outcomes
-
-PREDICTIVE INTEGRATION DOES NOT:
-    • Run world models or forecasting algorithms
-    • Acquire observations directly
-    • Create MonitoringThreads
-    • Schedule observations
-    • Commit plans or select actions
-    • Update Memory, Narrative, Identity, or Executive state
+Import Rules:
+    All imports must be from canonical modules.
+    No runtime dependencies allowed in semantic layer.
+    Deep immutability enforced through frozen dataclasses.
 """
 
 from __future__ import annotations
 
-# Main request models
-from .request import (
-    PredictiveIntegrationRequest,
-    PredictiveIntegrationRequestId,
-)
-from .purpose import PredictiveIntegrationPurpose
-from .subject import PredictiveSubject
-from .scope import PredictiveIntegrationScope
+from typing import TYPE_CHECKING
 
-# Episode and plan
-from .episode import PredictiveIntegrationEpisode
-from .plan import PredictiveIntegrationPlan, PredictiveCoordinationStepKind
+if TYPE_CHECKING:
+    # Enums (type definitions)
+    from .enums import (
+        PredictionLevel,
+        PredictionTimescale,
+        PredictionModality,
+        ConfidenceLevel,
+        UncertaintyLevel,
+        PredictionStatus,
+        PredictiveHypothesisStatus,
+        CrossLevelRelationKind,
+        PredictionSourceKind,
+        PredictiveAssumptionKind,
+        PredictiveConstraintKind,
+        CounterfactualModificationKind,
+        PredictionFindingCode,
+        PredictionLimitationKind,
+        ValidationStrictness,
+        PredictiveTraceCode,
+        SemanticTimeKind,
+        LatentSchemaKind,
+    )
 
-# Prediction structures
-from .prediction import (
-    Prediction,
-    PredictionKind,
-    PredictionHorizon,
-    PredictionAssumption,
-)
-from .hypothesis import PredictiveHypothesis
+    # Base types (identity, revision, provenance)
+    from .__base__ import (
+        SemanticIdentity,
+        RequestIdentity,
+        PredictionIdentity,
+        BeliefIdentity,
+        WorldModelIdentity,
+        HypothesisIdentity,
+        ScenarioIdentity,
+        LatentStateIdentity,
+        LatentTrajectoryIdentity,
+        ForecastIdentity,
+        Revision,
+        SchemaVersion,
+        PredictionProvenance,
+        BeliefProvenance,
+        WorldModelProvenance,
+        CounterfactualProvenance,
+        StateIdentity,
+        PolicyIdentity,
+        GenerativeModelIdentity,
+        PredictiveSubjectReference,
+        SerializationEnvelope,
+    )
 
-# Expectation structures
-from .expectation import Expectation, ExpectedState, ExpectedEvent, ExpectedOutcome
+    # Content types
+    from .content import (
+        ConfidenceEstimate,
+        PredictiveUncertainty,
+        PredictiveAssumption,
+        PredictiveConstraint,
+        PredictionSourceReference,
+    )
 
-# Assessment structures
-from .probability import PredictionProbability
-from .confidence import PredictionConfidence
-from .uncertainty import PredictionUncertainty
-from .applicability import PredictiveModelApplicabilityAssessment
-from .limitation import PredictiveModelLimitation
+    # State types
+    from .state import (
+        BeliefProjection,
+        WorldModelProjection,
+        PredictionLevelProjection,
+        HierarchicalPrediction,
+        ContextualForecast,
+        LatentStateProjection,
+        LatentTrajectory,
+    )
 
-# Error structures
-from .error.prediction_error import PredictionError
-from .error.expectation_violation import ExpectationViolation
-from .error.surprise import PredictiveSurpriseAssessment
-from .error.attribution import PredictionErrorAttribution
-from .error.calibration import PredictionCalibrationAssessment
+    # Generation types
+    from .generation import (
+        Prediction,
+        PredictionRequest,
+        PredictionGenerationRequest,
+        PredictionGenerationResult,
+        PredictionPolicy,
+    )
 
-# Comparison and conflict
-from .comparison import PredictionComparison
-from .consistency import PredictiveConsistencyAssessment
-from .conflict import PredictiveConflict
-from .gap import PredictiveGap
 
-# Revision proposals
-from .revision.proposal import PredictionRevisionProposal
-from .observation_request_proposal import ObservationRequestProposal
-from .monitoring_proposal import PredictiveMonitoringProposal
+# =============================================================================
+# CANONICAL EXPORTS (Phase 4.9.1)
+# =============================================================================
 
-# Products and outcomes
-from .product import PredictiveIntegrationProduct, PredictiveProductKind
-from .outcome import (
-    PredictiveIntegrationOutcome,
-    PredictiveIntegrationContinuation,
-    PredictiveIntegrationConfidence,
-    PredictiveIntegrationCompleteness,
-)
-from .state.model import PredictiveIntegrationState
-
-# Configuration
-from .configuration import PredictiveIntegrationConfig
-
-# Exceptions
-from .exceptions import (
-    PredictiveCoordinationError,
-    InvalidPredictiveRequest,
-    InvalidPredictivePurpose,
-    InvalidPredictiveSubject,
-    InvalidPredictiveScope,
-    PredictiveRecursionLimitExceeded,
-    RepeatedPredictiveRequestRejected,
-    PredictiveInvariantViolation,
-    InvalidPredictionReference,
-    InvalidObservationReference,
-)
-
-# Contracts (imported separately to avoid circular dependencies)
-from . import contracts
-
-__all__ = [
-    # Core request models
-    "PredictiveIntegrationRequest",
-    "PredictiveIntegrationRequestId",
-    "PredictiveIntegrationPurpose",
-    "PredictiveSubject",
-    "PredictiveIntegrationScope",
-    
-    # Episode and plan
-    "PredictiveIntegrationEpisode",
-    "PredictiveIntegrationPlan",
-    "PredictiveCoordinationStepKind",
-    
-    # Prediction structures
+__all__: list[str] = [
+    # Enums
+    "PredictionLevel",
+    "PredictionTimescale", 
+    "PredictionModality",
+    "ConfidenceLevel",
+    "UncertaintyLevel",
+    "PredictionStatus",
+    "PredictiveHypothesisStatus",
+    "CrossLevelRelationKind",
+    "PredictionSourceKind",
+    "PredictiveAssumptionKind",
+    "PredictiveConstraintKind",
+    "CounterfactualModificationKind",
+    "PredictionFindingCode",
+    "PredictionLimitationKind",
+    "ValidationStrictness",
+    "PredictiveTraceCode",
+    "SemanticTimeKind",
+    "LatentSchemaKind",
+    # Base types
+    "SemanticIdentity",
+    "RequestIdentity",
+    "PredictionIdentity", 
+    "BeliefIdentity",
+    "WorldModelIdentity",
+    "HypothesisIdentity",
+    "ScenarioIdentity",
+    "LatentStateIdentity",
+    "LatentTrajectoryIdentity",
+    "ForecastIdentity",
+    "Revision",
+    "SchemaVersion",
+    "PredictionProvenance",
+    "BeliefProvenance",
+    "WorldModelProvenance",
+    "CounterfactualProvenance",
+    "StateIdentity",
+    "PolicyIdentity",
+    "GenerativeModelIdentity",
+    "PredictiveSubjectReference",
+    "SerializationEnvelope",
+    # Content types
+    "ConfidenceEstimate",
+    "PredictiveUncertainty",
+    "PredictiveAssumption",
+    "PredictiveConstraint",
+    "PredictionSourceReference",
+    # State types
+    "BeliefProjection", 
+    "WorldModelProjection",
+    "PredictionLevelProjection",
+    "HierarchicalPrediction",
+    "ContextualForecast",
+    "LatentStateProjection",
+    "LatentTrajectory",
+    # Generation types
     "Prediction",
-    "PredictionKind",
-    "PredictionHorizon",
-    "PredictionAssumption",
-    "PredictiveHypothesis",
-    
-    # Expectation structures
-    "Expectation",
-    "ExpectedState",
-    "ExpectedEvent",
-    "ExpectedOutcome",
-    
-    # Assessment structures
-    "PredictionProbability",
-    "PredictionConfidence",
-    "PredictionUncertainty",
-    "PredictiveModelApplicabilityAssessment",
-    "PredictiveModelLimitation",
-    
-    # Error structures
-    "PredictionError",
-    "ExpectationViolation",
-    "PredictiveSurpriseAssessment",
-    "PredictionErrorAttribution",
-    "PredictionCalibrationAssessment",
-    
-    # Comparison and conflict
-    "PredictionComparison",
-    "PredictiveConsistencyAssessment",
-    "PredictiveConflict",
-    "PredictiveGap",
-    
-    # Revision proposals
-    "PredictionRevisionProposal",
-    "ObservationRequestProposal",
-    "PredictiveMonitoringProposal",
-    
-    # Products and outcomes
-    "PredictiveIntegrationProduct",
-    "PredictiveProductKind",
-    "PredictiveIntegrationOutcome",
-    "PredictiveIntegrationContinuation",
-    "PredictiveIntegrationConfidence",
-    "PredictiveIntegrationCompleteness",
-    
-    # State and configuration
-    "PredictiveIntegrationState",
-    "PredictiveIntegrationConfig",
-    
-    # Exceptions
-    "PredictiveCoordinationError",
-    "InvalidPredictiveRequest",
-    "InvalidPredictivePurpose",
-    "InvalidPredictiveSubject",
-    "InvalidPredictiveScope",
-    "PredictiveRecursionLimitExceeded",
-    "RepeatedPredictiveRequestRejected",
-    "PredictiveInvariantViolation",
-    "InvalidPredictionReference",
-    "InvalidObservationReference",
+    "PredictionRequest",
+    "PredictionGenerationRequest",
+    "PredictionGenerationResult",
+    "PredictionPolicy",
 ]
 
-# Import contracts module last to avoid circular dependencies
-__all__.append("contracts")
+
+# =============================================================================
+# PHASE CONSTANTS
+# =============================================================================
+
+PHASE_VERSION: str = "4.9.1"
+PHASE_STATUS: str = "DEVELOPMENT"
+
+CANONICAL_PREDICTIVE_SCHEMA: str = "gordon.predictive.state.v1"
+DEFAULT_HIERARCHY_LEVELS: tuple[str, ...] = ("sensory", "contextual", "abstract")
+DEFAULT_TIMESTEPSCALES: tuple[str, ...] = (
+    "immediate",
+    "short_term", 
+    "medium_term",
+    "long_term",
+)
+
+
+# =============================================================================
+# MODULE DOCUMENTATION
+# =============================================================================
+
+__doc__ = """
+Predictive Processing Network - Phase 4.9.1
+
+The Predictive Processing Network (PPN) generates expectations about the world.
+
+Core Principle:
+    Intelligence is predictive, not reactive.
+    
+    PPN continuously proposes: "What should exist?"
+    before perception determines: "What actually exists?"
+
+This Phase (4.9.1):
+    - Constructs hierarchical predictions
+    - Maintains belief states and projections  
+    - Generates expectations from world model
+    - Estimates prediction confidence and uncertainty
+
+NOT in this Phase:
+    - Prediction error computation
+    - Belief revision
+    - Active inference
+    - Attention allocation
+    - Action execution
+
+For complete documentation, see: docs/agent/architecture/predictive-network/
+"""

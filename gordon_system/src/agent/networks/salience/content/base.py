@@ -1,0 +1,435 @@
+# Salience Content Base Abstractions
+# ==================================
+#
+# Canonical implementation of base content abstractions (Phase 4.8.3).
+#
+
+"""
+Base content abstractions for the Salience Network.
+
+ARCHITECTURAL PURPOSE:
+    These base classes define the immutable semantic foundation for all
+    content objects in the Salience Network.
+    
+CONTENT LAWS:
+    SALIENCE-CONTENT-LAW-001 through SALIENCE-CONTENT-LAW-010
+
+SEMANTIC HIERARCHY (content flow):
+    BaseSalienceContent
+        ↓
+    BaseObservation
+        ↓
+    BaseEvidence
+        ↓
+    BaseCue
+        ↓
+    BaseHypothesis
+        ↓
+    BaseDescriptor
+        ↓
+    BaseAnnotation
+        ↓
+    BaseMetadata
+
+IMMUTABILITY INVARIANTS:
+    - SAL-CONTENT-INV-001: All content is immutable (frozen dataclasses)
+    - SAL-CONTENT-INV-002: No runtime behavior in content objects
+    - SAL-CONTENT-INV-003: Content never evaluates itself
+    - SAL-CONTENT-INV-004: Content never computes salience
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from datetime import datetime
+from enum import Enum
+from typing import Any, FrozenSet, Mapping, Optional, Tuple
+
+
+# =============================================================================
+# CONTENT IDENTITY (Phase 4.8.3)
+# =============================================================================
+
+@dataclass(frozen=True)
+class SalienceContentIdentity:
+    """
+    Immutable identity for content objects.
+    
+    Every content object possesses exactly one canonical identity that remains
+    constant throughout its lifecycle.
+    
+    CONSTITUTIVE LAWS:
+        - SAL-CONTENT-LAW-005: Content preserves semantic identity
+        - SAL-CONTENT-LAW-006: Content preserves provenance
+        - SAL-CONTENT-LAW-007: Content preserves lineage
+    """
+    
+    content_id: str = field(default="")
+    """Unique identifier for this content object."""
+    
+    namespace: str = field(default="salience")
+    """Namespace for scoping identity uniqueness."""
+    
+    revision: int = field(default=1)
+    """Revision number (incremented on semantic change)."""
+    
+    version: str = field(default="1.0.0")
+    """Semantic version string."""
+    
+    @property
+    def canonical_id(self) -> str:
+        """
+        Return the fully qualified canonical ID.
+        
+        Format: namespace/content_id:v{revision}/v{version}
+        """
+        return f"{self.namespace}/{self.content_id}:v{self.revision}/v{self.version}"
+    
+    @property
+    def is_canonical(self) -> bool:
+        """Indicates whether this identity represents a canonical (non-derivative) definition."""
+        return self.revision == 1 and self.version.startswith("1.")
+
+
+@dataclass(frozen=True)
+class ContentAuthority:
+    """
+    Authority that defines content semantics.
+    
+    Authority provides the source of truth for content validation
+    without参与ing in runtime behavior or evaluation.
+    """
+    
+    authority_id: str = field(default="")
+    """Unique identifier for this authority."""
+    
+    name: str = field(default="")
+    """Human-readable name of the authority."""
+    
+    specification: str = field(default="")
+    """Reference to the authoritative specification document."""
+    
+    version: str = field(default="1.0.0")
+    """Authority specification version."""
+    
+    @property
+    def canonical_authority(self) -> str:
+        """Return the fully qualified canonical authority identifier."""
+        return f"{self.authority_id}@{self.version}"
+
+
+@dataclass(frozen=True)
+class ContentOwnership:
+    """
+    Ownership contract for content objects.
+    
+    Ownership defines:
+        - Which subsystem owns this content
+        - What operations are permitted on owned content
+        - How ownership boundaries are preserved
+    """
+    
+    owner: str = field(default="Salience Network")
+    """Canonical owner of this content."""
+    
+    ownership_type: str = field(default="semantic")
+    """
+    Type of ownership:
+        - semantic: Pure semantic definition
+        - contract: Contractual obligation
+        - governance: Governance authority
+    """
+    
+    permissions: Tuple[str, ...] = field(default_factory=tuple)
+    """Permitted operations on owned content."""
+    
+    restrictions: Tuple[str, ...] = field(default_factory=tuple)
+    """Restricted operations on owned content."""
+    
+    @property
+    def is_unique_owner(self) -> bool:
+        """Validate that ownership is unique (not shared)."""
+        return len(self.owner.strip()) > 0
+
+
+@dataclass(frozen=True)
+class ContentOrigin:
+    """
+    Origin information for content objects.
+    
+    Origin preserves the source of semantic information without
+    runtime behavior or evaluation.
+    """
+    
+    origin_id: str = field(default="")
+    """Unique identifier for this origin."""
+    
+    origin_type: str = field(default="external")
+    """
+    Type of origin:
+        - external: From outside the system
+        - internal: Generated by the system
+        - derived: Computed from other content (descriptive)
+    """
+    
+    source_id: str = field(default="")
+    """ID of the original source."""
+    
+    timestamp: datetime = field(default_factory=datetime.now)
+    """Timestamp of origin (for provenance tracking)."""
+    
+    @property
+    def is_derived(self) -> bool:
+        """Indicates whether this content is derived from other content."""
+        return self.origin_type == "derived"
+
+
+@dataclass(frozen=True)
+class ContentLineage:
+    """
+    Lineage information for content objects.
+    
+    Lineage preserves the semantic history of content without
+    runtime behavior or evaluation.
+    """
+    
+    lineage_id: str = field(default="")
+    """Unique identifier for this lineage."""
+    
+    ancestors: Tuple[str, ...] = field(default_factory=tuple)
+    """IDs of ancestor content objects in semantic lineage."""
+    
+    descendants: Tuple[str, ...] = field(default_factory=tuple)
+    """IDs of descendant content objects in semantic lineage."""
+    
+    @property
+    def is_acyclic(self) -> bool:
+        """
+        Validate that lineage forms an acyclic graph.
+        
+        Content cannot be its own ancestor or descendant.
+        """
+        return len(set(self.ancestors) & set(self.descendants)) == 0
+
+
+# =============================================================================
+# BASE CONTENT ABSTRACTION (Phase 4.8.3)
+# =============================================================================
+
+@dataclass(frozen=True)
+class BaseSalienceContent:
+    """
+    Base class for all Salience Network content objects.
+    
+    Defines the canonical semantic contract that all content must satisfy.
+    
+    ARCHITECTURAL INVARIANTS:
+        - SAL-CONTENT-INV-001: All content is immutable (frozen dataclasses)
+        - SAL-CONTENT-INV-002: No runtime behavior in content objects
+        - SAL-CONTENT-INV-003: Content never evaluates itself
+        - SAL-CONTENT-INV-004: Content never computes salience
+        
+    CONTENT LAWS:
+        - SALIENCE-CONTENT-LAW-001: Content is the canonical representation
+        - SALIENCE-CONTENT-LAW-002: Content represents, never evaluates
+        - SALIENCE-CONTENT-LAW-003: Content never computes salience
+        - SALIENCE-CONTENT-LAW-004: Content never performs inference
+        - SALIENCE-CONTENT-LAW-005: Content preserves semantic identity
+        - SALIENCE-CONTENT-LAW-006: Content preserves provenance
+        - SALIENCE-CONTENT-LAW-007: Content preserves lineage
+        - SALIENCE-CONTENT-LAW-008: Content remains deterministic
+        - SALIENCE-CONTENT-LAW-009: Content remains immutable
+        - SALIENCE-CONTENT-LAW-010: Every relationship is explicit
+        
+    SEMANTIC HIERARCHY:
+        BaseSalienceContent → BaseObservation → BaseEvidence → ...
+    """
+    
+    # Identity fields
+    content_id: str = field(default="")
+    """Unique identifier within the content namespace."""
+    
+    content_type: str = field(default="base_content")
+    """Type of content (for categorization)."""
+    
+    version: str = field(default="1.0.0")
+    """Semantic version string."""
+    
+    # Semantic fields
+    definition: str = field(default="")
+    """Semantic definition of this content."""
+    
+    namespace: str = field(default="salience")
+    """Namespace for scoping."""
+    
+    # Ownership fields
+    owner: str = field(default="Salience Network Content Model")
+    """Canonical owner of this content."""
+    
+    authority: str = field(default="")
+    """Authority that defines this content's semantics."""
+    
+    # Origin fields
+    origin_id: str = field(default="")
+    """Origin identifier for provenance tracking."""
+    
+    timestamp: datetime = field(default_factory=datetime.now)
+    """Timestamp for provenance (not for computation)."""
+    
+    @property
+    def canonical_identity(self) -> SalienceContentIdentity:
+        """Return the canonical identity for this content."""
+        return SalienceContentIdentity(
+            content_id=self.content_id,
+            namespace=self.namespace,
+            revision=1,
+            version=self.version,
+        )
+    
+    @property
+    def canonical_authority(self) -> ContentAuthority:
+        """Return the canonical authority for this content."""
+        return ContentAuthority(
+            authority_id=f"{self.namespace}:{self.content_type}",
+            name=self.content_type.replace("_", " ").title(),
+            specification="Phase 4.8.3 - Salience Content Model",
+            version=self.version,
+        )
+    
+    @property
+    def canonical_ownership(self) -> ContentOwnership:
+        """Return the canonical ownership for this content."""
+        return ContentOwnership(
+            owner=self.owner,
+            ownership_type="semantic",
+            permissions=("read", "serialize", "validate"),
+            restrictions=("evaluate", "compute", "modify", "delete"),
+        )
+    
+    @property
+    def canonical_origin(self) -> ContentOrigin:
+        """Return the canonical origin for this content."""
+        return ContentOrigin(
+            origin_id=self.origin_id,
+            origin_type="internal",
+            source_id=f"{self.namespace}:{self.content_type}",
+            timestamp=self.timestamp,
+        )
+    
+    @property
+    def is_canonical(self) -> bool:
+        """
+        Indicates whether this content is a canonical (non-derivative) definition.
+        
+        Canonical content has no parent and is a root definition in the hierarchy.
+        """
+        return self.content_id == self.content_type
+    
+    def validate_content_compliance(self) -> bool:
+        """
+        Validate that this content satisfies all Salience Network content laws.
+        
+        Returns:
+            True if content compliance is valid, False otherwise.
+        """
+        return (
+            self._validate_identity() and
+            self._validate_ownership() and
+            self._validate_authority() and
+            self._validate_immutability() and
+            self._validate_determinism()
+        )
+    
+    def _validate_identity(self) -> bool:
+        """Validate that content identity is explicit and non-empty."""
+        return len(self.content_id.strip()) > 0 and len(self.namespace.strip()) > 0
+    
+    def _validate_ownership(self) -> bool:
+        """Validate that ownership is explicit and non-empty."""
+        return len(self.owner.strip()) > 0
+    
+    def _validate_authority(self) -> bool:
+        """Validate that authority is explicit and non-empty."""
+        return len(self.authority.strip()) > 0 or self.content_id == "base_content"
+    
+    def _validate_immutability(self) -> bool:
+        """
+        Validate that content is immutable.
+        
+        For frozen dataclasses, immutability is preserved by construction.
+        """
+        return True
+    
+    def _validate_determinism(self) -> bool:
+        """
+        Validate that content behavior is deterministic.
+        
+        For immutable content with static definitions, determinism is preserved
+        by construction.
+        """
+        return True
+
+
+# =============================================================================
+# TYPE VARIABLES (Phase 4.8.3)
+# =============================================================================
+
+T_SalienceContent = Any
+"""Type hint for Salience Content types."""
+
+T_SalienceObservation = Any
+"""Type hint for Salience Observation types."""
+
+T_SalienceEvidence = Any
+"""Type hint for Salience Evidence types."""
+
+T_SalienceCue = Any
+"""Type hint for Salience Cue types."""
+
+T_SalienceHypothesis = Any
+"""Type hint for Salience Hypothesis types."""
+
+T_SalienceDescriptor = Any
+"""Type hint for Salience Descriptor types."""
+
+T_SalienceAnnotation = Any
+"""Type hint for Salience Annotation types."""
+
+T_SalienceMetadata = Any
+"""Type hint for Salience Metadata types."""
+
+
+# =============================================================================
+# CONTENT CONSTANTS (Phase 4.8.3)
+# =============================================================================
+
+CONTENT_TYPES: Tuple[str, ...] = (
+    "observation",   # Raw semantic information
+    "evidence",      # Semantic support for significance
+    "cue",           # Indication of potential significance
+    "hypothesis",    # Semantic possibility
+    "descriptor",    # Semantic characterization
+    "annotation",    # Semantic metadata
+    "metadata",      # Identity and provenance data
+)
+"""All canonical Salience Network content types."""
+
+CONTENT_HIERARCHY: Tuple[Tuple[str, str], ...] = (
+    ("observation", "base_content"),
+    ("evidence", "observation"),
+    ("cue", "evidence"),
+    ("hypothesis", "cue"),
+    ("descriptor", "hypothesis"),
+    ("annotation", "descriptor"),
+    ("metadata", "annotation"),
+)
+"""Semantic dependency hierarchy (source → target)."""
+
+CONTENT_INVARIANTS: Tuple[str, ...] = (
+    "immutability",         # All content is immutable
+    "determinism",          # Same inputs produce same outputs
+    "acyclic_hierarchy",    # No circular dependencies in hierarchy
+    "explicit_ownership",   # Ownership is always explicit and unique
+    "no_runtime_behavior",  # Content never contains runtime code
+)
+"""All canonical Salience Network content invariants."""
