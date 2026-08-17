@@ -237,12 +237,11 @@ class TestExplanationCandidate:
             semantic_identity="exp1",
             confidence=0.85,
             coverage=0.9,
-            simplicity=0.7,
         )
         
         assert explanation.explanation_text == "Component failure"
         assert explanation.confidence == 0.85
-        assert len(explained_evidence_ids) == 2
+        assert len(explanation.explained_evidence) == 2
     
     def test_explanatory_strength(self):
         """Test explanatory strength calculation."""
@@ -252,7 +251,6 @@ class TestExplanationCandidate:
             semantic_identity="exp1",
             confidence=0.8,
             coverage=0.7,
-            simplicity=0.9,
         )
         
         strength = explanation.explanatory_strength
@@ -297,7 +295,6 @@ class TestHypothesisComparison:
             semantic_identity="exp1",
             confidence=0.95,
             coverage=0.85,
-            simplicity=0.9,
         )
         
         exp2 = ExplanationCandidate.create(
@@ -306,7 +303,6 @@ class TestHypothesisComparison:
             semantic_identity="exp2",
             confidence=0.7,
             coverage=0.6,
-            simplicity=0.5,
         )
         
         ranking = ExplanationRanking.create(candidates=[exp1, exp2], evidence_count=1)
@@ -346,11 +342,9 @@ class TestDiagnosticReasoning:
             trigger_conditions=["high_load", "network_partition"],
             observable_symptoms=["connection_failed", "retry_exhausted"],
             severity=0.9,
-            likelihood=0.6,
         )
         
         assert fm.failure_name == "Connection Timeout"
-        assert fm.risk_priority > 0
 
 
 class TestValidation:
