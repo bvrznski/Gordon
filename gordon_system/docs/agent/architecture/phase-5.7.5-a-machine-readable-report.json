@@ -1,0 +1,240 @@
+{
+  "audit_version": "5.7.5-A",
+  "timestamp": "2026-08-17T06:30:00Z",
+  "certification_status": "NOT_CERTIFIED",
+  "canonical_target": {
+    "package_path": "src/agent/capabilities/consciousness/presence/",
+    "status": "NOT_IMPLEMENTED"
+  },
+  "implementation_summary": {
+    "phases_completed": ["5.7.1-I", "5.7.2-I", "5.7.3-I", "5.7.4-I"],
+    "current_phase": "5.7.5-A",
+    "phase_5_7_5_status": "NOT_IMPLEMENTED"
+  },
+  "package_inventory": {
+    "consciousness": {
+      "path": "src/agent/capabilities/consciousness/",
+      "status": "IMPLEMENTED",
+      "files": [
+        "__init__.py",
+        "config.py",
+        "constants.py",
+        "exceptions.py",
+        "types.py",
+        "identities.py",
+        "contracts.py",
+        "registry.py",
+        "facade.py"
+      ]
+    },
+    "experiential_field": {
+      "path": "src/agent/capabilities/consciousness/experiential_field/",
+      "status": "IMPLEMENTED",
+      "files": [
+        "__init__.py",
+        "builder.py",
+        "snapshot.py",
+        "transition.py",
+        "normalization.py",
+        "ordering.py",
+        "capacity.py",
+        "integrity.py",
+        "validation.py"
+      ]
+    },
+    "intentionality": {
+      "path": "src/agent/capabilities/consciousness/intentionality/",
+      "status": "IMPLEMENTED",
+      "files": [
+        "__init__.py",
+        "engine.py",
+        "object.py",
+        "relation.py",
+        "target.py",
+        "snapshot.py",
+        "transition.py",
+        "diagnostics.py",
+        "integrity.py"
+      ]
+    },
+    "temporality": {
+      "path": "src/agent/capabilities/consciousness/temporality/",
+      "status": "IMPLEMENTED",
+      "files": [
+        "__init__.py",
+        "engine.py",
+        "retention.py",
+        "presentation.py",
+        "protention.py",
+        "continuity_window.py",
+        "snapshot.py",
+        "transition.py",
+        "validator.py"
+      ]
+    },
+    "presence": {
+      "path": "src/agent/capabilities/consciousness/presence/",
+      "status": "MISSING",
+      "files_expected": [
+        "__init__.py",
+        "engine.py",
+        "state.py",
+        "admission.py",
+        "persistence.py",
+        "fading.py",
+        "withdrawal.py",
+        "snapshot.py",
+        "transition.py",
+        "diagnostics.py",
+        "integrity.py"
+      ]
+    }
+  },
+  "implementation_gap": {
+    "presence_engine": "MISSING",
+    "admission_authority": "MISSING",
+    "persistence_manager": "MISSING",
+    "fading_transitions": "MISSING",
+    "withdrawal_mechanism": "MISSING",
+    "awareness_state_model": "MISSING"
+  },
+  "acceptance_invariants": {
+    "canonical_presence_engine_exists": {
+      "status": "FAIL",
+      "reason": "presence/ package not found"
+    },
+    "admission_authority_exists": {
+      "status": "FAIL",
+      "reason": "No admission controller implemented"
+    },
+    "presence_explicitly_represented": {
+      "status": "FAIL",
+      "reason": "No presence state model"
+    },
+    "awareness_explicitly_represented": {
+      "status": "FAIL",
+      "reason": "Awareness not separated from attention/salience"
+    },
+    "admission_deterministic": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "No implementation to verify"
+    },
+    "persistence_bounded": {
+      "status": "FAIL",
+      "reason": "No persistence policy defined"
+    },
+    "fading_explicit": {
+      "status": "FAIL",
+      "reason": "No fading transitions implemented"
+    },
+    "snapshots_immutable": {
+      "status": "CONTRACT_DEFINED_ONLY",
+      "reason": "Contracts exist, no runtime implementation"
+    },
+    "publication_deterministic": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "No implementation to verify"
+    },
+    "replay_deterministic": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "No replay mechanism"
+    },
+    "provenance_preserved": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "No provenance tracking"
+    },
+    "trust_preserved": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "No trust propagation mechanism"
+    },
+    "privacy_preserved": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "No privacy enforcement"
+    },
+    "experiential_field_separate": {
+      "status": "PASS",
+      "reason": "Clear ownership boundary maintained"
+    },
+    "intentional_context_separate": {
+      "status": "PASS",
+      "reason": "Clear ownership boundary maintained"
+    },
+    "temporal_context_separate": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "reason": "Integration unclear"
+    }
+  },
+  "integration_status": {
+    "experiential_field_to_presence": "MISSING",
+    "intentional_context_to_presence": "MISSING",
+    "temporal_context_to_presence": "MISSING",
+    "workspace_to_presence": "MISSING"
+  },
+  "security_assessment": {
+    "unauthorized_admission": {
+      "status": "UNKNOWN",
+      "reason": "No authority to audit"
+    },
+    "forged_accessibility": {
+      "status": "UNKNOWN",
+      "reason": "No validation mechanism"
+    },
+    "replay_corruption": {
+      "status": "UNKNOWN",
+      "reason": "No replay implementation"
+    },
+    "trust_escalation": {
+      "status": "UNKNOWN",
+      "reason": "No trust propagation"
+    },
+    "privacy_leakage": {
+      "status": "UNKNOWN",
+      "reason": "No privacy enforcement"
+    }
+  },
+  "failure_modes": {
+    "failed_admission": {
+      "response_required": "Reject, log, trace",
+      "implemented": false
+    },
+    "failed_withdrawal": {
+      "response_required": "Rollback, preserve state",
+      "implemented": false
+    },
+    "interrupted_transition": {
+      "response_required": "Atomic rollback",
+      "implemented": false
+    }
+  },
+  "observability_status": {
+    "diagnostics": "MISSING",
+    "health_monitoring": "MISSING",
+    "admission_tracing": "MISSING",
+    "metrics": "MISSING"
+  },
+  "testing_coverage": {
+    "unit_tests": "NONE_FOUND",
+    "integration_tests": "NONE_FOUND",
+    "replay_tests": "NONE_FOUND",
+    "architecture_tests": "NONE_FOUND"
+  },
+  "recommendations": [
+    "Implement presence package structure",
+    "Define presence state model (candidate, admitted, active, fading, withdrawn)",
+    "Create admission authority with deterministic ordering",
+    "Implement bounded persistence policy",
+    "Define fading transitions (weakening → fading → withdrawn)",
+    "Create immutable presence snapshots",
+    "Establish integration points with EF/IC/TC",
+    "Document architecture and integration contracts"
+  ],
+  "next_steps": {
+    "immediate": "Phase 5.7.5-I implementation",
+    "required_actions": [
+      "Create src/agent/capabilities/consciousness/presence/__init__.py",
+      "Implement PresenceEngine with admission authority",
+      "Define state model and transitions",
+      "Document architecture diagrams"
+    ]
+  }
+}

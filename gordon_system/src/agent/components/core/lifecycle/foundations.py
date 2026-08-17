@@ -291,15 +291,15 @@ class LifecycleContext:
     last_transition_at: Optional[float] = None  # Last state change
     transition_count: int = 0           # Total transitions so far
     
-    # Ownership
-    lifecycle_owner_id: str             # Who owns the lifecycle?
+    # Ownership (with defaults for optional fields)
+    lifecycle_owner_id: Optional[str] = None  # Who owns the lifecycle?
     construction_owner_id: Optional[str] = None   # Who constructed it?
     initialization_owner_id: Optional[str] = None  # Who initialized it?
     admission_owner_id: Optional[str] = None      # Who admitted it?
     activation_owner_id: Optional[str] = None     # Who activated it?
     
     # Operational context
-    runtime_instance_id: str            # Which runtime instance?
+    runtime_instance_id: Optional[str] = None  # Which runtime instance?
     scope: str = "global"               # Scope: global, user, session, etc.
     
     # Policy reference
@@ -362,8 +362,8 @@ class LifecycleTransitionRequest:
     # Validation context
     validation_context: Dict[str, Any] = field(default_factory=dict)
     
-    # Ownership tracking
-    requested_by: str                   # Who requested the transition?
+    # Ownership tracking (with defaults for optional fields)
+    requested_by: Optional[str] = None  # Who requested the transition?
     authority_id: Optional[str] = None  # Who has authority?
     
     # Metadata

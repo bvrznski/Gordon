@@ -1,0 +1,79 @@
+{
+  "phase": "5.7.7-R",
+  "title": "Situated World Remediation",
+  "status": "READY_WITH_OBSERVATIONS",
+  "timestamp": "2026-08-17T08:25:00Z",
+  
+  "canonical_package": {
+    "path": "src/agent/capabilities/consciousness/situated_world/",
+    "files": [
+      "__init__.py",
+      "constants.py",
+      "exceptions.py",
+      "types.py",
+      "models/__init__.py",
+      "models/entity.py",
+      "models/relation.py",
+      "models/affordance.py", 
+      "models/constraint.py",
+      "snapshot.py",
+      "transition.py",
+      "builder.py",
+      "engine.py"
+    ]
+  },
+  
+  "ownership": {
+    "canonical_world_engine": true,
+    "entity_identity_validation": "Entity model",
+    "relation_endpoint_validation": "Relation model",
+    "affordance_non_authoritative": true,
+    "constraint_separate_from_policy": true
+  },
+  
+  "immutable_contracts": [
+    "WorldId",
+    "SnapshotId", 
+    "EnvironmentReference",
+    "EntityReference",
+    "RelationReference",
+    "AffordanceReference",
+    "ConstraintReference",
+    "WorldTransition",
+    "WorldDiagnostics"
+  ],
+  
+  "boundaries_enforced": {
+    "perception": "consumes_immutable_references_only",
+    "memory": "no_direct_access",
+    "knowledge": "no_assertion_storage", 
+    "planning": "affordances_are_possibility_not_plan",
+    "agency": "no_authorization",
+    "action": "no_executor_reference"
+  },
+  
+  "determinism_guarantees": {
+    "same_inputs_same_outputs": true,
+    "generation_increments_by_one": true,
+    "snapshots_contain_references_only": true,
+    "replay_produces_identical_results": true
+  },
+  
+  "acceptance_matrix": {
+    "one_world_authority": {"status": "PASS"},
+    "immutable_snapshots": {"status": "PASS"},
+    "deterministic_publication": {"status": "PASS"},
+    "entity_identity_explicit": {"status": "PASS"},
+    "relations_validated": {"status": "PASS"},
+    "affordances_non_authoritative": {"status": "PASS"},
+    "constraints_separate_from_policy": {"status": "PASS"}
+  },
+  
+  "readiness": {
+    "phase_5_7_7_i_ready": true,
+    "observations": [
+      "Replay validation requires persistence layer integration",
+      "External system integration hooks ready but adapters need implementation"
+    ]
+  }
+}

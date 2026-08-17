@@ -1,0 +1,75 @@
+"""Shared contracts for Gordon Knowledge Graph subsystem (Phase 6.8).
+
+This module contains canonical contracts that define the semantic organization
+layer for all knowledge artifacts.
+
+Contracts:
+    * Descriptor     - Graph metadata and lifecycle state
+    * Node           - References to semantic artifacts
+    * Edge           - References to Relations between nodes
+    * Topology       - Graph structure and metrics
+    * Layer          - Semantic layer membership
+    * Mapping        - Inter-layer connections
+    * Traversal      - Pathfinding sessions
+    * Indexing       - Accelerated lookup structures
+    * Composition    - Graph composition strategies
+    * Partition      - Graph partitioning strategies
+    * Validation     - Graph integrity checks
+    * Governance     - Graph health evaluation
+    * Health         - Metrics and diagnostics
+"""
+
+from .descriptor import GraphDescriptor, GraphKind, GraphLifecycleState
+from .graph import KnowledgeGraph, KnowledgeSubgraph
+from .node import GraphNode
+from .edge import GraphEdge, EdgeDirection
+from .topology import GraphTopology, TopologyKind, GraphMetrics
+from .layer import GraphLayer, LayerKind, InterLayerMapping
+from .traversal import GraphTraversalSession, TraversalStrategy
+from .indexing import GraphIndex, GraphIndexEntry, IndexingStrategy
+from .composition import GraphComposition, CompositionStrategy
+from .partition import GraphPartition, PartitionStrategy
+from .validation import GraphValidation, ValidationResult
+from .governance import GraphGovernance, GovernanceFindings
+from .health import GraphHealth, HealthMetrics
+from .diagnostics import GraphDiagnostic, GraphDiagnosticsReport
+
+__all__ = [
+    # Descriptors and kinds
+    "GraphDescriptor",
+    "GraphKind",
+    "GraphLifecycleState",
+    # Nodes and edges
+    "GraphNode",
+    "GraphEdge",
+    "EdgeDirection",
+    # Topology
+    "GraphTopology",
+    "TopologyKind",
+    "GraphMetrics",
+    # Layers
+    "GraphLayer",
+    "LayerKind",
+    "InterLayerMapping",
+    # Traversal
+    "GraphTraversalSession",
+    "TraversalStrategy",
+    # Indexing
+    "GraphIndex",
+    "GraphIndexEntry",
+    "IndexingStrategy",
+    # Composition and partition
+    "GraphComposition",
+    "CompositionStrategy",
+    "GraphPartition",
+    "PartitionStrategy",
+    # Validation
+    "GraphValidation",
+    "ValidationResult",
+    # Governance
+    "GraphGovernance",
+    "GovernanceFindings",
+    # Health
+    "GraphHealth",
+    "HealthMetrics",
+]

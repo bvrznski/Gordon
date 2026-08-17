@@ -1,0 +1,168 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-08-17T09:45:00Z",
+  "phase": "5.7.9-R",
+  
+  "proposal": {
+    "from": "src/agent/capabilities/consciousness/",
+    "to": "src/agent/components/systems/consciousness/",
+    "target_system_id": "system.consciousness",
+    "target_capability_id": "capability.consciousness"
+  },
+  
+  "migration_order": [
+    {
+      "step": 1,
+      "action": "verify_remediation_baseline",
+      "description": "Verify all 5.7.9-R remediation artifacts are in place",
+      "files_required": [
+        "src/agent/components/systems/consciousness/interfaces.py",
+        "docs/agent/architecture/phase-5.7.9-r-executive-summary.md"
+      ]
+    },
+    {
+      "step": 2,
+      "action": "freeze_semantic_ids",
+      "description": "Freeze system and capability IDs for migration",
+      "ids_frozen": [
+        "system.consciousness",
+        "capability.consciousness"
+      ]
+    },
+    {
+      "step": 3,
+      "action": "establish_destination_package",
+      "description": "Create full implementation package at destination",
+      "files_to_move": [
+        "src/agent/capabilities/consciousness/**/*.py -> src/agent/components/systems/consciousness/"
+      ]
+    },
+    {
+      "step": 4,
+      "action": "rebind_internal_imports",
+      "description": "Update internal imports within Consciousness package"
+    },
+    {
+      "step": 5,
+      "action": "expose_destination_facade",
+      "description": "Expose destination facade for external consumers"
+    },
+    {
+      "step": 6,
+      "action": "switch_system_registry_provider",
+      "description": "Register new provider in system registry"
+    },
+    {
+      "step": 7,
+      "action": "switch_lifecycle_provider",
+      "description": "Bind lifecycle to destination implementation"
+    },
+    {
+      "step": 8,
+      "action": "switch_execution_cycle_resolution",
+      "description": "Update execution loops to use new provider"
+    },
+    {
+      "step": 9,
+      "action": "migrate_external_consumers",
+      "description": "Migrate all consumer imports to new paths"
+    },
+    {
+      "step": 10,
+      "action": "activate_capability_map_provider_binding",
+      "description": "Update capability map to reference destination provider"
+    },
+    {
+      "step": 11,
+      "action": "remove_or_deprecate_old_package",
+      "description": "Remove or mark old package as deprecated"
+    }
+  ],
+  
+  "files_to_migrate": [
+    {
+      "source": "src/agent/capabilities/consciousness/__init__.py",
+      "destination": "src/agent/components/systems/consciousness/__init__.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/config.py",
+      "destination": "src/agent/components/systems/consciousness/config.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/constants.py",
+      "destination": "src/agent/components/systems/consciousness/constants.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/exceptions.py",
+      "destination": "src/agent/components/systems/consciousness/exceptions.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/types.py",
+      "destination": "src/agent/components/systems/consciousness/types.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/identities.py",
+      "destination": "src/agent/components/systems/consciousness/identities.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/registry.py",
+      "destination": "src/agent/components/systems/consciousness/registry.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/facade.py",
+      "destination": "src/agent/components/systems/consciousness/facade.py"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/contracts.py",
+      "destination": "src/agent/components/systems/consciousness/contracts.py"
+    }
+  ],
+  
+  "subengine_files_to_migrate": [
+    {
+      "source": "src/agent/capabilities/consciousness/experiential_field/",
+      "destination": "src/agent/components/systems/consciousness/experiential_field/"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/intentionality/",
+      "destination": "src/agent/components/systems/consciousness/intentionality/"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/temporality/",
+      "destination": "src/agent/components/systems/consciousness/temporality/"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/presence/",
+      "destination": "src/agent/components/systems/consciousness/presence/"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/perspective/",
+      "destination": "src/agent/components/systems/consciousness/perspective/"
+    },
+    {
+      "source": "src/agent/capabilities/consciousness/situated_world/",
+      "destination": "src/agent/components/systems/consciousness/situated_world/"
+    }
+  ],
+  
+  "consumers_to_update": [
+    "src/agent/execution/threads/",
+    "src/agent/execution/cycles/",
+    "src/agent/entrypoint/"
+  ],
+  
+  "rollback_actions": [
+    {
+      "action": "restore_old_package",
+      "description": "Move Consciousness implementation back to capabilities"
+    },
+    {
+      "action": "revert_consumer_imports",
+      "description": "Restore consumer imports to old paths"
+    }
+  ],
+  
+  "status": "READY_FOR_TRANSMUTATION_WITH_OBSERVATIONS",
+  "confidence": "HIGH",
+  "next_phase": "5.7.9-T"
+}

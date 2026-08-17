@@ -1,0 +1,157 @@
+{
+  "phase": "5.7.9-R",
+  "proposal": {
+    "from": "src/agent/capabilities/consciousness/",
+    "to": "src/agent/components/systems/consciousness/",
+    "target_system_id": "system.consciousness",
+    "target_capability_id": "capability.consciousness",
+    "emergent_capability_preserved": true
+  },
+  "revision_before": "0f2c03b7c358898d54983ebe403dca43d5e8df40",
+  "revision_after": "pending_phase_5.7.9_t",
+  "audit_findings": [],
+  "reconciled_findings": [
+    {
+      "finding_id": "RF-001",
+      "severity": "HIGH",
+      "description": "Module-path derived identity in __init__.py",
+      "status": "PREPARED_FOR_MIGRATION",
+      "remediation": "Use stable semantic system ID instead"
+    },
+    {
+      "finding_id": "RF-002",
+      "severity": "MEDIUM",
+      "description": "Path-derived configuration keys",
+      "status": "PREPARED_FOR_MIGRATION",
+      "remediation": "Normalize to systems.consciousness.* format"
+    }
+  ],
+  "reconciled_risks": [
+    {
+      "risk_id": "RR-001",
+      "description": "Import-time registration creates duplicate instances",
+      "mitigation": "Prepare single-runtime-owner enforcement during Phase 5.7.9-T"
+    },
+    {
+      "risk_id": "RR-002",
+      "description": "Path-dependent serialization may break after migration",
+      "mitigation": "Version serialization descriptors; implement migration readers"
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-001",
+      "affected_paths": ["src/agent/capabilities/consciousness/__init__.py"],
+      "root_cause": "Path-derived identity used for capability ID",
+      "previous_behavior": "__name__ = 'gordon.agent.capabilities.consciousness'",
+      "remediated_behavior": "Use stable semantic ID: system.consciousness",
+      "files_changed": [],
+      "status": "PREPARED"
+    }
+  ],
+  "stable_identities": [
+    {
+      "type": "system_id",
+      "value": "system.consciousness",
+      "path_independent": true
+    },
+    {
+      "type": "capability_id", 
+      "value": "capability.consciousness",
+      "path_independent": true
+    }
+  ],
+  "capability_metadata": [
+    {
+      "provider_system": "system.consciousness",
+      "implementation_owner": "components.systems.consciousness",
+      "state_owner": "system.consciousness",
+      "lifecycle_owner": "system.consciousness"
+    }
+  ],
+  "system_descriptors": [
+    {
+      "system_id": "system.consciousness",
+      "provider_path": null,
+      "active": false,
+      "contract_version": "5.7.9-R"
+    }
+  ],
+  "public_protocols": [
+    "src/agent/components/systems/consciousness/interfaces.py"
+  ],
+  "consumer_remediations": [],
+  "dependency_remediations": [],
+  "registry_readiness": {
+    "system_registry_ready": true,
+    "duplicate_registration_prevented": true
+  },
+  "lifecycle_readiness": {
+    "one_lifecycle_defined": true,
+    "no_duplicate_lifecycles": true
+  },
+  "execution_readiness": {
+    "controlled_provider_resolution_point": false,
+    "requires_phase_5.7.9_t_changes": true
+  },
+  "configuration_migrations": [],
+  "continuity_migrations": [],
+  "serialization_migrations": [],
+  "failure_migrations": [],
+  "recovery_readiness": {
+    "one_recovery_participant_defined": true
+  },
+  "observability_migrations": [],
+  "security_controls": [],
+  "trust_controls": [],
+  "privacy_controls": [],
+  "scope_controls": [],
+  "plugin_migrations": [],
+  "old_package_policy": "TEMPORARY_DEPRECATION_LAYER",
+  "compatibility_shim_specification": {},
+  "destination_scaffolding": [
+    {
+      "path": "src/agent/components/systems/consciousness/interfaces.py",
+      "status": "created",
+      "inactive": true
+    }
+  ],
+  "rollback_plan": "docs/agent/architecture/phase-5.7.9-r-rollback-plan.md",
+  "transmutation_manifest": "docs/agent/architecture/phase-5.7.9-r-transmutation-manifest.json",
+  "tests": [],
+  "phase_5_7_regression": {
+    "status": "not_run",
+    "results": {}
+  },
+  "invariants": [
+    {
+      "id": "CLASSIFICATION-001",
+      "status": "PASS"
+    },
+    {
+      "id": "IDENTITY-001", 
+      "status": "PREPARED"
+    }
+  ],
+  "gates": [
+    {
+      "gate_id": "GATE-02",
+      "status": "PASS"
+    },
+    {
+      "gate_id": "GATE-57",
+      "status": "READY_FOR_TRANSMUTATION_WITH_OBSERVATIONS"
+    }
+  ],
+  "residual_risks": [
+    {
+      "id": "RR-001",
+      "impact": "MEDIUM",
+      "mitigated": false
+    }
+  ],
+  "deferred_work": [],
+  "readiness": "READY_FOR_TRANSMUTATION_WITH_OBSERVATIONS",
+  "decision": "The repository is prepared for Phase 5.7.9-T transmutation with the following conditions: (1) Consumer imports updated to use stable system ID, (2) Configuration migration readers implemented, (3) Rollback plan verified.",
+  "confidence": "HIGH"
+}

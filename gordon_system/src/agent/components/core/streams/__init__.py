@@ -18,6 +18,25 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Set, Tuple, Any, FrozenSet
 import uuid
 
+
+class StreamKind(Enum):
+    """
+    Categories of stream types.
+    
+    Defines the fundamental kinds of streams in the system:
+        - EVENT: Event streams for notifications and changes
+        - COMMAND: Command streams for actions and requests
+        - DATA: Data streams for persistent information
+        - CONTROL: Control streams for system management
+        - OBSERVATION: Observation streams for sensory input and perception
+    """
+    
+    EVENT = "event"              # Event/notification stream
+    COMMAND = "command"          # Command/request stream
+    DATA = "data"                # Data/persistence stream
+    CONTROL = "control"          # Control/management stream
+    OBSERVATION = "observation"  # Observation/perception stream
+
 # Re-export canonical types from existing modules to provide unified API
 # The canonical definitions exist in:
 #   - lifecycle.py: StreamLifecycleState and StreamLifecycleTransitionGraph
@@ -586,6 +605,9 @@ __all__ = [
     "StreamFailureType",
     "StreamTransportFailure",
     "InteractionStreamRecord",
+    
+    # StreamKind (new)
+    "StreamKind",
     
     # Exceptions
     "StreamError", "StreamNotFoundError", "StreamClosedError",
