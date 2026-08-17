@@ -69,6 +69,29 @@ from .diagnostics import (
     AnalogyTrace,
 )
 
+from .domain_set import (
+    ReasoningDomain,
+    DomainSet,
+)
+
+from .mapping_pipeline import (
+    MappingResult,
+    StructuralMappingPipeline,
+    CorrespondenceAnalysis,
+)
+
+from .inference import (
+    AnalogicalInference,
+    AnalogicalInferencePipeline,
+    InferenceCandidate,
+)
+
+from .evaluation import (
+    QualityMetric,
+    MappingEvaluation,
+    EvaluationSummary,
+)
+
 __all__ = [
     "AnalogyDescriptor",
     "AnalogySessionIdentity",
@@ -106,4 +129,19 @@ __all__ = [
     "HealthMetrics",
     # Diagnostics
     "AnalogyTrace",
+    # Domain contracts (Phase 7.12)
+    "ReasoningDomain",
+    "DomainSet",
+    # Mapping pipeline (Phase 7.12)
+    "MappingResult",
+    "StructuralMappingPipeline",
+    "CorrespondenceAnalysis",
+    # Inference (Phase 7.12)
+    "AnalogicalInference",
+    "AnalogicalInferencePipeline",
+    "InferenceCandidate",
+    # Evaluation (Phase 7.12)
+    "QualityMetric",
+    "MappingEvaluation",
+    "EvaluationSummary",
 ]

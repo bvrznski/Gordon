@@ -116,9 +116,51 @@ from gordon_system.src.agent.components.systems.cognition.reasoning.deductive im
     
     DeductionValidation,
     
-    DeductionGovernance,
+     DeductionGovernance,
+     
+     DeductionHealth,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.temporal import (
+    # Temporal contracts (Phase 7.8)
+    TemporalDescriptor,
+    TemporalMode,
+    TemporalLifecycle,
     
-    DeductionHealth,
+    TemporalEvent,
+    EventSet,
+    EventKind,
+    
+    TemporalRelation,
+    ChronologyGraph,
+    ChronologyConstruction,
+    TemporalRelationType,
+    
+    TemporalInterval,
+    IntervalReasoning,
+    
+    TemporalConstraint,
+    ConstraintPropagation,
+    ConcurrencyAnalysis,
+    ConstraintType,
+    ConcurrencyType,
+    
+    TemporalDependencyGraph,
+    DependencyNode,
+    DependencyEdge,
+    DependencyType,
+    
+    TemporalValidation,
+    ValidationResult,
+    ValidationType,
+    
+    TemporalFailure,
+    FailureKind,
+    
+    TemporalGovernance,
+    
+    TemporalHealth,
+    DiagnosticType,
 )
 
 __all__ = [
@@ -176,7 +218,47 @@ __all__ = [
     
     "DeductionValidation",
     
-    "DeductionGovernance",
-    
-    "DeductionHealth",
+     "DeductionGovernance",
+     
+     "DeductionHealth",
+     
+     # Temporal contracts (Phase 7.8)
+     "TemporalDescriptor",
+     "TemporalMode",
+     "TemporalLifecycle",
+     
+     "TemporalEvent",
+     "EventSet",
+     "EventKind",
+     
+     "TemporalRelation",
+     "ChronologyGraph",
+     "ChronologyConstruction",
+     "TemporalRelationType",
+     
+     "TemporalInterval",
+     "IntervalReasoning",
+     
+     "TemporalConstraint",
+     "ConstraintPropagation",
+     "ConcurrencyAnalysis",
+     "ConstraintType",
+     "ConcurrencyType",
+     
+     "TemporalDependencyGraph",
+     "DependencyNode",
+     "DependencyEdge",
+     "DependencyType",
+     
+     "TemporalValidation",
+     "ValidationResult",
+     "ValidationType",
+     
+     "TemporalFailure",
+     "FailureKind",
+     
+     "TemporalGovernance",
+     
+     "TemporalHealth",
+     "DiagnosticType",
 ]

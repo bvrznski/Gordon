@@ -1,77 +1,102 @@
-# Reasoning Explanation - Phase 7.14
-# ====================================
+# Explanation Shared - Phase 7.14
+# ===============================
 
 """
-Explanatory reasoning and explanation generation.
+Shared types and interfaces for explanatory reasoning.
 
-Explanation provides clear accounts of how conclusions were reached.
-This implementation follows the canonical contracts specified in
-Phase 7.14 of the Gordon Cognitive Architecture.
-
-Submodules:
-    - shared: Canonical contracts for explanatory components
-    - explanations: Explanation model implementations
-    - evidence: Evidence aggregation and analysis
-    - narratives: Explanatory narrative construction
+This module provides the canonical contracts for:
+    - Explanations
+    - Evidence
+    - Justifications  
+    - Narratives
+    - Alternatives
+    - Refinements
+    - Validation
+    - Governance
+    - Health metrics
+    - Diagnostics
 """
 
-from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared import (
-    # Descriptors
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.descriptor import (
     ExplanationDescriptor,
     ExplanationSessionIdentity,
     ExplanationMode,
     ExplanationLifecycle,
-    # Evidence
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.evidence import (
     EvidenceIdentity,
     ExplanationEvidence,
     EvidenceAggregation,
     EvidenceKind,
     EvidenceRelevance,
-    # Justification
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.justification import (
     JustificationIdentity,
     JustificationStep,
     JustificationAnalysis,
     JustificationKind,
-    # Explanation Set
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.explanation_set import (
     ExplanationSetIdentity,
     Claim,
     ExplanationSet,
-    # Construction
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.construction import (
     ConstructionIdentity,
     ExplanationStrategy,
     ExplanationConstruction,
-    # Narrative
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.narrative import (
     NarrativeIdentity,
     NarrativeStep,
     NarrativeConstruction,
-    # Alternatives
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.alternatives import (
     AlternativeIdentity,
     CandidateExplanation,
     AlternativeExplanationAnalysis,
-    # Refinement
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.refinement import (
     RefinementIdentity,
     ExplanationRefinement,
-    # Validation
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.validation import (
     ValidationIdentity,
     ValidationResult,
-    # Failure
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.failure import (
     FailureIdentity,
     ExplanationFailure,
     FailureKind,
-    # Governance
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.governance import (
     GovernanceIdentity,
     GovernanceFinding,
     ExplanationGovernance,
-    # Health
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.health import (
     HealthMetrics,
-    # Diagnostics
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.explanatory.shared.diagnostics import (
     DiagnosticRecord,
     ExplanationDiagnostics,
 )
 
 
 __all__ = [
-    # Descriptors
+    # Descriptor
     "ExplanationDescriptor",
     "ExplanationSessionIdentity",
     "ExplanationMode",
