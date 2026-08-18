@@ -1,127 +1,167 @@
-# Meta-Reasoning Shared Components - Phase 7.13
-# ===============================================
+# Meta-Reasoning Shared Components - Phase 7.27
+# ==============================================
 
 """
-Shared contracts and data structures for Meta-Reasoning.
+Shared components for the Meta-Reasoning subsystem.
 
-This module provides the canonical data models governing meta-reasoning
-orchestration, strategy selection, monitoring, validation, governance,
-and diagnostics.
+This module provides canonical contracts, utilities, and infrastructure
+for meta-reasoning in Gordon Cognitive Architecture.
 """
 
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.descriptor import (
     MetaReasoningDescriptor,
     MetaReasoningState,
+    OrchestrationMode,
 )
-from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.reasoner_set import (
-    ReasonerSet,
-    ReasonerCapability,
-)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.reasoner_set import ReasonerSet
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.strategy_selection import (
     StrategySelection,
     StrategyKind,
     SelectionRationale,
+    StrategyEvaluation,
 )
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.orchestration import (
     ReasoningOrchestration,
     ExecutionGraph,
+    ExecutionStep,
     SynchronizationPoint,
     OrchestrationPolicy,
 )
-from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.resources import (
-    ReasoningResourceAllocation,
-    ResourceKind,
-    AllocationConstraints,
-)
-from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.monitoring import (
-    ReasoningMonitoring,
-    MonitoringMetric,
-    MonitoringEvent,
-    MonitorKind,
-)
-from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.adaptation import (
-    AdaptiveOrchestration,
-    StrategyAdaptation,
-    AdaptationTrigger,
-)
-from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.refinement import (
-    MetaReasoningRefinement,
-    PolicyChange,
-)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.resources import ReasoningResourceAllocation
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.monitoring import ReasoningMonitoring
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.adaptation import AdaptiveOrchestration, StrategyAdaptation
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.refinement import MetaReasoningRefinement
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.validation import (
     MetaReasoningValidation,
     ValidationStatus,
-    ValidationResult,
 )
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.failure import (
     MetaReasoningFailure,
     FailureKind,
-    RecoveryOptions,
 )
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.governance import (
     MetaReasoningGovernance,
     GovernanceFindings,
-    GovernanceViolation,
 )
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.health import (
     MetaReasoningHealth,
     HealthMetrics,
-    HealthStatus,
 )
-from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.diagnostics import (
-    MetaReasoningDiagnostics,
-    DiagnosticEvent,
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.diagnostics import MetaReasoningDiagnostics
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.pipeline import (
+    MetaReasoningPipelineResult,
+    MetaReasoningState as PipelineMetaState,
+    ReasoningObservation,
+    StrategySelectionResult,
+    ReasoningRegulation,
+    ReasonerCoordination,
+    EscalationDecision,
+    TerminationDecision,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.anti_patterns import (
+    AntiPatternDetector,
+    DetectedAntiPattern,
+    AntiPatternCategory,
+    AntiPatternSeverity,
+    detect_implicit_strategy_selection,
+    detect_hidden_coordination_dependencies,
+    detect_unjustified_escalation,
+    detect_arbitrary_termination,
+    detect_validation_bypass,
+    detect_governance_bypass,
+    detect_provenance_loss,
+    detect_deterministic_violation,
 )
 
 __all__ = [
-    # Descriptor
+    # Core descriptors
     "MetaReasoningDescriptor",
     "MetaReasoningState",
-    # Reasoner Set
+    "OrchestrationMode",
+    
+    # Reasoner management
     "ReasonerSet",
-    "ReasonerCapability",
-    # Strategy Selection
+    
+    # Strategy management  
     "StrategySelection",
     "StrategyKind",
     "SelectionRationale",
+    "StrategyEvaluation",
+    
     # Orchestration
     "ReasoningOrchestration",
     "ExecutionGraph",
+    "ExecutionStep", 
     "SynchronizationPoint",
     "OrchestrationPolicy",
+    
     # Resources
     "ReasoningResourceAllocation",
-    "ResourceKind",
-    "AllocationConstraints",
+    
     # Monitoring
     "ReasoningMonitoring",
-    "MonitoringMetric",
-    "MonitoringEvent",
-    "MonitorKind",
+    
     # Adaptation
     "AdaptiveOrchestration",
     "StrategyAdaptation",
-    "AdaptationTrigger",
+    
     # Refinement
     "MetaReasoningRefinement",
-    "PolicyChange",
+    
     # Validation
     "MetaReasoningValidation",
     "ValidationStatus",
-    "ValidationResult",
-    # Failure
-    "MetaReasoningFailure",
+    
+    # Failure handling
+    "MetaReasoningFailure", 
     "FailureKind",
-    "RecoveryOptions",
+    
     # Governance
     "MetaReasoningGovernance",
     "GovernanceFindings",
-    "GovernanceViolation",
+    
     # Health
     "MetaReasoningHealth",
     "HealthMetrics",
-    "HealthStatus",
+    
     # Diagnostics
     "MetaReasoningDiagnostics",
-    "DiagnosticEvent",
+    
+    # Pipeline contracts (Part 3)
+    "MetaReasoningPipelineResult",
+    "PipelineMetaState",
+    "ReasoningObservation",
+    "StrategySelectionResult",
+    "ReasoningRegulation",
+    "ReasonerCoordination",
+    "EscalationDecision",
+    "TerminationDecision",
+    
+    # Anti-pattern detection (Part 3)
+    "AntiPatternDetector",
+    "DetectedAntiPattern", 
+    "AntiPatternCategory",
+    "AntiPatternSeverity",
+    "detect_implicit_strategy_selection",
+    "detect_hidden_coordination_dependencies",
+    "detect_unjustified_escalation",
+    "detect_arbitrary_termination",
+    "detect_validation_bypass",
+    "detect_governance_bypass",
+    "detect_provenance_loss",
+    "detect_deterministic_violation",
 ]

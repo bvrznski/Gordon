@@ -61,6 +61,140 @@ from gordon_system.src.agent.components.systems.cognition.reasoning.shared.valid
     ReasoningGovernance,
 )
 
+# Planning Reasoning exports (Phase 7.20)
+from gordon_system.src.agent.components.systems.cognition.reasoning.planning import (
+    # Descriptors
+    PlanningDescriptor,
+    PlanningSessionIdentity,
+    PlanningMode,
+    PlanningLifecycle,
+    
+    # Plan Set
+    ExecutionPlan,
+    PlanSet,
+    PlanConstruction,
+    
+    # Tasks
+    PlannedTask,
+    TaskKind,
+    TaskState,
+    TaskManagement,
+    TaskDecomposition,
+    
+    # Dependencies
+    TaskDependency,
+    DependencyKind,
+    DependencyGraphState,
+    DependencyGraph,
+    DependencyAnalysis,
+    
+    # Resources
+    ResourceAllocation,
+    ResourceType,
+    AllocationPolicy,
+    ResourcePlanning,
+    ResourceAvailability,
+    
+    # Contingencies
+    ContingencyPlan,
+    ContingencyKind,
+    ContingencyState,
+    ContingencyManagement,
+    RecoveryTrigger,
+    
+    # Refinement
+    PlanningRefinement,
+    PlanHistory,
+    
+    # Validation
+    PlanningValidation,
+    ValidationFindingKind,
+    ValidationFinding,
+    ValidationTrace,
+    
+    # Failure
+    PlanningFailure,
+    FailureKind,
+    FailureTrace,
+    
+    # Governance
+    PlanningGovernance,
+    GovernanceFindingKind,
+    GovernanceFinding,
+    PlanningSessionGovernance,
+    
+    # Health
+    PlanningHealth,
+    HealthMetricsSnapshot,
+    HealthAlert,
+)
+
+# Hypothetical Reasoning exports (Phase 7.15)
+from gordon_system.src.agent.components.systems.cognition.reasoning.hypothetical import (
+    # Descriptors
+    HypotheticalDescriptor,
+    HypothesisSessionIdentity,
+    HypotheticalMode,
+    HypotheticalLifecycle,
+    
+    # Hypothesis sets
+    HypothesisIdentity,
+    ExplorationStrategy,
+    HypothesisSetIdentity,
+    HypothesisSet,
+    AssumptionSet,
+    
+    # Possibility spaces
+    PossibilityKind,
+    PossibilityIdentity,
+    Constraint,
+    PossibilitySpaceIdentity,
+    PossibilitySpace,
+    PossibilitySpaceConstruction,
+    
+    # Scenarios
+    ScenarioEnvironmentKind,
+    ScenarioIdentity,
+    EnvironmentalCondition,
+    HypotheticalScenario,
+    ScenarioExploration,
+    
+    # Comparison
+    ComparisonMetric,
+    HypothesisComparisonIdentity,
+    ComparisonResult,
+    HypothesisComparison,
+    
+    # Refinement
+    RefinementIdentity,
+    HypothesisRefinement,
+    HypothesisRefinementPipeline,
+    
+    # Validation
+    ValidationFindingKind,
+    ValidationIdentity,
+    ValidationFinding,
+    ValidationResult,
+    HypotheticalValidationError,
+    
+    # Failure
+    HypotheticalFailureKind,
+    HypotheticalFailure,
+    FailureTrace,
+    
+    # Governance
+    GovernanceRule,
+    GovernanceFindingKind,
+    GovernanceIdentity,
+    GovernanceFinding,
+    HypotheticalGovernance,
+    GovernanceHealth,
+    
+    # Health
+    HypotheticalHealth,
+    HypotheticalTrace,
+)
+
 __all__ = [
     # Descriptor
     "ReasoningDescriptor",
@@ -98,4 +232,113 @@ __all__ = [
     "ReasoningValidation",
     "ReasoningFailure",
     "ReasoningGovernance",
+    
+    # Planning Reasoning contracts (Phase 7.20)
+    "PlanningDescriptor",
+    "PlanningSessionIdentity",
+    "PlanningMode",
+    "PlanningLifecycle",
+    
+    "ExecutionPlan",
+    "PlanSet",
+    "PlanConstruction",
+    
+    "PlannedTask",
+    "TaskKind",
+    "TaskState",
+    "TaskManagement",
+    "TaskDecomposition",
+    
+    "TaskDependency",
+    "DependencyKind",
+    "DependencyGraphState",
+    "DependencyGraph",
+    "DependencyAnalysis",
+    
+    "ResourceAllocation",
+    "ResourceType",
+    "AllocationPolicy",
+    "ResourcePlanning",
+    "ResourceAvailability",
+    
+    "ContingencyPlan",
+    "ContingencyKind",
+    "ContingencyState",
+    "ContingencyManagement",
+    "RecoveryTrigger",
+    
+    "PlanningRefinement",
+    "PlanHistory",
+    
+    "PlanningValidation",
+    "ValidationFindingKind",
+    "ValidationFinding",
+    "ValidationTrace",
+    
+    "PlanningFailure",
+    "FailureKind",
+    "FailureTrace",
+    
+    "PlanningGovernance",
+    "GovernanceFindingKind",
+    "GovernanceFinding",
+    "PlanningSessionGovernance",
+    
+    "PlanningHealth",
+    "HealthMetricsSnapshot",
+    "HealthAlert",
+    
+    # Hypothetical Reasoning contracts (Phase 7.15)
+    "HypotheticalDescriptor",
+    "HypothesisSessionIdentity",
+    "HypotheticalMode",
+    "HypotheticalLifecycle",
+    
+    "HypothesisIdentity",
+    "ExplorationStrategy",
+    "HypothesisSetIdentity",
+    "HypothesisSet",
+    "AssumptionSet",
+    
+    "PossibilityKind",
+    "PossibilityIdentity",
+    "Constraint",
+    "PossibilitySpaceIdentity",
+    "PossibilitySpace",
+    "PossibilitySpaceConstruction",
+    
+    "ScenarioEnvironmentKind",
+    "ScenarioIdentity",
+    "EnvironmentalCondition",
+    "HypotheticalScenario",
+    "ScenarioExploration",
+    
+    "ComparisonMetric",
+    "HypothesisComparisonIdentity",
+    "ComparisonResult",
+    "HypothesisComparison",
+    
+    "RefinementIdentity",
+    "HypothesisRefinement",
+    "HypothesisRefinementPipeline",
+    
+    "ValidationFindingKind",
+    "ValidationIdentity",
+    "ValidationFinding",
+    "ValidationResult",
+    "HypotheticalValidationError",
+    
+    "HypotheticalFailureKind",
+    "HypotheticalFailure",
+    "FailureTrace",
+    
+    "GovernanceRule",
+    "GovernanceFindingKind",
+    "GovernanceIdentity",
+    "GovernanceFinding",
+    "HypotheticalGovernance",
+    "GovernanceHealth",
+    
+    "HypotheticalHealth",
+    "HypotheticalTrace",
 ]

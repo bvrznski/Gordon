@@ -31,11 +31,61 @@ from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.governance import MetaReasoningGovernance, GovernanceFindings
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.health import MetaReasoningHealth, HealthMetrics
 from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.diagnostics import MetaReasoningDiagnostics
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.pipeline import (
+    MetaReasoningPipelineResult,
+    MetaReasoningState,  # Canonical state enum from Part 3
+    ReasoningObservation,
+    StrategySelectionResult,
+    ReasoningRegulation,
+    ReasonerCoordination,
+    EscalationDecision,
+    TerminationDecision,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.meta.shared.anti_patterns import (
+    AntiPatternDetector,
+    DetectedAntiPattern,
+    AntiPatternCategory,
+    AntiPatternSeverity,
+    detect_implicit_strategy_selection,
+    detect_hidden_coordination_dependencies,
+    detect_unjustified_escalation,
+    detect_arbitrary_termination,
+    detect_validation_bypass,
+    detect_governance_bypass,
+    detect_provenance_loss,
+    detect_deterministic_violation,
+)
 
 __all__ = [
     "MetaReasoningDescriptor",
     "ReasonerSet",
-    "StrategySelection", 
+    "StrategySelection",
+    
+    # Pipeline contracts (Part 3)
+    "MetaReasoningPipelineResult",
+    "MetaReasoningState",  # Canonical state enum from Part 3 pipeline module
+    "ReasoningObservation",
+    "StrategySelectionResult",
+    "ReasoningRegulation",
+    "ReasonerCoordination",
+    "EscalationDecision",
+    "TerminationDecision",
+    
+    # Anti-pattern detection (Part 3)
+    "AntiPatternDetector",
+    "DetectedAntiPattern",
+    "AntiPatternCategory",
+    "AntiPatternSeverity",
+    "detect_implicit_strategy_selection",
+    "detect_hidden_coordination_dependencies", 
+    "detect_unjustified_escalation",
+    "detect_arbitrary_termination",
+    "detect_validation_bypass",
+    "detect_governance_bypass",
+    "detect_provenance_loss",
+    "detect_deterministic_violation",
+    
     "ReasoningOrchestration",
     "ReasoningResourceAllocation",
     "ReasoningMonitoring",

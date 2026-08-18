@@ -163,6 +163,80 @@ from gordon_system.src.agent.components.systems.cognition.reasoning.temporal imp
     DiagnosticType,
 )
 
+from gordon_system.src.agent.components.systems.cognition.reasoning.scientific import (
+    # Scientific contracts (Phase 7.34)
+    ScientificDescriptor,
+    ScientificMode,
+    ScientificState,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.hypothetical import (
+    # Hypothetical contracts (Phase 7.15)
+    HypotheticalDescriptor,
+    HypothesisSessionIdentity,
+    HypotheticalMode,
+    HypotheticalLifecycle,
+    
+    HypothesisIdentity,
+    ExplorationStrategy,
+    HypothesisSetIdentity,
+    HypothesisSet,
+    AssumptionSet,
+    
+    PossibilityKind,
+    PossibilityIdentity,
+    Constraint,
+    PossibilitySpaceIdentity,
+    PossibilitySpace,
+    PossibilitySpaceConstruction,
+    
+    AssumptionKind,
+    AssumptionJustification,
+    Assumption,
+    AssumptionManagement,
+    HiddenAssumption,
+    
+    ScenarioEnvironmentKind,
+    ScenarioIdentity,
+    EnvironmentalCondition,
+    HypotheticalScenario,
+    ScenarioExploration,
+    
+    ComparisonMetric,
+    HypothesisComparisonIdentity,
+    ComparisonResult,
+    HypothesisComparison,
+    
+    RefinementIdentity,
+    HypothesisRefinement,
+    HypothesisRefinementPipeline,
+    
+    EvolutionIdentity,
+    HypothesisEvolution,
+    
+    ValidationFindingKind,
+    ValidationIdentity,
+    ValidationFinding,
+    ValidationResult,
+    HypotheticalValidationError,
+    
+    HypotheticalFailureKind,
+    HypotheticalFailure,
+    FailureTrace,
+    
+    GovernanceRule,
+    GovernanceFindingKind,
+    GovernanceIdentity,
+    GovernanceFinding,
+    HypotheticalGovernance,
+    GovernanceHealth,
+    
+    HypotheticalHealth,
+    HypotheticalTrace,
+    
+    DiagnosticType as HypotheticalDiagnosticType,
+)
+
 __all__ = [
     # Shared contracts (exported directly)
     "ReasoningDescriptor",
@@ -259,6 +333,75 @@ __all__ = [
      
      "TemporalGovernance",
      
-     "TemporalHealth",
-     "DiagnosticType",
+      "TemporalHealth",
+      "DiagnosticType",
+      
+      # Hypothetical contracts (Phase 7.15)
+      "HypotheticalDescriptor",
+      "HypothesisSessionIdentity",
+      "HypotheticalMode",
+      "HypotheticalLifecycle",
+      
+      "HypothesisIdentity",
+      "ExplorationStrategy",
+      "HypothesisSetIdentity",
+      "HypothesisSet",
+      "AssumptionSet",
+      
+      "PossibilityKind",
+      "PossibilityIdentity",
+      "Constraint",
+      "PossibilitySpaceIdentity",
+      "PossibilitySpace",
+      "PossibilitySpaceConstruction",
+      
+      "AssumptionKind",
+      "AssumptionJustification",
+      "Assumption",
+      "AssumptionManagement",
+      "HiddenAssumption",
+      
+      "ScenarioEnvironmentKind",
+      "ScenarioIdentity",
+      "EnvironmentalCondition",
+      "HypotheticalScenario",
+      "ScenarioExploration",
+      
+      "ComparisonMetric",
+      "HypothesisComparisonIdentity",
+      "ComparisonResult",
+      "HypothesisComparison",
+      
+      "RefinementIdentity",
+      "HypothesisRefinement",
+      "HypothesisRefinementPipeline",
+      
+      "EvolutionIdentity",
+      "HypothesisEvolution",
+      
+      "ValidationFindingKind",
+      "ValidationIdentity",
+      "ValidationFinding",
+      "ValidationResult",
+      "HypotheticalValidationError",
+      
+      "HypotheticalFailureKind",
+      "HypotheticalFailure",
+      "FailureTrace",
+      
+      "GovernanceRule",
+      "GovernanceFindingKind",
+      "GovernanceIdentity",
+      "GovernanceFinding",
+      "HypotheticalGovernance",
+      "GovernanceHealth",
+      
+      "HypotheticalHealth",
+      "HypotheticalTrace",
+      "HypotheticalDiagnosticType",
+      
+      # Scientific contracts (Phase 7.34)
+      "ScientificDescriptor",
+      "ScientificMode",
+      "ScientificState",
 ]
