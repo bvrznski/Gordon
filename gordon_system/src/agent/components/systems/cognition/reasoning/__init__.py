@@ -163,6 +163,29 @@ from gordon_system.src.agent.components.systems.cognition.reasoning.temporal imp
     DiagnosticType,
 )
 
+from gordon_system.src.agent.components.systems.cognition.reasoning.economic import (
+    # Economic contracts (Phase 7.48)
+    EconomicSessionDescriptor,
+    EconomicReasoningKind,
+    EconomicLifecycleState,
+    
+    EconomicSet,
+    EconomicSetKind,
+    ResourceEntry,
+    AgentEntry,
+    AllocationConstraint,
+    UtilityFunction,
+    MarketAssumptions,
+    
+    EconomicPipeline,
+    PipelineStage,
+    PipelineStageResult,
+    
+    ResourceAnalysis,
+    ResourceAssessment,
+    ResourceInventory,
+)
+
 from gordon_system.src.agent.components.systems.cognition.reasoning.scientific import (
     # Scientific contracts (Phase 7.34)
     ScientificDescriptor,
@@ -238,6 +261,27 @@ from gordon_system.src.agent.components.systems.cognition.reasoning.hypothetical
 )
 
 __all__ = [
+    # Economic contracts (Phase 7.48)
+    "EconomicSessionDescriptor",
+    "EconomicReasoningKind",
+    "EconomicLifecycleState",
+    
+    "EconomicSet",
+    "EconomicSetKind",
+    "ResourceEntry",
+    "AgentEntry",
+    "AllocationConstraint",
+    "UtilityFunction",
+    "MarketAssumptions",
+    
+    "EconomicPipeline",
+    "PipelineStage",
+    "PipelineStageResult",
+    
+    "ResourceAnalysis",
+    "ResourceAssessment",
+    "ResourceInventory",
+    
     # Shared contracts (exported directly)
     "ReasoningDescriptor",
     "ReasoningKind",

@@ -1,105 +1,135 @@
-# Legal Reasoning Shared Components - Phase 7.47
-# ================================================
+# Legal Reasoning Shared Components - Phase 7.47 Part 1
+# ======================================================
 
 """
-Canonical shared components for Legal Reasoning.
+Shared components for Legal Reasoning subsystem.
 
-Legal Reasoning determines:
-    - "What does the applicable legal framework require?"
-    - "Which actions satisfy legal obligations while preserving rights and regulatory compliance?"
-
-Legal Reasoning transforms legal sources into explicit interpretations,
-obligations, permissions and compliance assessments.
+This module exports the canonical contracts governing:
+    - legal sessions and descriptors;
+    - legal sets and pipelines;
+    - jurisdiction identification;
+    - legal source discovery;
+    - obligation analysis;
+    - rights analysis;
+    - compliance assessment;
+    - validation;
+    - governance;
+    - evolution tracking;
+    - failure handling;
+    - diagnostics and health monitoring.
 """
 
-from __future__ import annotations
-
-from .descriptor import (
-    LegalSessionDescriptor,
-    LegalReasoningKind,
-    LegalLifecycleState,
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.descriptor import (
+    LegalDescriptor,
 )
 
-from .legal_set import LegalSet
-from .pipeline import LegalPipeline
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.legal_set import (
+    LegalSet,
+)
 
-from .jurisdictions import Jurisdiction, JurisdictionManager
-from .legal_sources import LegalSource, LegalSourceManager
-from .statutes import Statute, StatuteManager
-from .regulations import Regulation, RegulationManager
-from .precedents import Precedent, PrecedentAnalysis
-from .obligations import Obligation, ObligationAnalysis
-from .rights import Right, RightsAnalysis
-from .compliance import ComplianceStatus, ComplianceAnalysis
-from .evolution import LegalEvolution
-from .validation import LegalValidation, ValidationResult
-from .failure import LegalFailure, FailureKind
-from .governance import LegalGovernance, GovernanceFinding
-from .health import LegalHealth, HealthMetric
-from .diagnostics import DiagnosticRecord, DiagnosticsEngine
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.pipeline import (
+    LegalPipeline,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.jurisdictions import (
+    JurisdictionAnalysis,
+    JurisdictionManagement,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.statutes import (
+    StatuteAnalysis,
+    StatuteManagement,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.regulations import (
+    RegulationAnalysis,
+    RegulationManagement,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.precedents import (
+    PrecedentAnalysis,
+    PrecedentManagement,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.obligations import (
+    Obligation,
+    ObligationAnalysis,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.rights import (
+    Right,
+    RightsAnalysis,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.compliance import (
+    ComplianceAssessment,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.validation import (
+    ValidationResult,
+    ValidationSession,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.governance import (
+    GovernanceEvaluation,
+    GovernanceSession,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.evolution import (
+    LegalEvolution,
+    EvolutionManager,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.failure import (
+    LegalFailure,
+    FailureManager,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.diagnostics import (
+    DiagnosticReport,
+    HealthMetrics,
+)
+
+from gordon_system.src.agent.components.systems.cognition.reasoning.legal.shared.health import (
+    HealthStatus,
+    HealthMonitor,
+)
 
 __all__ = [
-    # Descriptors and lifecycle
-    "LegalSessionDescriptor",
-    "LegalReasoningKind",
-    "LegalLifecycleState",
-    
-    # Core models
+    # Core contracts
+    "LegalDescriptor",
     "LegalSet",
     "LegalPipeline",
-    
-    # Jurisdiction management
-    "Jurisdiction",
-    "JurisdictionManager",
-    
-    # Legal source management  
-    "LegalSource",
-    "LegalSourceManager",
-    
-    # Statutes
-    "Statute",
-    "StatuteManager",
-    
-    # Regulations
-    "Regulation",
-    "RegulationManager",
-    
-    # Precedents
-    "Precedent",
+    # Analysis modules
+    "JurisdictionAnalysis",
+    "JurisdictionManagement",
+    "StatuteAnalysis",
+    "StatuteManagement",
+    "RegulationAnalysis",
+    "RegulationManagement",
     "PrecedentAnalysis",
-    
-    # Obligations
+    "PrecedentManagement",
+    # Rights and obligations
     "Obligation",
     "ObligationAnalysis",
-    
-    # Rights
     "Right",
     "RightsAnalysis",
-    
     # Compliance
-    "ComplianceStatus",
-    "ComplianceAnalysis",
-    
-    # Evolution and history
-    "LegalEvolution",
-    
-    # Validation
-    "LegalValidation",
+    "ComplianceAssessment",
+    # Validation and governance
     "ValidationResult",
-    
-    # Failure handling
+    "ValidationSession",
+    "GovernanceEvaluation",
+    "GovernanceSession",
+    # Evolution and failure tracking
+    "LegalEvolution",
+    "EvolutionManager",
     "LegalFailure",
-    "FailureKind",
-    
-    # Governance
-    "LegalGovernance",
-    "GovernanceFinding",
-    
-    # Health metrics
-    "LegalHealth",
-    "HealthMetric",
-    
-    # Diagnostics
-    "DiagnosticRecord",
-    "DiagnosticsEngine",
+    "FailureManager",
+    # Diagnostics and health
+    "DiagnosticReport",
+    "HealthMetrics",
+    "HealthStatus",
+    "HealthMonitor",
 ]
+
